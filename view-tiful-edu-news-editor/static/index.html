@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>교육뉴스 편집실</title>
+  <link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
+  <link rel="stylesheet" href="/static/style.css?v=newsroom-20261005"><script src="/static/research.js?v=newsroom-20261005" defer></script><script src="/static/rewrite.js?v=newsroom-20261005" defer></script><script src="/static/final.js?v=newsroom-20261005" defer></script><script src="/static/app.js?v=newsroom-20261005" defer></script>
+</head>
+<body>
+<header class="app-header"><div class="brand"><span class="brand-mark">E</span><span>교육뉴스 편집실</span></div><span class="header-caption">원문·근거 비교형</span><span class="stage-badge">최종 검증·승인</span></header>
+<main class="app-main">
+  <div class="heading"><div><h1>원문을 읽고, 근거를 모으세요.</h1><p>원문과 확인 자료를 함께 보관하고, 사실 검증을 준비합니다.</p></div><button type="button" id="new-article" class="button">새 기사</button></div>
+  <nav class="workflow" aria-label="기사 제작 단계"><span class="current">원문·근거 등록</span><button type="button" id="nav-verify" class="workflow-action" disabled>원문 검증 실행</button><button type="button" id="nav-rewrite" class="workflow-action" disabled>기사 재작성</button><button type="button" id="nav-final" class="workflow-action" disabled>최종 재검증·승인</button></nav>
+  <div class="work-grid">
+    <section class="panel" aria-labelledby="original-heading">
+      <div class="panel-header"><h2 id="original-heading">원문 기사</h2><button type="button" id="sample-article" class="text-button">가상 예시 넣기</button></div>
+      <form id="original-form">
+        <label>기사 주소 <span class="optional">선택</span><input id="original-url" type="url" placeholder="https://…" maxlength="4000"></label>
+        <button type="button" id="import-original" class="button import-button">주소에서 원문 불러오기</button>
+        <label>기사 제목과 본문<textarea id="original-text" required maxlength="100000" placeholder="기사 제목과 본문을 붙여넣어주세요."></textarea></label>
+        <div class="input-meta"><span>원문의 표현과 조건을 보존합니다.</span><span id="character-count">0자</span></div>
+        <div class="action-row"><span id="save-state" class="secondary">새 기사</span><button type="submit" class="button primary" id="save-original">원문 저장</button></div>
+      </form>
+      <p id="original-message" class="message" role="status" aria-live="polite"></p>
+    </section>
+    <section class="panel" aria-labelledby="verification-heading">
+      <div class="panel-header"><h2 id="verification-heading">원문 검증</h2><span class="status-badge" id="verification-status">검증 전</span></div>
+      <p class="panel-intro">공개 자료를 자동 검색하고 등록한 근거·인터뷰 기록과 함께 사실을 대조합니다. 의견·분석·제안은 구분해 읽습니다.</p>
+      <label class="review-checkbox"><input type="checkbox" id="web-search-enabled" checked><span>자동 웹 검색·교차 대조 사용 · 원문 검증과 최종 재검증에 적용</span></label>
+      <p class="secondary">검색한 출처의 실제 본문을 읽습니다. 공개 자료가 충분하면 PDF를 직접 넣지 않아도 됩니다. 검색 실패·단일 근거·출처 충돌은 검토 화면에 표시합니다.</p>
+      <div class="verification-actions"><span id="ai-status" class="secondary">AI 설정 확인 중</span><button type="button" id="verify-original" class="button primary" disabled>원문 검증 실행</button></div>
+      <p id="verify-help" class="secondary">원문을 저장하고 근거를 등록한 뒤 실행하세요.</p>
+      <details id="ai-setup" class="ai-setup"><summary>AI 설정 안내</summary><p>프로젝트의 .env.example을 .env로 복사하고 OPENAI_API_KEY에 본인의 키를 입력하세요. 서버를 다시 실행하고 화면을 새로고침하면 사용할 수 있습니다.</p><p>키는 서버에서만 사용합니다. 기사와 등록한 근거의 관련 발췌가 AI API로 전송됩니다.</p></details>
+      <p id="verification-message" class="message" role="status" aria-live="polite"></p>
+      <div id="verification-meta" class="verification-meta" hidden></div>
+      <div class="verification-placeholder" id="check-list">
+        <div class="check-row"><span>날짜·숫자</span><span>확인 대기</span></div>
+        <div class="check-row"><span>적용 대상·범위</span><span>확인 대기</span></div>
+        <div class="check-row"><span>예외·추가 조건</span><span>확인 대기</span></div>
+        <div class="check-row"><span>주장의 공식 근거</span><span>확인 대기</span></div>
+      </div>
+      <div class="notice">판정은 실제로 읽은 근거의 발췌를 대조한 AI 검토 결과입니다. 적용 학년도·조건과 누락된 주장은 사람이 확인해야 합니다.</div>
+      <h3 class="source-heading">근거 자료 등록</h3>
+      <form id="source-form"><fieldset id="source-fields" disabled>
+        <label>자료 이름<input id="source-name" required maxlength="200" placeholder="공식 안내·모집요강·참고 기사 등"></label>
+        <div class="source-grid">
+          <label>자료 종류<select id="source-kind"><option value="official">공식 자료</option><option value="press">언론 기사</option><option value="interview">인터뷰·취재 기록</option><option value="other">기타 자료</option></select></label>
+          <label>페이지·위치 <span class="optional">선택</span><input id="source-locator" maxlength="500" placeholder="PDF 5쪽 / 적용 대상 항목"></label>
+        </div>
+        <div id="interview-fields" hidden><div class="source-grid">
+          <label>인터뷰 대상·익명 표기<input id="interview-speaker" maxlength="150" placeholder="이름 또는 익명 교사 A"></label>
+          <label>소속·역할 <span class="optional">선택</span><input id="interview-role" maxlength="200" placeholder="고등학교 교사 등"></label>
+          <label>인터뷰 날짜<input type="date" id="interview-date"></label>
+          <label>취재 방법<select id="interview-method"><option>서면</option><option>대면</option><option>전화</option><option>이메일</option><option>기타</option></select></label>
+        </div><p class="secondary">아래 근거 내용에 실제 발언·취재 기록을 입력하세요. 인터뷰 내용과 기자의 의견은 구분해 사용합니다.</p></div>
+        <label>자료 주소 <span class="optional">선택</span><input id="source-url" type="url" placeholder="https://…" maxlength="4000"></label>
+        <button type="button" id="import-source-url" class="button import-button">주소에서 근거 불러오기</button>
+        <div class="pdf-upload"><label>PDF 첨부 <span class="optional">선택 · 20MB 이하</span><input type="file" id="source-pdf" accept=".pdf,application/pdf"></label><button type="button" id="import-source-pdf" class="button">PDF 내용 읽기</button></div>
+        <div id="material-preview" class="material-preview" hidden><p id="material-title"></p><label>추출한 페이지<select id="material-page"></select></label><textarea id="material-text" class="small-textarea" readonly aria-label="추출한 자료 내용"></textarea><button type="button" id="use-material-text" class="button">선택한 문장 또는 이 페이지를 근거 내용에 넣기</button><p class="secondary">필요한 문장을 드래그해 선택하면 그 부분만 넣습니다. PDF의 쪽수는 파일 안의 페이지 순서입니다.</p><p id="material-warning" class="secondary"></p><button type="button" id="clear-material" class="text-button">불러온 자료 선택 해제</button></div>
+        <label>대조할 근거 내용 <span class="optional">주소·PDF가 없으면 필수</span><textarea id="source-excerpt" class="small-textarea" maxlength="50000" placeholder="대조할 문장과 조건을 입력하세요."></textarea></label>
+        <div class="action-row"><button type="submit" class="button" id="save-source">근거 등록</button><button type="button" class="text-button" id="reset-source">등록 입력 비우기</button></div>
+      </fieldset></form>
+      <p id="source-message" class="message" role="status" aria-live="polite"></p>
+      <div id="source-list" class="source-list" aria-live="polite"><p class="secondary">원문을 저장하면 근거를 등록할 수 있습니다.</p></div>
+    </section>
+  </div>
+  <section class="saved-section" id="rewrite-panel" aria-labelledby="rewrite-heading">
+    <div class="panel-header"><h2 id="rewrite-heading">기사 재작성</h2><span id="draft-status" class="status-badge">초안 작성 전</span></div>
+    <p id="rewrite-help" class="panel-intro">원문 검증 결과를 저장하면 편집 결정을 선택할 수 있습니다.</p>
+    <fieldset id="rewrite-fields" disabled>
+      <details class="rewrite-decisions"><summary>검증 항목별 포함·수정·보류·제외</summary><div id="decision-list"></div></details>
+      <p id="decision-summary" class="notice"></p>
+      <h3 class="source-heading">추가 배경 내용</h3>
+      <p class="secondary">사실·편집자 분석·기자 의견·학습 제안·인터뷰를 선택해 작성하세요. 인터뷰는 실제 취재 기록을 연결하고, 근거 없는 추가 사실은 자동 검색을 사용할 때 최종 재검증에서 확인합니다.</p>
+      <div id="addition-list"></div><button type="button" id="add-background" class="text-button">+ 추가 내용 넣기</button>
+      <label>편집 요청 <span class="optional">표현·구성에 관한 요청</span><textarea id="editor-note" class="small-textarea" maxlength="2000" placeholder="쉽게 설명할 독자, 강조할 조건, 문장 길이 등을 적어주세요."></textarea></label>
+      <div class="rewrite-actions"><button type="button" id="save-plan" class="button">편집 결정 저장</button><button type="button" id="generate-draft" class="button primary">AI로 초안 작성</button><button type="button" id="manual-draft" class="button">직접 초안 작성</button></div>
+      <p class="secondary">AI 작성 버튼을 누를 때 API를 한 번 호출합니다. 보류·제외 항목은 작성 소재에서 빼고, 원문은 그대로 보관합니다.</p>
+    </fieldset>
+    <p id="rewrite-message" class="message" role="status" aria-live="polite"></p>
+    <div id="draft-area" hidden>
+      <div class="draft-work-grid">
+        <form id="draft-form"><fieldset id="draft-fields">
+          <h3 class="source-heading">초안 편집</h3>
+          <label>기사 분류<select id="draft-category"><option>입시·수능</option><option>영재·특목</option><option>AI·디지털교육</option><option>학교·교육정책</option><option>진로·대학</option><option>기타</option></select></label>
+          <label>기사 제목<input id="draft-title" required maxlength="200"></label>
+          <label>요약 첫 문장<textarea id="draft-summary-1" required class="small-textarea" maxlength="1000"></textarea></label>
+          <label>요약 둘째 문장<textarea id="draft-summary-2" required class="small-textarea" maxlength="1000"></textarea></label>
+          <h3>세부 항목</h3><div id="draft-sections"></div><button type="button" id="add-draft-section" class="text-button">+ 세부 항목 추가</button>
+          <h3 class="source-heading">핵심 정보</h3><div id="draft-facts"></div>
+          <h3 class="source-heading">독자별 안내</h3><div id="draft-guidance"></div>
+          <button type="submit" id="save-draft" class="button primary">초안 저장</button>
+        </fieldset></form>
+        <div><h3 class="source-heading">기사 미리보기</h3><p id="draft-preview-status" class="notice">편집 초안 · 최종 재검증과 사람의 승인 전입니다.</p><article id="draft-preview" class="draft-preview"></article></div>
+      </div>
+      <p id="draft-message" class="message" role="status" aria-live="polite"></p>
+      <div id="draft-warnings" class="notice"></div>
+    </div>
+  </section>
+  <section class="saved-section" id="final-panel" aria-labelledby="final-heading">
+    <div class="panel-header"><h2 id="final-heading">최종 재검증·승인</h2><span id="final-status" class="status-badge">초안 저장 대기</span></div>
+    <p id="final-help" class="panel-intro">초안을 저장한 뒤 제목·요약·본문·핵심 정보·독자별 안내 전체를 다시 검증합니다.</p>
+    <div class="rewrite-actions"><button type="button" id="verify-draft" class="button primary" disabled>최종 재검증 실행</button><button type="button" id="edit-draft" class="button" disabled>초안 수정하러 가기</button></div>
+    <p class="secondary">웹 검색을 사용하면 검색 요청과 사실 대조 요청을 실행합니다. 의견·분석·제안·인터뷰에 포함된 사실도 확인합니다. 최종 승인은 사람이 하며 승인 버튼은 API를 호출하지 않습니다.</p>
+    <p id="final-message" class="message" role="status" aria-live="polite"></p>
+    <div id="final-meta" class="verification-meta" hidden></div>
+    <div id="final-blockers" class="notice" hidden></div>
+    <details id="final-coverage" class="final-coverage" hidden><summary>기사 전체 검사 범위 보기</summary><div id="coverage-list"></div></details>
+    <div id="final-check-list"></div>
+    <div class="final-work-grid">
+      <form id="approval-form"><fieldset id="approval-fields" disabled>
+        <h3 class="source-heading">사람의 최종 승인</h3>
+        <p id="approval-help" class="secondary">검토자 이름을 입력하고 미해결 항목을 하나씩 검토하세요. 기사 수정이 필요하면 저장·재검증하고, AI 판정 오류는 실제 근거와 판단 이유를 기록해 보완합니다.</p>
+        <label>최종 검토자 이름<input id="approval-reviewer" required maxlength="100" placeholder="검토한 사람의 이름"></label>
+        <label class="review-checkbox"><input type="checkbox" id="approval-facts" required><span>기사 전체의 사실·학년도·대상·수치·조건과 검색 출처·단일 근거·인터뷰 기록을 직접 확인했습니다.</span></label>
+        <label class="review-checkbox"><input type="checkbox" id="approval-editorial" required><span>제목·요약·추가 내용·독자별 안내와 의견·분석·제안·인터뷰의 표시를 검토했습니다.</span></label>
+        <label class="review-checkbox"><input type="checkbox" id="approval-rights" required><span>원문·근거의 출처 표기와 게시에 필요한 이용 권한을 확인했습니다.</span></label>
+        <button type="submit" id="approve-draft" class="button primary" disabled>현재 기사 버전 승인</button>
+      </fieldset></form>
+      <div><h3 class="source-heading">승인 기록·기사 내보내기</h3><div id="approval-record" class="verification-meta"><p>아직 승인한 기사가 없습니다.</p></div>
+        <div class="rewrite-actions"><button type="button" id="export-html" class="button" disabled>기사 HTML 다운로드</button><button type="button" id="export-json" class="button" disabled>기사 JSON 다운로드</button></div>
+        <p class="secondary">HTML은 브라우저에서 열어 확인할 수 있고, JSON은 웹사이트 연결용입니다. 현재 승인한 버전만 내려받습니다. 실제 웹사이트에 자동 게시되지는 않습니다. 첨부 PDF는 별도로 연결하세요.</p>
+      </div>
+    </div>
+  </section>
+  <section class="saved-section" aria-labelledby="saved-heading"><div class="panel-header"><h2 id="saved-heading">저장한 기사</h2><button type="button" id="refresh-articles" class="text-button">목록 새로고침</button></div><div id="article-list" class="article-list"><p class="secondary">저장한 기사를 불러옵니다.</p></div></section>
+</main>
+<footer>원문 검증 → 기사 재작성 → 최종 재검증 → 사람의 승인 → 기사 내보내기</footer>
+</body>
+</html>
