@@ -75,6 +75,8 @@ function renderArticles(query = '') {
 }
 
 if (pageKind === 'category') {
+    const schoolStats = document.querySelector('#ai-school-stats');
+  if (schoolStats) schoolStats.hidden = type !== 'digital';
   document.title = `${currentPage.title} | 뷰티풀 에듀`;
   document.querySelector('#listing-title').textContent = currentPage.title;
   document.querySelector('#listing-description').textContent = currentPage.description;
@@ -102,3 +104,193 @@ search.addEventListener('submit', event => {
     search.querySelector('input').focus();
   }
 });
+// AI·디지털교육 페이지의 학교 통계
+let schoolStatsRequest = 0;
+
+async function showSchoolList(year, region, level, total) {
+  const title = `${year}년 ${region} · ${level || '전체 학교급'}`;
+  showInfo(title, []);
+
+  const content = document.querySelector('#dialog-content');
+  const message = document.createElement('p');
+  message.textContent = '학교 목록을 불러오는 중입니다.';
+  content.append(message);
+
+  // 팝업을 닫거나 다른 내용을 열면 이전 응답을 표시하지 않습니다.
+  const isCurrent = () => dialog.open && content.contains(message);
+
+  try {
+    const query = new URLSearchParams({
+      year: String(year), region, level
+    });
+    const response = await fetch(`/api/schools?${query}`);
+    if (!response.ok) throw new Error('학교 목록 조회 실패');
+
+    const data = await response.json();
+    if (!isCurrent()) return;
+
+    message.textContent =
+      `통계: ${total}개교 · 등록된 학교 목록: ${data.count}개교`;
+
+    if (!data.items.length) {
+      const notice = document.createElement('p');
+      notice.textContent =
+        '이 조건에 해당하는 학교 목록이 아직 등록되어 있지 않습니다. 학교가 0개라는 뜻은 아닙니다.';
+      content.append(notice);
+      return;
+    }
+
+    if (data.count !== total) {
+      const notice = document.createElement('p');
+      notice.textContent =
+        '통계 수와 등록된 목록 수가 다릅니다. 목록의 누락·중복 및 집계 기준을 확인해야 합니다.';
+      content.append(notice);
+    }
+
+    const list = document.createElement('ol');
+    list.style.cssText = 'padding-left:24px; line-height:1.9;';
+
+    data.items.forEach(school => {
+      const item = document.createElement('li');
+      const details = [school.school_level, school.district]
+        .filter(Boolean).join(' · ');
+      item.textContent = `${school.school_name} (${details})`;
+      list.append(item);
+    });
+
+    content.append(list);
+  } catch (error) {
+    if (isCurrent()) {
+      message.textContent =
+        '학교 목록을 불러오지 못했습니다. 잠시 후 다시 클릭해주세요.';
+    }
+    console.error(error);
+  }
+}
+
+async function loadSchoolStats(year = '2026') {
+  const section = document.querySelector('#ai-school-stats');
+  const status = document.querySelector('#ai-school-status');
+  if (!section || !status) return;
+
+  const requestId = ++schoolStatsRequest;
+  section.querySelector('#ai-school-table')?.remove();
+  status.textContent = `${year}년 학교 통계를 불러오는 중입니다.`;
+
+  try {
+    const query = new URLSearchParams({ year: String(year) });
+    const response = await fetch(`/api/school-stats?${query}`);
+    if (!response.ok) throw new Error('통계 조회 실패');
+
+    const data = await response.json();
+    if (requestId !== schoolStatsRequest) return;
+
+    if (!data.items.length) {
+      status.textContent = `${year}년에 등록된 통계가 없습니다.`;
+      return;
+    }
+
+    const wrapper = document.createElement('div');
+    wrapper.id = 'ai-school-table';
+    wrapper.style.overflowX = 'auto';
+
+    const table = document.createElement('table');
+    table.style.cssText =
+      'width:100%; border-collapse:collapse; margin:16px 0 24px;';
+
+    const caption = table.createCaption();
+    caption.textContent =
+      `${data.year}년 지역별 학교 현황 (단위: 개교)`;
+
+    const head = table.createTHead().insertRow();
+    ['지역', '초등', '중등', '고등', '특수', '합계', '자료 확인 상태']
+      .forEach(label => {
+        const th = document.createElement('th');
+        th.scope = 'col';
+        th.textContent = label;
+        th.style.cssText =
+          'padding:10px; border-bottom:2px solid #ccc; text-align:left; white-space:nowrap;';
+        head.append(th);
+      });
+
+    const columns = [
+      ['elementary_count', '초등학교'],
+      ['middle_count', '중학교'],
+      ['high_count', '고등학교'],
+      ['special_count', '특수학교'],
+      ['total_count', '']
+    ];
+
+    const cellStyle =
+      'padding:10px; border-bottom:1px solid #ddd; text-align:left;';
+
+    const body = table.createTBody();
+
+    data.items.forEach(item => {
+      const row = body.insertRow();
+      const regionCell = document.createElement('th');
+      regionCell.scope = 'row';
+      regionCell.textContent = item.region_name;
+      regionCell.style.cssText = cellStyle + 'font-weight:normal;';
+      row.append(regionCell);
+
+      columns.forEach(([key, level]) => {
+        const cell = row.insertCell();
+        cell.style.cssText = cellStyle;
+        const value = item[key];
+
+        if (value == null) {
+          cell.textContent = '미확인';
+        } else if (value === 0) {
+          cell.textContent = '0';
+        } else {
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.textContent = String(value);
+          button.style.cssText =
+            'background:none; border:0; padding:4px; color:inherit; font:inherit; text-decoration:underline; cursor:pointer;';
+          button.setAttribute(
+            'aria-label',
+            `${data.year}년 ${item.region_name} ${level || '전체'} ${value}개교 학교 목록 보기`
+          );
+          button.addEventListener('click', () => {
+            showSchoolList(
+              data.year, item.region_name, level, value
+            );
+          });
+          cell.append(button);
+        }
+      });
+
+      const stateCell = row.insertCell();
+      stateCell.style.cssText = cellStyle;
+      stateCell.textContent =
+        `${item.data_status || '상태 미확인'} · ` +
+        (item.validation_status || '미검증').replaceAll('_', ' · ');
+    });
+
+    wrapper.append(table);
+    section.append(wrapper);
+
+    const programs = [
+      ...new Set(data.items.map(item => item.program_name))
+    ];
+    status.textContent =
+      `${data.year}년 ${programs.join(' / ')} · ${data.count}개 지역. ` +
+      '밑줄 친 숫자를 누르면 등록된 학교 목록을 확인할 수 있습니다. ' +
+      '미확인은 0개를 뜻하지 않으며, 연도별 사업과 집계 기준은 다를 수 있습니다.';
+  } catch (error) {
+    if (requestId !== schoolStatsRequest) return;
+    status.textContent =
+      `${year}년 통계를 불러오지 못했습니다. API 서버 실행 상태를 확인해주세요.`;
+    console.error(error);
+  }
+}
+
+if (pageKind === 'category' && type === 'digital') {
+  const yearSelect = document.querySelector('#ai-school-year');
+  yearSelect.addEventListener('change', () => {
+    loadSchoolStats(yearSelect.value);
+  });
+  loadSchoolStats(yearSelect.value);
+}
