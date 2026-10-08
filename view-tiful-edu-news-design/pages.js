@@ -123,7 +123,7 @@ async function showSchoolList(year, region, level, total) {
     const query = new URLSearchParams({
       year: String(year), region, level
     });
-    const response = await fetch(`/api/schools?${query}`);
+    const response = await fetch(`http://127.0.0.1:8000/api/schools?${query}`);
     if (!response.ok) throw new Error('학교 목록 조회 실패');
 
     const data = await response.json();
@@ -179,7 +179,7 @@ async function loadSchoolStats(year = '2026') {
 
   try {
     const query = new URLSearchParams({ year: String(year) });
-    const response = await fetch(`/api/school-stats?${query}`);
+    const response = await fetch(`http://127.0.0.1:8000/api/school-stats?${query}`);
     if (!response.ok) throw new Error('통계 조회 실패');
 
     const data = await response.json();
