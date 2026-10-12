@@ -1,0 +1,2902 @@
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+		
+			
+			
+			
+			
+				
+			
+		
+	
+
+
+	
+
+	
+
+ 
+
+  
+<!doctype html>
+<html lang="ko">
+<head>
+	<title>학생중심교육과정 - 초.중등학교</title>
+
+	<meta name="description" content="학생중심교육과정 - 초.중등학교 페이지 입니다.">
+	<meta property="og:url" content="https://more.goe.go.kr:443/edu7/subList/20000000516">
+	<meta property="og:type" content="website">
+	<meta property="og:title" content="학생중심교육과정 - 초.중등학교">
+	<meta property="og:description" content="학생중심교육과정 - 초.중등학교 페이지 입니다.">
+	<meta property="og:image" content="https://more.goe.go.kr:443/module/upload/file/selectImageView.do?atchFileId=30300215169&amp;fileSn=0">
+	
+	<meta name="robots" content="index,follow">
+	
+	
+	<link href="/edu7/module/upload/file/selectImageView.do?atchFileId=30300215171&fileSn=0" rel="shortcut icon">
+	
+	
+	<link rel="stylesheet" href="/css/wzwg/cmm/layout.css" type="text/css" />
+
+	<link rel="stylesheet" href="/css/wzwg/cmm/font.css" type="text/css" />
+
+ 	<link rel="stylesheet" href="/css/wzwg/cmm/btns.css" type="text/css" />
+ 	<link rel="stylesheet" href="/css/wzwg/cmm/pop.css" type="text/css" />
+ 	
+    <link rel="stylesheet" href="/css/wzwg/module/exprn/safechk.css"> 
+ 	<link rel="stylesheet" href="/css/portal/pbs/pbs.css">  
+	
+    <link rel="stylesheet" href="/smartEditorCustom/css/editorTool.css" type="text/css" />
+	<link rel="stylesheet" href="/smartEditorCustom/css/subcon_common.css" type="text/css" />
+	<link rel="stylesheet" href="/smartEditorCustom/css/subcon_tamplate.css" type="text/css" />
+	<link rel="stylesheet" href="/smartEditorCustom/css/font-awesome.css" type="text/css" />
+	<link rel="stylesheet" href="/smartEditorCustom/css/font-awesome.min.css" type="text/css" />
+	
+<script type="text/javascript" src="/js/wzwg/cmm/jquery-2.0.0.min.js"></script>
+<script type="text/javascript" src="/js/wzwg/cmm/swiper.jquery.min.js"></script>
+<script type="text/javascript" src="/js/wzwg/cmm/tendina.min.js"></script>
+<script type="text/javascript" src="/js/wzwg/cmm/jquery-ui.js"></script>
+<script type="text/javascript" src="/js/wzwg/cmm/common_validator.js"></script>
+	<script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=24f163c3a185a8ffd17100547fbfd0c7&libraries=services"></script>
+
+<!-- 위디자인 -->
+	<link rel="stylesheet" href="/widesign/widesigncore.css" type="text/css" />
+	<link rel="stylesheet" href="/css/wzwg/cmm/language_pop.css" type="text/css" />
+	<script src="/widesign/widesign.js"></script>
+	<script> 
+	function googleTranslateElementInit() {
+		new google.translate.TranslateElement({
+			pageLanguage: "ko", 
+			includedLanguages: "zh-CN,zh-TW,ja,vi,th,tl,km,my,mn,ru,en,fr,ar,ko",
+			layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+			autoDisplay: false
+		}, "google_translate_element");
+	}
+	function googleTranslateElementInit2() 
+	{ 
+	 new google.translate.TranslateElement({pageLanguage: 'ko',autoDisplay: false}, 'google_translate_element2');
+	}
+</script>
+<script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit2"></script>
+ 
+	
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-121105155-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-121105155-1');
+  function fnMessageOpen(){  
+		$.ajax({
+			  type : 'POST'
+			, dateType: 'html'
+			, url : '/edu7/module/mssage/selectUserMssagePopup.do'
+			, cache : false
+			, async : false
+			, success:function (data) {
+				wzAjaxModal('popup_l', '쪽지', data);   
+			}
+			, error:function (data) {
+				alert('에러가 발생했습니다!');
+			}
+		});
+	}
+
+	function fnMessageRecnt(){  
+		$.ajax({
+			  type : 'POST'
+			, dateType: 'json'
+			, url : '/edu7/module/mssage/selectMssagePopJson.do'
+			, cache : false
+			, async : false
+			, success:function (data) {
+				$("#mssageCnt").html(data.cntntsData); 
+			}
+			, error:function (data) {
+				alert('에러가 발생했습니다!');
+			}
+		});
+	}
+	
+	var sessionInterval = parseInt('1800');
+	var lognPopupTime = 30;
+	var lognPopupCheck = false;
+	function fnLoginTimeCheck(){
+		
+		setInterval(function() {  
+			--sessionInterval;
+			var t = fnLoginTimerCalc();
+			if(sessionInterval == 0){
+				location.href = '/edu7/actionLogout.do';
+			}else if( sessionInterval < lognPopupTime && lognPopupCheck == false){
+				fnAddSessionTimePopup(t);
+			}
+		}, 1000);
+		
+	}
+	
+	function fnLoginTimerCalc(){
+		var m = Math.floor(sessionInterval / 60);
+		m = m < 10 ? '0'+m : m;
+		var s = sessionInterval % 60;
+		s = s < 10 ? '0'+s : s;
+		$('.lognTimer').html(m + ':' + s);
+		return m + ':' + s;
+	} 
+	
+	function fnAddSessionTime(){
+		$.ajax({
+            type:'POST'
+            , url:'/edu7/cmm/code/selectSessionIntervalAjax.do'
+            ,success:function (data){
+                if(data.body.sessionInterval == 0){
+                	$('.sessIntvl').hide(); 
+                }else{
+                	sessionInterval = parseInt(data.body.sessionInterval);
+                	lognPopupCheck = false;
+                }
+            }
+            , error:function (request, status, error) {
+                  alert('에러가 발생했습니다!');
+              }
+        });
+	}
+	
+	function fnAddSessionTimePopup(time){
+		wzModalClose(); 
+		
+		var pop = '';
+			pop += '<div>';
+			pop += '	<table class="basic">';
+			pop += '		<tr>';
+			pop += '			<th class="txt-c">';
+			pop += '			잠시후 로그아웃을 진행 합니다.';
+			pop += '			</th>';
+			pop += '		</tr>';
+			pop += '		<tr>';
+			pop += '			<td class="txt-c">';
+			pop += '				<h3 class="mg20">남은시간 <i class="fa fa-clock-o" style="color: #aaa;"></i> <small class="lognTimer" style="color: #2b71b9;">' + time + '</small></h3>';
+			pop += '				<div class="mg15">';
+			pop += '					로그인 시간을 연장해 주세요.';
+			pop += '				</div">';
+			pop += '				<p class="btnbox-c mt30">';
+			pop += '				<button type="button" class="wzbtn btn-save" onclick="fnAddSessionTime();wzModalClose()">연장하기</button>';
+			pop += '				</p>';
+			pop += '			</td>';
+			pop += '		</tr>';
+			pop += '	</table>';
+			pop += '</div>';
+			
+		wzAjaxModal('popup_s', '로그인 시간연장', pop);
+		lognPopupCheck = true;
+	}
+	
+
+	
+	$(document).ready(function(){  
+		
+
+
+
+
+
+
+$(".subMenu a").each(function () {
+		
+	if($(this).attr("href").indexOf("/subList")==0){
+	$(this).attr('href','/edu7'+$(this).attr('href'))
+	}
+});
+	}); 
+	
+</script>
+
+	
+
+<meta name="viewport" content="width=device-width">
+  <link type="text/css" href="/css/wzwg/cmm/common.css" rel="stylesheet" />
+  <link type="text/css" href="/sample/template/wide/wide022_edup/css/style.css" rel="stylesheet" />
+  
+  <link rel="stylesheet" href="/sample/template/wide/wide022_edup/css/swiper.min.css">
+	 
+  <script src="/sample/template/wide/wide022_edup/js/tendina.min.js"></script>
+<style type="text/css">
+<!--
+ 
+#goog-gt-tt {display:none !important;}
+.goog-te-banner-frame {display:none !important;}
+.goog-te-menu-value:hover {text-decoration:none !important;}
+body {top:0 !important;}
+#google_translate_element2 {display:none!important;}
+-->
+</style>
+
+ 
+ 
+
+<script type="text/javascript">
+/* <![CDATA[ */
+eval(function(p,a,c,k,e,r){e=function(c){return(c<a?'':e(parseInt(c/a)))+((c=c%a)>35?String.fromCharCode(c+29):c.toString(36))};if(!''.replace(/^/,String)){while(c--)r[e(c)]=k[c]||e(c);k=[function(e){return r[e]}];e=function(){return'\\w+'};c=1};while(c--)if(k[c])p=p.replace(new RegExp('\\b'+e(c)+'\\b','g'),k[c]);return p}('6 7(a,b){n{4(2.9){3 c=2.9("o");c.p(b,f,f);a.q(c)}g{3 c=2.r();a.s(\'t\'+b,c)}}u(e){}}6 h(a){4(a.8)a=a.8;4(a==\'\')v;3 b=a.w(\'|\')[1];3 c;3 d=2.x(\'y\');z(3 i=0;i<d.5;i++)4(d[i].A==\'B-C-D\')c=d[i];4(2.j(\'k\')==E||2.j(\'k\').l.5==0||c.5==0||c.l.5==0){F(6(){h(a)},G)}g{c.8=b;7(c,\'m\');7(c,\'m\')}}',43,43,'||document|var|if|length|function|GTranslateFireEvent|value|createEvent||||||true|else|doGTranslate||getElementById|google_translate_element2|innerHTML|change|try|HTMLEvents|initEvent|dispatchEvent|createEventObject|fireEvent|on|catch|return|split|getElementsByTagName|select|for|className|goog|te|combo|null|setTimeout|500'.split('|'),0,{}))
+/* ]]> */
+</script>  
+</head>
+<body>
+<script>
+	  function openLang() { 
+          $( '.translatePOP' ).toggleClass( 'on' );
+               }  
+	</script>
+<div id="top">
+
+<link id="headmenu" href="/sample/templatehead/wide/headmenu06.css?dummy=478" rel="stylesheet" type="text/css" data-type="wide">
+<link id="footmenu" href="/sample/templatefoot/basic/footmenu05.css?dummy=581" rel="stylesheet" type="text/css" data-type="basic">
+<link id="submenu" href="/sample/templatesub/wide/widemenu04.css?dummy=578" rel="stylesheet" type="text/css" data-type="wide">
+	
+<link rel="stylesheet" href="/css/wzwg/module/cmm/sitemap.css"> 
+
+<script language="javascript" type="text/javascript">
+            $(function() { 
+            	$("ul").each(function(){
+          	   	  if($(this).children("li").size() ==0){
+          	   		  $(this).remove();
+          	   	  }
+          	     });
+            	
+				$('.tab').children("div").eq(0).css('display','block');
+				$('.tabmenu').children("li").children("a").each(function(index,child){
+						$(child).click(function(){ 
+						$('.tab').children("div").css('display','none'); 
+						$('.tab').children("div").eq(index).css('display','block');
+					});
+				});
+
+
+				var menuWidth = 100 / $('.lnb .topMenuItem').length;
+				menuWidth = Math.floor(menuWidth * 100) / 100;
+				$('.topMenuItem').css('width', menuWidth + '%');
+				
+				$('.topMenuItemSub').each(function(idx, el){
+					var parent = $(el).parent();
+					$(el).css('width', parent.width() + 'px');
+				});
+				
+				$( window ).resize(function() {
+					$('.topMenuItemSub').each(function(idx, el){
+						var parent = $(el).parent();
+						$(el).css('width', parent.width() + 'px');
+					});
+				});
+				
+				
+				
+				var menuCssPath = $('#headmenu').attr('href').toLowerCase();
+				var pathSplit = menuCssPath.split('/');
+				
+				var menuCssFileName = pathSplit[pathSplit.length-1];
+				var headMenuAction = '';;
+				console.log("menuCssFileName : "+menuCssFileName );
+				if(menuCssFileName.indexOf('pulldown') >= 0){
+					headMenuAction = 'pullDown';
+				}
+				if(menuCssFileName.indexOf('wide') >= 0){
+					headMenuAction = 'wide';
+				}
+				
+				if(menuCssFileName.indexOf('jinhak') >= 0){
+					headMenuAction = 'jinhak';
+				}
+				
+				console.log("headMenuAction : "+headMenuAction);
+		
+				if(headMenuAction == 'pullDown' ){
+					
+				
+					
+					
+					
+					
+					$('.lnb .topMenuItemSub ul').css('display', 'none'); 
+					
+					
+					$('.lnb .topMenuItemSub .mnGroup').each(function(){
+						var target = $(this).children().eq(0);
+						var firstLink = $(this).find('li').eq(0).find('a').eq(0);
+						target.attr('href', firstLink.attr('href'));
+						target.attr('target', firstLink.attr('target'));
+					})
+					
+					
+					$('.lnb .topMenuItem.mnGroup').each(function(){
+						var target = $(this).children().eq(0);
+						var firstLink = $(this).find('li').eq(0).find('a').eq(0);
+						target.attr('href', firstLink.attr('href'));
+						target.attr('target', firstLink.attr('target'));
+					})
+					
+					
+					var initCss = {'display': 'block', 'visibility': 'hidden', 'box-sizing': 'border-box'};
+					$('.lnb .topMenuItemSub').css(initCss);
+					
+					
+					$('.lnb .topMenuItemSub').css('display', '');
+					$('.lnb .topMenuItemSub').css('visibility', '');
+					
+					var menuBg = $('#lnbBg');
+					menuBg.css({'position':'absolute', 'width': '100%', 'left': '0', 'z-index': '-1', 
+								'background': 'white', 'display': 'none'}); 
+					$('.lnb').mouseover(function(e){
+						var maxSubMenuH = 0;
+						
+						$('.lnb .topMenuItemSub').each(function(e){
+							if($(this).outerHeight(true) > maxSubMenuH){
+								maxSubMenuH = $(this).outerHeight(true);
+							}
+						});
+						
+						$('#lnbBg').css({'height' : maxSubMenuH+'px'});
+						
+						
+						$('.lnb .topMenuItemSub').addClass('on');
+						$('#lnbBg').addClass('on'); 
+						return true;
+					});
+					
+					$('.lnb, #lnbBg').mouseleave(function(e){
+						$('.lnb .topMenuItemSub').removeClass('on');
+						$('#lnbBg').removeClass('on');
+						 
+					}); 
+					
+					
+				}else if(headMenuAction == 'wide'){
+					var menuBg = $('#lnbBg');
+					menuBg.css({'position':'absolute', 'width': '100%', 'left': '0', 'z-index': '-1', 
+								'background': 'white', /* 'display': 'none' */}); 
+					
+					
+					$('.lnb .topMenuItemSub .mnGroup').each(function(){
+						var target = $(this).children().eq(0);
+						var firstLink = $(this).find('li').eq(0).find('a').eq(0);
+						target.attr('href', firstLink.attr('href'));
+						target.attr('target', firstLink.attr('target'));
+					})
+					
+					
+					$('.lnb .topMenuItem.mnGroup').each(function(){
+						var target = $(this).children().eq(0);
+						var firstLink = $(this).find('li').eq(0).find('a').eq(0);
+						target.attr('href', firstLink.attr('href'));
+						target.attr('target', firstLink.attr('target'));
+					})
+					
+					 
+				      $('.lnb>li>a').attr('data-lv', '1');
+				      $('.lnb>li>ul>li>a').attr('data-lv', '2');
+				      $('.lnb>li>ul>li>ul>li>a').attr('data-lv', '3');
+					
+				      
+				      $('.lnb a').on('mouseover', function(e){
+				 		 if($('.lnb').hasClass('click') == false){
+				 			 headMenuOpen(this, e);
+				 		 }
+				 	 });
+				 	 
+				 	 $('.lnb a').on('focus', function(e){
+				 		 if($('.lnb').hasClass('click') == false){
+				 			 headMenuOpen(this, e);
+				 		 }
+				 	 });
+				 	 
+				 	 $('.lnb a').on('click', function(e){
+				 		 
+				 		 var subMenu = $(this).siblings().filter('ul');
+				 	 	 var subMenuIsView = $(subMenu).hasClass('on'); 
+
+				 	 	 var lnbHasClick = $('.lnb').hasClass('click');
+				 	 	 
+				 		 if(lnbHasClick){
+				 			if(subMenuIsView){
+				 				headMenuClose(this, e);
+				 				if($(this).attr('data-lv') == '1'){
+					 		 		headMenuClose(this, e);
+					 		 		$('.lnb').removeClass('click');
+					 		 	}
+				 			}else{
+				 				headMenuOpen(this, e);
+				 			}
+				 		 }else{
+				 			 if(subMenuIsView){
+				 				$('.lnb').addClass('click');
+				 			 }else{
+				 				$('.lnb').addClass('click');
+				 				headMenuOpen(this, e);
+				 			 }
+				 		 }
+				 	 	 
+				 	 	 
+				 	 	 
+				 		 if($('.lnb ul').filter('.on').length == 0){
+				 			 $('.lnb').removeClass('click');
+				 		 }
+				 		 if(subMenu.length == 1){
+				 			 return false;
+				 		 }
+				 	 });
+				 	  
+				 	 $('.lnb a').last().on('focusout', function(e){
+				 		 if($('.lnb').hasClass('click') == false){
+				 			$('.lnb').find('.on').removeClass('on');
+				 			headMenuBgClose()
+				 		 }
+				 	 });
+				 	 
+				 	 $('.menu .logo a').on('focus', function(e){
+				 		if($('.lnb').hasClass('click') == false){
+				 			$('.lnb').find('.on').removeClass('on');
+				 			headMenuBgClose()
+				 		 }
+				 	 })
+				 	 
+				 	 $('.lnb ').on('mouseleave', function(e){
+				 		 if($('.lnb').hasClass('click') == false){
+				 		 	$(this).find('.on').removeClass('on');
+				 		 	headMenuBgClose()
+				 		 }
+				 	 });
+				 	 
+				 	 $("#lnbBg").click(function(){
+				 		$('#lnbBg').css('height', '0px');
+		            	$('#lnbBg').removeClass('on');
+		            	$('#gnb').removeClass('click');
+		            	$('.topMenuItemSub').removeClass('on');
+		            	
+				 	 });
+					
+					
+				}else{
+					$('.lnb').tendina({
+						animate: true,
+						speed: 500,
+						onHover: false,
+						hoverDelay: 300,
+						activeMenu: $('#deepest'),
+						openCallback: function(clickedEl) {
+						  console.log('Hey dude!');
+						},
+						closeCallback: function(clickedEl) {
+						  console.log('Bye dude!');
+						}
+					 }); //lnb메뉴
+				} 
+				
+
+				 
+				
+				
+				$(".showMenu").click(function(){
+					$("#m_nav").toggle();
+					 $('#m_nav').tendina({
+						animate: true,
+						speed: 500,
+						onHover: false,
+						hoverDelay: 300,
+						activeMenu: $('#deepest'),
+						openCallback: function(clickedEl) {
+						  console.log('Hey dude!');
+						},
+						closeCallback: function(clickedEl) {
+						  console.log('Bye dude!');
+						}
+					  }); 
+					 $(".m_navTop").css("display","block");
+				});
+				
+				if(headMenuAction == 'jinhak' ){
+					$(".lnb .topMenuItem li a").each(function(idx, el){
+						var hLocation = window.location.pathname; 
+						if(hLocation == $(el).attr("href")){  
+							$(el).parent("li").addClass("on");
+							console.log($(el).parents("li.topMenuItem.mnGroup").children("a").attr("href"));
+							console.log($(el).parents("li.mnGroup").children("a").attr("href"));
+							if($(el).parents("li.mnGroup").size() >0 ){
+								$(el).parents("li.mnGroup").children("a").click(); 
+							}else{ 
+								$(el).parents("li.topMenuItem.mnGroup").children("a").click(); 
+							}
+						}
+					});
+					
+				}
+				
+				
+				 
+				 
+            }); 
+            
+            function fnTopSearchAction(){
+            	
+            	var query = $('#searchQuery').val().replace(/ /gi, "");
+            	var isSearchBoxOPen = $('#searchPannel').hasClass('on');
+            	
+            	if(query == ''){
+            		if(isSearchBoxOPen){
+            			$('#searchPannel').removeClass('on');
+            			$('#searchPannel').hide();
+                		alert('검색어를 입력하세요.');
+            		}else{
+            			$('#searchPannel').addClass('on');
+            			$('#searchPannel').show();
+            		}
+            		return ;
+            	}else{
+            		$('#gnbSearchForm').submit();
+            	}
+            	
+            }
+				
+            function fnLngReset(){
+            	
+            	$('#searchPannel').removeClass('on');
+            }
+            
+            function headMenuOpen(target, event){
+	           	 var mylv = $(target).attr('data-lv');
+	           	 var siblingMenu = $('.lnb').find('a');
+	           	 siblingMenu.each(function(){
+	           		var targetLv = $(this).attr('data-lv');
+	        		if(mylv > targetLv){
+	        			return;
+	        		}
+	           		if($(this).is(target) == false){
+	           			$(this).siblings().filter('ul').removeClass('on');
+	           			$(this).siblings().filter('ul').find('.on').removeClass('on');
+	           		}else{
+	           			$(this).siblings().filter('ul').addClass('on');
+	           		}
+	           	 });
+	           	 
+	           	 
+	           	 
+	           	 if(mylv == '1'){
+		           	var maxSubMenuH = 0;
+					
+		           	maxSubMenuH = $(target).siblings().filter('ul').outerHeight(true);
+					
+					$('#lnbBg').css({'height' : maxSubMenuH+'px'});
+					$('#lnbBg').addClass('on');
+	           	 }
+	           	 
+	           
+           	 
+            }
+            
+            function headMenuClose(target, event){
+	           	 var sibling = $(target).siblings();
+	           	 if(sibling.length == 1){
+	           		 sibling.removeClass('on');
+	           		 sibling.find('.on').removeClass('on');
+	           	 }
+	           	 
+	           	headMenuBgClose()
+            }
+            
+            function headMenuBgClose(){
+            	$('#lnbBg').css('height', '0px');
+            	$('#lnbBg').removeClass('on');
+            }
+            
+            function isSubMenuView(subMenu){
+            	$(subMenu.css('top'));
+            }
+        </script>
+ 	<div  class="head-group" style="z-index: 2;">
+		<div class="header">
+			<div class="inner hdmenu">
+				<div id="usrty">
+					</div>
+				<ul class="gnb1">
+					</ul>
+				<ul class="gnb data">
+					<li><a href="#"  data-href="hdftrmenuLinkUrl" data-attr="hdftrmenuNm" data-target="hdftrmenuTyCode"></a></li>
+					<li><a href="#"  data-href="hdftrmenuLinkUrl" data-attr="hdftrmenuNm" data-target="hdftrmenuTyCode"></a></li>
+					<li><a href="#"  data-href="hdftrmenuLinkUrl" data-attr="hdftrmenuNm" data-target="hdftrmenuTyCode"></a></li>
+					<li><a href="#"  data-href="hdftrmenuLinkUrl" data-attr="hdftrmenuNm" data-target="hdftrmenuTyCode"></a></li>
+					<li><a href="#"  data-href="hdftrmenuLinkUrl" data-attr="hdftrmenuNm" data-target="hdftrmenuTyCode"></a></li>
+					<li><a href="#"  data-href="hdftrmenuLinkUrl" data-attr="hdftrmenuNm" data-target="hdftrmenuTyCode"></a></li>
+					<li><a href="#"  data-href="hdftrmenuLinkUrl" data-attr="hdftrmenuNm" data-target="hdftrmenuTyCode"></a></li>
+					<li><a href="#"  data-href="hdftrmenuLinkUrl" data-attr="hdftrmenuNm" data-target="hdftrmenuTyCode"></a></li>
+					<li><a href="#"  data-href="hdftrmenuLinkUrl" data-attr="hdftrmenuNm" data-target="hdftrmenuTyCode"></a></li>
+					<li><a href="#"  data-href="hdftrmenuLinkUrl" data-attr="hdftrmenuNm" data-target="hdftrmenuTyCode"></a></li>
+					<li><a href="#"  data-href="hdftrmenuLinkUrl" data-attr="hdftrmenuNm" data-target="hdftrmenuTyCode"></a></li>
+					<li><a href="#"  data-href="hdftrmenuLinkUrl" data-attr="hdftrmenuNm" data-target="hdftrmenuTyCode"></a></li>
+				</ul>	
+				<div class="btn_wrap">
+					<!--  전체메뉴(메인) -->
+					<div id="searchPannel">
+						<div class="search_box">
+							<div class="search_box_inner">
+								<form id="gnbSearchForm" method="GET" action="/edu7/selectUnitySearchInc.do" target="_blank">
+									<input type="text" id="searchQuery" name="searchWord" class="g_search" placeholder="검색어를 입력하세요." title="검색어를 입력하세요." value=''>
+									</form>
+							</div>
+						</div>
+					</div>
+					<div class="lnb_search">
+						<button class="btn_search" type="button" title="검색하기" onclick="fnTopSearchAction();">검색</button>
+					</div>
+					<div class="all_menu">
+	   					<button id="btn_allmenu" class="btn_allmenu" type="button" title="전체메뉴" onclick="wzHtmlModal('popup_l', '전체메뉴', 'sitemapAjax', 'false', $(this)  )">전체메뉴</button>
+	   				</div> 
+	   				<div style="display:none;">
+	   					<div id="sitemapAjax">
+							<ul class="allMenuContents">
+								   <li class="topMenuItem">
+										<a href="https://www.edunet.net/nedu/ncicsvc/listSub7thForm.do?menu_id=853" target="_blank" title="새창열림" data-type="link" data-mnSeq="20000000150">교육과정지침</a>
+													<ul class="topMenuItemSub">
+										<li>
+												<a href="https://www.edunet.net/nedu/ncicsvc/listSub7thForm.do?menu_id=853" target="_blank" title="새창열림" data-type="link" data-mnSeq="20000000511">7차 교육과정</a>
+															<ul>
+												</ul>
+											</li>
+										<li>
+												<a href="https://www.edunet.net/nedu/ncicsvc/listSub2007Form.do?menu_id=852" target="_blank" title="새창열림" data-type="link" data-mnSeq="20000000513">2007년 개정 교육과정</a>
+															<ul>
+												</ul>
+											</li>
+										<li>
+												<a href="javascript:void(0);" data-type="link" data-mnSeq="20000000157"  title="메뉴 그룹 타이틀">2009년 개정 교육과정</a>
+															<ul>
+												<li>
+														<a href="/edu7/subList/20000000515" data-type="subPage" data-mnSeq="20000000515">유치원</a>
+																	</li>
+												<li>
+														<a href="/edu7/subList/20000000516" data-type="subPage" data-mnSeq="20000000516">초.중등학교</a>
+																	</li>
+												<li>
+														<a href="/edu7/subList/20000000517" data-type="subPage" data-mnSeq="20000000517">고등학교</a>
+																	</li>
+												<li>
+														<a href="/edu7/subList/20000000518" data-type="subPage" data-mnSeq="20000000518">특수교육</a>
+																	</li>
+												<li>
+														<a href="/edu7/subList/20000000800" data-type="subPage" data-mnSeq="20000000800">핵심 성취기준</a>
+																	</li>
+												</ul>
+											</li>
+										<li>
+												<a href="javascript:void(0);" data-type="link" data-mnSeq="20000000158"  title="메뉴 그룹 타이틀">경기도 교육과정</a>
+															<ul>
+												<li>
+														<a href="/edu7/subList/20000000801" data-type="subPage" data-mnSeq="20000000801">교육과정 편성 운영 지침</a>
+																	</li>
+												<li>
+														<a href="/edu7/subList/30300001415" data-type="subPage" data-mnSeq="30300001415">신설 교과목 교과 교육과정(2015개정)</a>
+																	</li>
+												<li>
+														<a href="/edu7/subList/20000000176" data-type="subPage" data-mnSeq="20000000176">경기도 교육과정(2012년 이전)</a>
+																	</li>
+												<li>
+														<a href="/edu7/subList/20000000177" data-type="subPage" data-mnSeq="20000000177">2012년 경기도교육과정</a>
+																	</li>
+												<li>
+														<a href="/edu7/subList/20000000178" data-type="subPage" data-mnSeq="20000000178">2013년 경기도교육과정</a>
+																	</li>
+												<li>
+														<a href="/edu7/subList/20000000179" data-type="subPage" data-mnSeq="20000000179">2014년 경기도교육과정</a>
+																	</li>
+												</ul>
+											</li>
+										<li>
+												<a href="/edu7/subList/20000000180" data-type="subPage" data-mnSeq="20000000180">2015년 개정 교육과정</a>
+															<ul>
+												</ul>
+											</li>
+										</ul>  
+									</li>  
+									<li class="topMenuItem">
+										<a href="javascript:void(0);" data-type="link" data-mnSeq="20000000187"  title="메뉴 그룹 타이틀">고교학점제</a>
+													<ul class="topMenuItemSub">
+										<li>
+												<a href="javascript:void(0);" data-type="link" data-mnSeq="20000000160"  title="메뉴 그룹 타이틀">교과교실제</a>
+															<ul>
+												<li>
+														<a href="/edu7/subList/20000000187" data-type="subPage" data-mnSeq="20000000187">교과교실제프로그램</a>
+																	</li>
+												</ul>
+											</li>
+										<li>
+												<a href="javascript:void(0);" data-type="link" data-mnSeq="20000000161"  title="메뉴 그룹 타이틀">공동교육과정</a>
+															<ul>
+												<li>
+														<a href="/edu7/subList/20000000188" data-type="subPage" data-mnSeq="20000000188">공동교육과정 운영방안</a>
+																	</li>
+												</ul>
+											</li>
+										<li>
+												<a href="javascript:void(0);" data-type="link" data-mnSeq="20000000162"  title="메뉴 그룹 타이틀">일반고 교육역량강화</a>
+															<ul>
+												<li>
+														<a href="/edu7/subList/20000000189" data-type="subPage" data-mnSeq="20000000189">공지사항</a>
+																	</li>
+												<li>
+														<a href="/edu7/subList/20000000190" data-type="subPage" data-mnSeq="20000000190">자료실</a>
+																	</li>
+												<li>
+														<a href="/edu7/subList/20000000191" data-type="subPage" data-mnSeq="20000000191">홍보사례</a>
+																	</li>
+												<li>
+														<a href="/edu7/subList/20000000192" data-type="subPage" data-mnSeq="20000000192">우수운영사례</a>
+																	</li>
+												</ul>
+											</li>
+										</ul>  
+									</li>  
+									<li class="topMenuItem">
+										<a href="javascript:void(0);" data-type="link" data-mnSeq="20000000154"  title="메뉴 그룹 타이틀">학생맞춤형수업(초)</a>
+													<ul class="topMenuItemSub">
+										<li>
+												<a href="/edu7/subList/20000000198" data-type="subPage" data-mnSeq="20000000198">원격교육 선도학교</a>
+															<ul>
+												</ul>
+											</li>
+										<li>
+												<a href="javascript:void(0);" data-type="link" data-mnSeq="20000000163"  title="메뉴 그룹 타이틀">온오프라인수업 콘텐츠</a>
+															<ul>
+												<li>
+														<a href="/edu7/subList/20000000820" data-type="subPage" data-mnSeq="20000000820">1,2학년</a>
+																	</li>
+												<li>
+														<a href="/edu7/subList/20000000818" data-type="subPage" data-mnSeq="20000000818">3,4학년</a>
+																	</li>
+												<li>
+														<a href="/edu7/subList/20000000843" data-type="subPage" data-mnSeq="20000000843">5,6학년</a>
+																	</li>
+												</ul>
+											</li>
+										<li>
+												<a href="javascript:void(0);" data-type="link" data-mnSeq="20000000771"  title="메뉴 그룹 타이틀">놀이중심교육활동</a>
+															<ul>
+												<li>
+														<a href="/edu7/subList/20000000525" data-type="subPage" data-mnSeq="20000000525">경기함께놀자</a>
+																	</li>
+												<li>
+														<a href="/edu7/subList/20000000772" data-type="subPage" data-mnSeq="20000000772">놀이활동자료</a>
+																	</li>
+												</ul>
+											</li>
+										<li>
+												<a href="/edu7/subList/20000000199" data-type="subPage" data-mnSeq="20000000199">융합프로젝트수업</a>
+															<ul>
+												</ul>
+											</li>
+										<li>
+												<a href="/edu7/subList/20000000526" data-type="subPage" data-mnSeq="20000000526">배움중심수업 리뷰</a>
+															<ul>
+												</ul>
+											</li>
+										<li>
+												<a href="javascript:void(0);" data-type="link" data-mnSeq="20000000774"  title="메뉴 그룹 타이틀">독서교육콘텐츠</a>
+															<ul>
+												<li>
+														<a href="/edu7/subList/20000000775" data-type="subPage" data-mnSeq="20000000775">독서기반 교육과정</a>
+																	</li>
+												<li>
+														<a href="/edu7/subList/20000000777" data-type="subPage" data-mnSeq="20000000777">학교도서관 협력모델</a>
+																	</li>
+												<li>
+														<a href="/edu7/subList/20000000778" data-type="subPage" data-mnSeq="20000000778">경기솔솔~독서바람</a>
+																	</li>
+												</ul>
+											</li>
+										<li>
+												<a href="javascript:void(0);" data-type="link" data-mnSeq="30300001384"  title="메뉴 그룹 타이틀">보건교육, 성교육</a>
+															<ul>
+												<li>
+														<a href="/edu7/subList/30300001386" data-type="subPage" data-mnSeq="30300001386">보건교육(초등)</a>
+																	</li>
+												<li>
+														<a href="/edu7/subList/30300001387" data-type="subPage" data-mnSeq="30300001387">성교육(초등)</a>
+																	</li>
+												</ul>
+											</li>
+										</ul>  
+									</li>  
+									<li class="topMenuItem">
+										<a href="javascript:void(0);" data-type="link" data-mnSeq="20000000155"  title="메뉴 그룹 타이틀">학생맞춤형수업(중)</a>
+													<ul class="topMenuItemSub">
+										<li>
+												<a href="/edu7/subList/20000000200" data-type="subPage" data-mnSeq="20000000200">원격교육 선도학교</a>
+															<ul>
+												</ul>
+											</li>
+										<li>
+												<a href="javascript:void(0);" data-type="link" data-mnSeq="20000000164"  title="메뉴 그룹 타이틀">온오프라인 연계수업 콘텐츠</a>
+															<ul>
+												<li>
+														<a href="/edu7/subList/20000000854" data-type="subPage" data-mnSeq="20000000854">중학교(교과별)</a>
+																	</li>
+												<li>
+														<a href="/edu7/subList/20000000527" data-type="subPage" data-mnSeq="20000000527">고등학교(교과별)</a>
+																	</li>
+												<li>
+														<a href="/edu7/subList/20000000529" data-type="subPage" data-mnSeq="20000000529">비교과</a>
+																	</li>
+												<li>
+														<a href="/edu7/subList/20000000531" data-type="subPage" data-mnSeq="20000000531">전문교과</a>
+																	</li>
+												</ul>
+											</li>
+										<li>
+												<a href="javascript:void(0);" data-type="link" data-mnSeq="20000000207"  title="메뉴 그룹 타이틀">자유학기활동</a>
+															<ul>
+												<li>
+														<a href="/edu7/subList/20000000521" data-type="subPage" data-mnSeq="20000000521">자유학기 활동</a>
+																	</li>
+												<li>
+														<a href="/edu7/subList/20000000789" data-type="subPage" data-mnSeq="20000000789">주제선택</a>
+																	</li>
+												<li>
+														<a href="/edu7/subList/20000000790" data-type="subPage" data-mnSeq="20000000790">진로탐색</a>
+																	</li>
+												<li>
+														<a href="/edu7/subList/20000000791" data-type="subPage" data-mnSeq="20000000791">예술체육</a>
+																	</li>
+												<li>
+														<a href="/edu7/subList/20000000792" data-type="subPage" data-mnSeq="20000000792">동아리활동</a>
+																	</li>
+												</ul>
+											</li>
+										<li>
+												<a href="javascript:void(0);" data-type="link" data-mnSeq="20000000208"  title="메뉴 그룹 타이틀">프로젝트 수업</a>
+															<ul>
+												<li>
+														<a href="/edu7/subList/20000000530" data-type="subPage" data-mnSeq="20000000530">프로젝트수업</a>
+																	</li>
+												<li>
+														<a href="/edu7/subList/20000000785" data-type="subPage" data-mnSeq="20000000785">교과융합</a>
+																	</li>
+												<li>
+														<a href="/edu7/subList/20000000786" data-type="subPage" data-mnSeq="20000000786">진로연계</a>
+																	</li>
+												<li>
+														<a href="/edu7/subList/20000000787" data-type="subPage" data-mnSeq="20000000787">독서연계</a>
+																	</li>
+												<li>
+														<a href="/edu7/subList/20000000788" data-type="subPage" data-mnSeq="20000000788">창체연계</a>
+																	</li>
+												</ul>
+											</li>
+										<li>
+												<a href="javascript:void(0);" data-type="link" data-mnSeq="20000000779"  title="메뉴 그룹 타이틀">독서교육콘텐츠</a>
+															<ul>
+												<li>
+														<a href="/edu7/subList/20000000780" data-type="subPage" data-mnSeq="20000000780">독서기반 교육과정</a>
+																	</li>
+												<li>
+														<a href="/edu7/subList/20000000782" data-type="subPage" data-mnSeq="20000000782">학교도서관 협력모델</a>
+																	</li>
+												<li>
+														<a href="/edu7/subList/20000000783" data-type="subPage" data-mnSeq="20000000783">경기솔솔~독서바람</a>
+																	</li>
+												</ul>
+											</li>
+										<li>
+												<a href="/edu7/subList/30300001011" data-type="subPage" data-mnSeq="30300001011">중등 기초학력보장</a>
+															<ul>
+												</ul>
+											</li>
+										<li>
+												<a href="javascript:void(0);" data-type="link" data-mnSeq="30300001385"  title="메뉴 그룹 타이틀">보건교육, 성교육</a>
+															<ul>
+												<li>
+														<a href="/edu7/subList/30300001388" data-type="subPage" data-mnSeq="30300001388">보건교육(중등)</a>
+																	</li>
+												<li>
+														<a href="/edu7/subList/30300001389" data-type="subPage" data-mnSeq="30300001389">성교육(중등)</a>
+																	</li>
+												</ul>
+											</li>
+										</ul>  
+									</li>  
+									<li class="topMenuItem">
+										<a href="javascript:void(0);" data-type="link" data-mnSeq="20000000165"  title="메뉴 그룹 타이틀">성장중심평가</a>
+													<ul class="topMenuItemSub">
+										<li>
+												<a href="javascript:void(0);" data-type="link" data-mnSeq="30300000971"  title="메뉴 그룹 타이틀">초등평가자료실</a>
+															<ul>
+												<li>
+														<a href="/edu7/subList/20000000165" data-type="subPage" data-mnSeq="20000000165">공지사항</a>
+																	</li>
+												<li>
+														<a href="/edu7/subList/30300000983" data-type="subPage" data-mnSeq="30300000983">자료실</a>
+																	</li>
+												<li>
+														<a href="/edu7/subList/30300000984" data-type="subPage" data-mnSeq="30300000984">지침</a>
+																	</li>
+												<li>
+														<a href="/edu7/subList/30300001368" data-type="subPage" data-mnSeq="30300001368">연구-실천사례</a>
+																	</li>
+												</ul>
+											</li>
+										<li>
+												<a href="javascript:void(0);" data-type="link" data-mnSeq="30300000972"  title="메뉴 그룹 타이틀">중등평가자료실</a>
+															<ul>
+												<li>
+														<a href="/edu7/subList/30300000987" data-type="subPage" data-mnSeq="30300000987">공지사항</a>
+																	</li>
+												<li>
+														<a href="/edu7/subList/30300000973" data-type="subPage" data-mnSeq="30300000973">자료실</a>
+																	</li>
+												<li>
+														<a href="/edu7/subList/30300000990" data-type="subPage" data-mnSeq="30300000990">지침</a>
+																	</li>
+												</ul>
+											</li>
+										</ul>  
+									</li>  
+									<li class="topMenuItem">
+										<a href="javascript:void(0);" data-type="link" data-mnSeq="30300001029"  title="메뉴 그룹 타이틀">기초학력보장</a>
+													<ul class="topMenuItemSub">
+										<li>
+												<a href="javascript:void(0);" data-type="link" data-mnSeq="30300001028"  title="메뉴 그룹 타이틀">기초학력보장자료실</a>
+															<ul>
+												<li>
+														<a href="/edu7/subList/30300001029" data-type="subPage" data-mnSeq="30300001029">경기기초학력보장소개</a>
+																	</li>
+												<li>
+														<a href="/edu7/subList/30300001030" data-type="subPage" data-mnSeq="30300001030">3R&amp;apos;s</a>
+																	</li>
+												<li>
+														<a href="/edu7/subList/30300001031" data-type="subPage" data-mnSeq="30300001031">입문기(초1~초2)</a>
+																	</li>
+												<li>
+														<a href="/edu7/subList/30300001032" data-type="subPage" data-mnSeq="30300001032">초등교과기초(초3~초6)</a>
+																	</li>
+												<li>
+														<a href="/edu7/subList/30300001033" data-type="subPage" data-mnSeq="30300001033">중등교과기초(중1~고1)</a>
+																	</li>
+												</ul>
+											</li>
+										<li>
+												<a href="javascript:void(0);" data-type="link" data-mnSeq="30300001034"  title="메뉴 그룹 타이틀">학습종합클리닉센터자료실</a>
+															<ul>
+												<li>
+														<a href="/edu7/subList/30300001035" data-type="subPage" data-mnSeq="30300001035">학습종합클리닉센터소개</a>
+																	</li>
+												<li>
+														<a href="/edu7/subList/30300001036" data-type="subPage" data-mnSeq="30300001036">학습종합클리닉센터 운영</a>
+																	</li>
+												</ul>
+											</li>
+										<li>
+												<a href="/edu7/subList/30300001041" data-type="subPage" data-mnSeq="30300001041">읽기곤란(난독증) 통합게시판</a>
+															<ul>
+												</ul>
+											</li>
+										</ul>  
+									</li>  
+									<li class="topMenuItem">
+										<a href="javascript:void(0);" data-type="link" data-mnSeq="20000000151"  title="메뉴 그룹 타이틀">교육과정편성(2023년 이전)</a>
+													<ul class="topMenuItemSub">
+										<li>
+												<a href="/edu7/subList/20000000181" data-type="subPage" data-mnSeq="20000000181">교육과정 정책자료</a>
+															<ul>
+												</ul>
+											</li>
+										<li>
+												<a href="/edu7/subList/20000000182" data-type="subPage" data-mnSeq="20000000182">교사교육과정(학교자율과정)</a>
+															<ul>
+												</ul>
+											</li>
+										<li>
+												<a href="/edu7/subList/20000000183" data-type="subPage" data-mnSeq="20000000183">성장배려학년제</a>
+															<ul>
+												</ul>
+											</li>
+										</ul>  
+									</li>  
+									<li class="topMenuItem">
+										<a href="javascript:void(0);" data-type="link" data-mnSeq="20000000152"  title="메뉴 그룹 타이틀">교육과정운영(2023년 이전)</a>
+													<ul class="topMenuItemSub">
+										<li>
+												<a href="/edu7/subList/20000000184" data-type="subPage" data-mnSeq="20000000184">교육과정 운영 장학자료</a>
+															<ul>
+												</ul>
+											</li>
+										<li>
+												<a href="javascript:void(0);" data-type="link" data-mnSeq="20000000159"  title="메뉴 그룹 타이틀">연구대회</a>
+															<ul>
+												<li>
+														<a href="/edu7/subList/20000000643" data-type="subPage" data-mnSeq="20000000643">교육방송</a>
+																	</li>
+												<li>
+														<a href="/edu7/subList/20000000519" data-type="subPage" data-mnSeq="20000000519">수업혁신사례 연구대회</a>
+																	</li>
+												</ul>
+											</li>
+										<li>
+												<a href="/edu7/subList/30300001127" data-type="subPage" data-mnSeq="30300001127">초등교과특성화학교</a>
+															<ul>
+												</ul>
+											</li>
+										<li>
+												<a href="/edu7/subList/30300001274" data-type="subPage" data-mnSeq="30300001274">학생중심교육과정 홈페이지 공지사항</a>
+															<ul>
+												</ul>
+											</li>
+										</ul>  
+									</li>  
+									</ul>
+							</div>
+	   				</div>	
+				</div>
+			</div>
+		
+		</div> <!-- end header -->
+		
+		<div class="menu">
+			<div class="showMenu"></div>
+			<div class="inner">
+				<h1 class="logo">
+					<a href="/edu7/index.do" title="홈바로가기"> <img src="/edu7/module/upload/file/selectImageView.do?atchFileId=30300215169&amp;fileSn=0" alt="로고이미지" /></a>
+						</h1>	
+				
+				<ul class="lnb">
+							   <li class="topMenuItem ">
+									<a href="https://www.edunet.net/nedu/ncicsvc/listSub7thForm.do?menu_id=853" target="_blank" title="새창열림" data-type="link" data-mnSeq="20000000150">교육과정지침</a>
+										<ul class="topMenuItemSub">
+										<span class="oneDepth_menuNm" style="display: none;">교육과정지침</span>
+									<li >
+										
+											<a href="https://www.edunet.net/nedu/ncicsvc/listSub7thForm.do?menu_id=853" target="_blank" title="새창열림" data-type="link" data-mnSeq="20000000511">7차 교육과정</a>
+												<ul>
+											</ul>
+										</li>
+									<li >
+										
+											<a href="https://www.edunet.net/nedu/ncicsvc/listSub2007Form.do?menu_id=852" target="_blank" title="새창열림" data-type="link" data-mnSeq="20000000513">2007년 개정 교육과정</a>
+												<ul>
+											</ul>
+										</li>
+									<li class="mnGroup">
+										
+											<a href="/edu7/subList/20000000157" data-type="subPage" data-mnSeq="20000000157">2009년 개정 교육과정</a>
+												<ul>
+											<li >
+												<a href="/edu7/subList/20000000515" data-type="subPage" data-mnSeq="20000000515">유치원</a>
+													</li>
+											<li >
+												<a href="/edu7/subList/20000000516" data-type="subPage" data-mnSeq="20000000516">초.중등학교</a>
+													</li>
+											<li >
+												<a href="/edu7/subList/20000000517" data-type="subPage" data-mnSeq="20000000517">고등학교</a>
+													</li>
+											<li >
+												<a href="/edu7/subList/20000000518" data-type="subPage" data-mnSeq="20000000518">특수교육</a>
+													</li>
+											<li >
+												<a href="/edu7/subList/20000000800" data-type="subPage" data-mnSeq="20000000800">핵심 성취기준</a>
+													</li>
+											</ul>
+										</li>
+									<li class="mnGroup">
+										
+											<a href="/edu7/subList/20000000158" data-type="subPage" data-mnSeq="20000000158">경기도 교육과정</a>
+												<ul>
+											<li >
+												<a href="/edu7/subList/20000000801" data-type="subPage" data-mnSeq="20000000801">교육과정 편성 운영 지침</a>
+													</li>
+											<li >
+												<a href="/edu7/subList/30300001415" data-type="subPage" data-mnSeq="30300001415">신설 교과목 교과 교육과정(2015개정)</a>
+													</li>
+											<li >
+												<a href="/edu7/subList/20000000176" data-type="subPage" data-mnSeq="20000000176">경기도 교육과정(2012년 이전)</a>
+													</li>
+											<li >
+												<a href="/edu7/subList/20000000177" data-type="subPage" data-mnSeq="20000000177">2012년 경기도교육과정</a>
+													</li>
+											<li >
+												<a href="/edu7/subList/20000000178" data-type="subPage" data-mnSeq="20000000178">2013년 경기도교육과정</a>
+													</li>
+											<li >
+												<a href="/edu7/subList/20000000179" data-type="subPage" data-mnSeq="20000000179">2014년 경기도교육과정</a>
+													</li>
+											</ul>
+										</li>
+									<li >
+										
+											<a href="/edu7/subList/20000000180" data-type="subPage" data-mnSeq="20000000180">2015년 개정 교육과정</a>
+												<ul>
+											</ul>
+										</li>
+									</ul>  
+								</li>   
+								<li class="topMenuItem mnGroup">
+									<a href="/edu7/subList/20000000187" data-type="subPage" data-mnSeq="20000000187">고교학점제</a>
+										<ul class="topMenuItemSub">
+										<span class="oneDepth_menuNm" style="display: none;">고교학점제</span>
+									<li class="mnGroup">
+										
+											<a href="/edu7/subList/20000000160" data-type="subPage" data-mnSeq="20000000160">교과교실제</a>
+												<ul>
+											<li >
+												<a href="/edu7/subList/20000000187" data-type="subPage" data-mnSeq="20000000187">교과교실제프로그램</a>
+													</li>
+											</ul>
+										</li>
+									<li class="mnGroup">
+										
+											<a href="/edu7/subList/20000000161" data-type="subPage" data-mnSeq="20000000161">공동교육과정</a>
+												<ul>
+											<li >
+												<a href="/edu7/subList/20000000188" data-type="subPage" data-mnSeq="20000000188">공동교육과정 운영방안</a>
+													</li>
+											</ul>
+										</li>
+									<li class="mnGroup">
+										
+											<a href="/edu7/subList/20000000162" data-type="subPage" data-mnSeq="20000000162">일반고 교육역량강화</a>
+												<ul>
+											<li >
+												<a href="/edu7/subList/20000000189" data-type="subPage" data-mnSeq="20000000189">공지사항</a>
+													</li>
+											<li >
+												<a href="/edu7/subList/20000000190" data-type="subPage" data-mnSeq="20000000190">자료실</a>
+													</li>
+											<li >
+												<a href="/edu7/subList/20000000191" data-type="subPage" data-mnSeq="20000000191">홍보사례</a>
+													</li>
+											<li >
+												<a href="/edu7/subList/20000000192" data-type="subPage" data-mnSeq="20000000192">우수운영사례</a>
+													</li>
+											</ul>
+										</li>
+									</ul>  
+								</li>   
+								<li class="topMenuItem mnGroup">
+									<a href="/edu7/subList/20000000154" data-type="subPage" data-mnSeq="20000000154">학생맞춤형수업(초)</a>
+										<ul class="topMenuItemSub">
+										<span class="oneDepth_menuNm" style="display: none;">학생맞춤형수업(초)</span>
+									<li >
+										
+											<a href="/edu7/subList/20000000198" data-type="subPage" data-mnSeq="20000000198">원격교육 선도학교</a>
+												<ul>
+											</ul>
+										</li>
+									<li class="mnGroup">
+										
+											<a href="/edu7/subList/20000000163" data-type="subPage" data-mnSeq="20000000163">온오프라인수업 콘텐츠</a>
+												<ul>
+											<li >
+												<a href="/edu7/subList/20000000820" data-type="subPage" data-mnSeq="20000000820">1,2학년</a>
+													</li>
+											<li >
+												<a href="/edu7/subList/20000000818" data-type="subPage" data-mnSeq="20000000818">3,4학년</a>
+													</li>
+											<li >
+												<a href="/edu7/subList/20000000843" data-type="subPage" data-mnSeq="20000000843">5,6학년</a>
+													</li>
+											</ul>
+										</li>
+									<li class="mnGroup">
+										
+											<a href="/edu7/subList/20000000771" data-type="subPage" data-mnSeq="20000000771">놀이중심교육활동</a>
+												<ul>
+											<li >
+												<a href="/edu7/subList/20000000525" data-type="subPage" data-mnSeq="20000000525">경기함께놀자</a>
+													</li>
+											<li >
+												<a href="/edu7/subList/20000000772" data-type="subPage" data-mnSeq="20000000772">놀이활동자료</a>
+													</li>
+											</ul>
+										</li>
+									<li >
+										
+											<a href="/edu7/subList/20000000199" data-type="subPage" data-mnSeq="20000000199">융합프로젝트수업</a>
+												<ul>
+											</ul>
+										</li>
+									<li >
+										
+											<a href="/edu7/subList/20000000526" data-type="subPage" data-mnSeq="20000000526">배움중심수업 리뷰</a>
+												<ul>
+											</ul>
+										</li>
+									<li class="mnGroup">
+										
+											<a href="/edu7/subList/20000000774" data-type="subPage" data-mnSeq="20000000774">독서교육콘텐츠</a>
+												<ul>
+											<li >
+												<a href="/edu7/subList/20000000775" data-type="subPage" data-mnSeq="20000000775">독서기반 교육과정</a>
+													</li>
+											<li >
+												<a href="/edu7/subList/20000000777" data-type="subPage" data-mnSeq="20000000777">학교도서관 협력모델</a>
+													</li>
+											<li >
+												<a href="/edu7/subList/20000000778" data-type="subPage" data-mnSeq="20000000778">경기솔솔~독서바람</a>
+													</li>
+											</ul>
+										</li>
+									<li class="mnGroup">
+										
+											<a href="/edu7/subList/30300001384" data-type="subPage" data-mnSeq="30300001384">보건교육, 성교육</a>
+												<ul>
+											<li >
+												<a href="/edu7/subList/30300001386" data-type="subPage" data-mnSeq="30300001386">보건교육(초등)</a>
+													</li>
+											<li >
+												<a href="/edu7/subList/30300001387" data-type="subPage" data-mnSeq="30300001387">성교육(초등)</a>
+													</li>
+											</ul>
+										</li>
+									</ul>  
+								</li>   
+								<li class="topMenuItem mnGroup">
+									<a href="/edu7/subList/20000000155" data-type="subPage" data-mnSeq="20000000155">학생맞춤형수업(중)</a>
+										<ul class="topMenuItemSub">
+										<span class="oneDepth_menuNm" style="display: none;">학생맞춤형수업(중)</span>
+									<li >
+										
+											<a href="/edu7/subList/20000000200" data-type="subPage" data-mnSeq="20000000200">원격교육 선도학교</a>
+												<ul>
+											</ul>
+										</li>
+									<li class="mnGroup">
+										
+											<a href="/edu7/subList/20000000164" data-type="subPage" data-mnSeq="20000000164">온오프라인 연계수업 콘텐츠</a>
+												<ul>
+											<li >
+												<a href="/edu7/subList/20000000854" data-type="subPage" data-mnSeq="20000000854">중학교(교과별)</a>
+													</li>
+											<li >
+												<a href="/edu7/subList/20000000527" data-type="subPage" data-mnSeq="20000000527">고등학교(교과별)</a>
+													</li>
+											<li >
+												<a href="/edu7/subList/20000000529" data-type="subPage" data-mnSeq="20000000529">비교과</a>
+													</li>
+											<li >
+												<a href="/edu7/subList/20000000531" data-type="subPage" data-mnSeq="20000000531">전문교과</a>
+													</li>
+											</ul>
+										</li>
+									<li class="mnGroup">
+										
+											<a href="/edu7/subList/20000000207" data-type="subPage" data-mnSeq="20000000207">자유학기활동</a>
+												<ul>
+											<li >
+												<a href="/edu7/subList/20000000521" data-type="subPage" data-mnSeq="20000000521">자유학기 활동</a>
+													</li>
+											<li >
+												<a href="/edu7/subList/20000000789" data-type="subPage" data-mnSeq="20000000789">주제선택</a>
+													</li>
+											<li >
+												<a href="/edu7/subList/20000000790" data-type="subPage" data-mnSeq="20000000790">진로탐색</a>
+													</li>
+											<li >
+												<a href="/edu7/subList/20000000791" data-type="subPage" data-mnSeq="20000000791">예술체육</a>
+													</li>
+											<li >
+												<a href="/edu7/subList/20000000792" data-type="subPage" data-mnSeq="20000000792">동아리활동</a>
+													</li>
+											</ul>
+										</li>
+									<li class="mnGroup">
+										
+											<a href="/edu7/subList/20000000208" data-type="subPage" data-mnSeq="20000000208">프로젝트 수업</a>
+												<ul>
+											<li >
+												<a href="/edu7/subList/20000000530" data-type="subPage" data-mnSeq="20000000530">프로젝트수업</a>
+													</li>
+											<li >
+												<a href="/edu7/subList/20000000785" data-type="subPage" data-mnSeq="20000000785">교과융합</a>
+													</li>
+											<li >
+												<a href="/edu7/subList/20000000786" data-type="subPage" data-mnSeq="20000000786">진로연계</a>
+													</li>
+											<li >
+												<a href="/edu7/subList/20000000787" data-type="subPage" data-mnSeq="20000000787">독서연계</a>
+													</li>
+											<li >
+												<a href="/edu7/subList/20000000788" data-type="subPage" data-mnSeq="20000000788">창체연계</a>
+													</li>
+											</ul>
+										</li>
+									<li class="mnGroup">
+										
+											<a href="/edu7/subList/20000000779" data-type="subPage" data-mnSeq="20000000779">독서교육콘텐츠</a>
+												<ul>
+											<li >
+												<a href="/edu7/subList/20000000780" data-type="subPage" data-mnSeq="20000000780">독서기반 교육과정</a>
+													</li>
+											<li >
+												<a href="/edu7/subList/20000000782" data-type="subPage" data-mnSeq="20000000782">학교도서관 협력모델</a>
+													</li>
+											<li >
+												<a href="/edu7/subList/20000000783" data-type="subPage" data-mnSeq="20000000783">경기솔솔~독서바람</a>
+													</li>
+											</ul>
+										</li>
+									<li >
+										
+											<a href="/edu7/subList/30300001011" data-type="subPage" data-mnSeq="30300001011">중등 기초학력보장</a>
+												<ul>
+											</ul>
+										</li>
+									<li class="mnGroup">
+										
+											<a href="/edu7/subList/30300001385" data-type="subPage" data-mnSeq="30300001385">보건교육, 성교육</a>
+												<ul>
+											<li >
+												<a href="/edu7/subList/30300001388" data-type="subPage" data-mnSeq="30300001388">보건교육(중등)</a>
+													</li>
+											<li >
+												<a href="/edu7/subList/30300001389" data-type="subPage" data-mnSeq="30300001389">성교육(중등)</a>
+													</li>
+											</ul>
+										</li>
+									</ul>  
+								</li>   
+								<li class="topMenuItem mnGroup">
+									<a href="/edu7/subList/20000000165" data-type="subPage" data-mnSeq="20000000165">성장중심평가</a>
+										<ul class="topMenuItemSub">
+										<span class="oneDepth_menuNm" style="display: none;">성장중심평가</span>
+									<li class="mnGroup">
+										
+											<a href="/edu7/subList/30300000971" data-type="subPage" data-mnSeq="30300000971">초등평가자료실</a>
+												<ul>
+											<li >
+												<a href="/edu7/subList/20000000165" data-type="subPage" data-mnSeq="20000000165">공지사항</a>
+													</li>
+											<li >
+												<a href="/edu7/subList/30300000983" data-type="subPage" data-mnSeq="30300000983">자료실</a>
+													</li>
+											<li >
+												<a href="/edu7/subList/30300000984" data-type="subPage" data-mnSeq="30300000984">지침</a>
+													</li>
+											<li >
+												<a href="/edu7/subList/30300001368" data-type="subPage" data-mnSeq="30300001368">연구-실천사례</a>
+													</li>
+											</ul>
+										</li>
+									<li class="mnGroup">
+										
+											<a href="/edu7/subList/30300000972" data-type="subPage" data-mnSeq="30300000972">중등평가자료실</a>
+												<ul>
+											<li >
+												<a href="/edu7/subList/30300000987" data-type="subPage" data-mnSeq="30300000987">공지사항</a>
+													</li>
+											<li >
+												<a href="/edu7/subList/30300000973" data-type="subPage" data-mnSeq="30300000973">자료실</a>
+													</li>
+											<li >
+												<a href="/edu7/subList/30300000990" data-type="subPage" data-mnSeq="30300000990">지침</a>
+													</li>
+											</ul>
+										</li>
+									</ul>  
+								</li>   
+								<li class="topMenuItem mnGroup">
+									<a href="/edu7/subList/30300001029" data-type="subPage" data-mnSeq="30300001029">기초학력보장</a>
+										<ul class="topMenuItemSub">
+										<span class="oneDepth_menuNm" style="display: none;">기초학력보장</span>
+									<li class="mnGroup">
+										
+											<a href="/edu7/subList/30300001028" data-type="subPage" data-mnSeq="30300001028">기초학력보장자료실</a>
+												<ul>
+											<li >
+												<a href="/edu7/subList/30300001029" data-type="subPage" data-mnSeq="30300001029">경기기초학력보장소개</a>
+													</li>
+											<li >
+												<a href="/edu7/subList/30300001030" data-type="subPage" data-mnSeq="30300001030">3R&amp;apos;s</a>
+													</li>
+											<li >
+												<a href="/edu7/subList/30300001031" data-type="subPage" data-mnSeq="30300001031">입문기(초1~초2)</a>
+													</li>
+											<li >
+												<a href="/edu7/subList/30300001032" data-type="subPage" data-mnSeq="30300001032">초등교과기초(초3~초6)</a>
+													</li>
+											<li >
+												<a href="/edu7/subList/30300001033" data-type="subPage" data-mnSeq="30300001033">중등교과기초(중1~고1)</a>
+													</li>
+											</ul>
+										</li>
+									<li class="mnGroup">
+										
+											<a href="/edu7/subList/30300001034" data-type="subPage" data-mnSeq="30300001034">학습종합클리닉센터자료실</a>
+												<ul>
+											<li >
+												<a href="/edu7/subList/30300001035" data-type="subPage" data-mnSeq="30300001035">학습종합클리닉센터소개</a>
+													</li>
+											<li >
+												<a href="/edu7/subList/30300001036" data-type="subPage" data-mnSeq="30300001036">학습종합클리닉센터 운영</a>
+													</li>
+											</ul>
+										</li>
+									<li >
+										
+											<a href="/edu7/subList/30300001041" data-type="subPage" data-mnSeq="30300001041">읽기곤란(난독증) 통합게시판</a>
+												<ul>
+											</ul>
+										</li>
+									</ul>  
+								</li>   
+								<li class="topMenuItem mnGroup">
+									<a href="/edu7/subList/20000000151" data-type="subPage" data-mnSeq="20000000151">교육과정편성(2023년 이전)</a>
+										<ul class="topMenuItemSub">
+										<span class="oneDepth_menuNm" style="display: none;">교육과정편성(2023년 이전)</span>
+									<li >
+										
+											<a href="/edu7/subList/20000000181" data-type="subPage" data-mnSeq="20000000181">교육과정 정책자료</a>
+												<ul>
+											</ul>
+										</li>
+									<li >
+										
+											<a href="/edu7/subList/20000000182" data-type="subPage" data-mnSeq="20000000182">교사교육과정(학교자율과정)</a>
+												<ul>
+											</ul>
+										</li>
+									<li >
+										
+											<a href="/edu7/subList/20000000183" data-type="subPage" data-mnSeq="20000000183">성장배려학년제</a>
+												<ul>
+											</ul>
+										</li>
+									</ul>  
+								</li>   
+								<li class="topMenuItem mnGroup">
+									<a href="/edu7/subList/20000000152" data-type="subPage" data-mnSeq="20000000152">교육과정운영(2023년 이전)</a>
+										<ul class="topMenuItemSub">
+										<span class="oneDepth_menuNm" style="display: none;">교육과정운영(2023년 이전)</span>
+									<li >
+										
+											<a href="/edu7/subList/20000000184" data-type="subPage" data-mnSeq="20000000184">교육과정 운영 장학자료</a>
+												<ul>
+											</ul>
+										</li>
+									<li class="mnGroup">
+										
+											<a href="/edu7/subList/20000000159" data-type="subPage" data-mnSeq="20000000159">연구대회</a>
+												<ul>
+											<li >
+												<a href="/edu7/subList/20000000643" data-type="subPage" data-mnSeq="20000000643">교육방송</a>
+													</li>
+											<li >
+												<a href="/edu7/subList/20000000519" data-type="subPage" data-mnSeq="20000000519">수업혁신사례 연구대회</a>
+													</li>
+											</ul>
+										</li>
+									<li >
+										
+											<a href="/edu7/subList/30300001127" data-type="subPage" data-mnSeq="30300001127">초등교과특성화학교</a>
+												<ul>
+											</ul>
+										</li>
+									<li >
+										
+											<a href="/edu7/subList/30300001274" data-type="subPage" data-mnSeq="30300001274">학생중심교육과정 홈페이지 공지사항</a>
+												<ul>
+											</ul>
+										</li>
+									</ul>  
+								</li>   
+								</ul>
+					</div><!--  // 메뉴(메인) End -->
+   				
+   				
+   				
+   				
+				
+				<ul id="m_nav">
+					<li >
+									<a href="https://www.edunet.net/nedu/ncicsvc/listSub7thForm.do?menu_id=853" target="_blank" title="새창열림" data-type="link" data-mnSeq="20000000150">교육과정지침</a>
+										<ul>
+									<li >
+										
+											<a href="https://www.edunet.net/nedu/ncicsvc/listSub7thForm.do?menu_id=853" target="_blank" title="새창열림" data-type="link" data-mnSeq="20000000511">7차 교육과정</a>
+												<ul>
+											</ul>
+										</li>
+									<li >
+										
+											<a href="https://www.edunet.net/nedu/ncicsvc/listSub2007Form.do?menu_id=852" target="_blank" title="새창열림" data-type="link" data-mnSeq="20000000513">2007년 개정 교육과정</a>
+												<ul>
+											</ul>
+										</li>
+									<li class="mnGroup">
+										
+											<a href="/edu7/subList/20000000157" data-type="subPage" data-mnSeq="20000000157">2009년 개정 교육과정</a>
+												<ul>
+											<li >
+												
+												<a href="/edu7/subList/20000000515" data-type="subPage" data-mnSeq="20000000515">유치원</a>
+													</li>
+											<li >
+												
+												<a href="/edu7/subList/20000000516" data-type="subPage" data-mnSeq="20000000516">초.중등학교</a>
+													</li>
+											<li >
+												
+												<a href="/edu7/subList/20000000517" data-type="subPage" data-mnSeq="20000000517">고등학교</a>
+													</li>
+											<li >
+												
+												<a href="/edu7/subList/20000000518" data-type="subPage" data-mnSeq="20000000518">특수교육</a>
+													</li>
+											<li >
+												
+												<a href="/edu7/subList/20000000800" data-type="subPage" data-mnSeq="20000000800">핵심 성취기준</a>
+													</li>
+											</ul>
+										</li>
+									<li class="mnGroup">
+										
+											<a href="/edu7/subList/20000000158" data-type="subPage" data-mnSeq="20000000158">경기도 교육과정</a>
+												<ul>
+											<li >
+												
+												<a href="/edu7/subList/20000000801" data-type="subPage" data-mnSeq="20000000801">교육과정 편성 운영 지침</a>
+													</li>
+											<li >
+												
+												<a href="/edu7/subList/30300001415" data-type="subPage" data-mnSeq="30300001415">신설 교과목 교과 교육과정(2015개정)</a>
+													</li>
+											<li >
+												
+												<a href="/edu7/subList/20000000176" data-type="subPage" data-mnSeq="20000000176">경기도 교육과정(2012년 이전)</a>
+													</li>
+											<li >
+												
+												<a href="/edu7/subList/20000000177" data-type="subPage" data-mnSeq="20000000177">2012년 경기도교육과정</a>
+													</li>
+											<li >
+												
+												<a href="/edu7/subList/20000000178" data-type="subPage" data-mnSeq="20000000178">2013년 경기도교육과정</a>
+													</li>
+											<li >
+												
+												<a href="/edu7/subList/20000000179" data-type="subPage" data-mnSeq="20000000179">2014년 경기도교육과정</a>
+													</li>
+											</ul>
+										</li>
+									<li >
+										
+											<a href="/edu7/subList/20000000180" data-type="subPage" data-mnSeq="20000000180">2015년 개정 교육과정</a>
+												<ul>
+											</ul>
+										</li>
+									</ul>  
+								</li>   
+								<li class="mnGroup">
+									<a href="/edu7/subList/20000000187" data-type="subPage" data-mnSeq="20000000187">고교학점제</a>
+										<ul>
+									<li class="mnGroup">
+										
+											<a href="/edu7/subList/20000000160" data-type="subPage" data-mnSeq="20000000160">교과교실제</a>
+												<ul>
+											<li >
+												
+												<a href="/edu7/subList/20000000187" data-type="subPage" data-mnSeq="20000000187">교과교실제프로그램</a>
+													</li>
+											</ul>
+										</li>
+									<li class="mnGroup">
+										
+											<a href="/edu7/subList/20000000161" data-type="subPage" data-mnSeq="20000000161">공동교육과정</a>
+												<ul>
+											<li >
+												
+												<a href="/edu7/subList/20000000188" data-type="subPage" data-mnSeq="20000000188">공동교육과정 운영방안</a>
+													</li>
+											</ul>
+										</li>
+									<li class="mnGroup">
+										
+											<a href="/edu7/subList/20000000162" data-type="subPage" data-mnSeq="20000000162">일반고 교육역량강화</a>
+												<ul>
+											<li >
+												
+												<a href="/edu7/subList/20000000189" data-type="subPage" data-mnSeq="20000000189">공지사항</a>
+													</li>
+											<li >
+												
+												<a href="/edu7/subList/20000000190" data-type="subPage" data-mnSeq="20000000190">자료실</a>
+													</li>
+											<li >
+												
+												<a href="/edu7/subList/20000000191" data-type="subPage" data-mnSeq="20000000191">홍보사례</a>
+													</li>
+											<li >
+												
+												<a href="/edu7/subList/20000000192" data-type="subPage" data-mnSeq="20000000192">우수운영사례</a>
+													</li>
+											</ul>
+										</li>
+									</ul>  
+								</li>   
+								<li class="mnGroup">
+									<a href="/edu7/subList/20000000154" data-type="subPage" data-mnSeq="20000000154">학생맞춤형수업(초)</a>
+										<ul>
+									<li >
+										
+											<a href="/edu7/subList/20000000198" data-type="subPage" data-mnSeq="20000000198">원격교육 선도학교</a>
+												<ul>
+											</ul>
+										</li>
+									<li class="mnGroup">
+										
+											<a href="/edu7/subList/20000000163" data-type="subPage" data-mnSeq="20000000163">온오프라인수업 콘텐츠</a>
+												<ul>
+											<li >
+												
+												<a href="/edu7/subList/20000000820" data-type="subPage" data-mnSeq="20000000820">1,2학년</a>
+													</li>
+											<li >
+												
+												<a href="/edu7/subList/20000000818" data-type="subPage" data-mnSeq="20000000818">3,4학년</a>
+													</li>
+											<li >
+												
+												<a href="/edu7/subList/20000000843" data-type="subPage" data-mnSeq="20000000843">5,6학년</a>
+													</li>
+											</ul>
+										</li>
+									<li class="mnGroup">
+										
+											<a href="/edu7/subList/20000000771" data-type="subPage" data-mnSeq="20000000771">놀이중심교육활동</a>
+												<ul>
+											<li >
+												
+												<a href="/edu7/subList/20000000525" data-type="subPage" data-mnSeq="20000000525">경기함께놀자</a>
+													</li>
+											<li >
+												
+												<a href="/edu7/subList/20000000772" data-type="subPage" data-mnSeq="20000000772">놀이활동자료</a>
+													</li>
+											</ul>
+										</li>
+									<li >
+										
+											<a href="/edu7/subList/20000000199" data-type="subPage" data-mnSeq="20000000199">융합프로젝트수업</a>
+												<ul>
+											</ul>
+										</li>
+									<li >
+										
+											<a href="/edu7/subList/20000000526" data-type="subPage" data-mnSeq="20000000526">배움중심수업 리뷰</a>
+												<ul>
+											</ul>
+										</li>
+									<li class="mnGroup">
+										
+											<a href="/edu7/subList/20000000774" data-type="subPage" data-mnSeq="20000000774">독서교육콘텐츠</a>
+												<ul>
+											<li >
+												
+												<a href="/edu7/subList/20000000775" data-type="subPage" data-mnSeq="20000000775">독서기반 교육과정</a>
+													</li>
+											<li >
+												
+												<a href="/edu7/subList/20000000777" data-type="subPage" data-mnSeq="20000000777">학교도서관 협력모델</a>
+													</li>
+											<li >
+												
+												<a href="/edu7/subList/20000000778" data-type="subPage" data-mnSeq="20000000778">경기솔솔~독서바람</a>
+													</li>
+											</ul>
+										</li>
+									<li class="mnGroup">
+										
+											<a href="/edu7/subList/30300001384" data-type="subPage" data-mnSeq="30300001384">보건교육, 성교육</a>
+												<ul>
+											<li >
+												
+												<a href="/edu7/subList/30300001386" data-type="subPage" data-mnSeq="30300001386">보건교육(초등)</a>
+													</li>
+											<li >
+												
+												<a href="/edu7/subList/30300001387" data-type="subPage" data-mnSeq="30300001387">성교육(초등)</a>
+													</li>
+											</ul>
+										</li>
+									</ul>  
+								</li>   
+								<li class="mnGroup">
+									<a href="/edu7/subList/20000000155" data-type="subPage" data-mnSeq="20000000155">학생맞춤형수업(중)</a>
+										<ul>
+									<li >
+										
+											<a href="/edu7/subList/20000000200" data-type="subPage" data-mnSeq="20000000200">원격교육 선도학교</a>
+												<ul>
+											</ul>
+										</li>
+									<li class="mnGroup">
+										
+											<a href="/edu7/subList/20000000164" data-type="subPage" data-mnSeq="20000000164">온오프라인 연계수업 콘텐츠</a>
+												<ul>
+											<li >
+												
+												<a href="/edu7/subList/20000000854" data-type="subPage" data-mnSeq="20000000854">중학교(교과별)</a>
+													</li>
+											<li >
+												
+												<a href="/edu7/subList/20000000527" data-type="subPage" data-mnSeq="20000000527">고등학교(교과별)</a>
+													</li>
+											<li >
+												
+												<a href="/edu7/subList/20000000529" data-type="subPage" data-mnSeq="20000000529">비교과</a>
+													</li>
+											<li >
+												
+												<a href="/edu7/subList/20000000531" data-type="subPage" data-mnSeq="20000000531">전문교과</a>
+													</li>
+											</ul>
+										</li>
+									<li class="mnGroup">
+										
+											<a href="/edu7/subList/20000000207" data-type="subPage" data-mnSeq="20000000207">자유학기활동</a>
+												<ul>
+											<li >
+												
+												<a href="/edu7/subList/20000000521" data-type="subPage" data-mnSeq="20000000521">자유학기 활동</a>
+													</li>
+											<li >
+												
+												<a href="/edu7/subList/20000000789" data-type="subPage" data-mnSeq="20000000789">주제선택</a>
+													</li>
+											<li >
+												
+												<a href="/edu7/subList/20000000790" data-type="subPage" data-mnSeq="20000000790">진로탐색</a>
+													</li>
+											<li >
+												
+												<a href="/edu7/subList/20000000791" data-type="subPage" data-mnSeq="20000000791">예술체육</a>
+													</li>
+											<li >
+												
+												<a href="/edu7/subList/20000000792" data-type="subPage" data-mnSeq="20000000792">동아리활동</a>
+													</li>
+											</ul>
+										</li>
+									<li class="mnGroup">
+										
+											<a href="/edu7/subList/20000000208" data-type="subPage" data-mnSeq="20000000208">프로젝트 수업</a>
+												<ul>
+											<li >
+												
+												<a href="/edu7/subList/20000000530" data-type="subPage" data-mnSeq="20000000530">프로젝트수업</a>
+													</li>
+											<li >
+												
+												<a href="/edu7/subList/20000000785" data-type="subPage" data-mnSeq="20000000785">교과융합</a>
+													</li>
+											<li >
+												
+												<a href="/edu7/subList/20000000786" data-type="subPage" data-mnSeq="20000000786">진로연계</a>
+													</li>
+											<li >
+												
+												<a href="/edu7/subList/20000000787" data-type="subPage" data-mnSeq="20000000787">독서연계</a>
+													</li>
+											<li >
+												
+												<a href="/edu7/subList/20000000788" data-type="subPage" data-mnSeq="20000000788">창체연계</a>
+													</li>
+											</ul>
+										</li>
+									<li class="mnGroup">
+										
+											<a href="/edu7/subList/20000000779" data-type="subPage" data-mnSeq="20000000779">독서교육콘텐츠</a>
+												<ul>
+											<li >
+												
+												<a href="/edu7/subList/20000000780" data-type="subPage" data-mnSeq="20000000780">독서기반 교육과정</a>
+													</li>
+											<li >
+												
+												<a href="/edu7/subList/20000000782" data-type="subPage" data-mnSeq="20000000782">학교도서관 협력모델</a>
+													</li>
+											<li >
+												
+												<a href="/edu7/subList/20000000783" data-type="subPage" data-mnSeq="20000000783">경기솔솔~독서바람</a>
+													</li>
+											</ul>
+										</li>
+									<li >
+										
+											<a href="/edu7/subList/30300001011" data-type="subPage" data-mnSeq="30300001011">중등 기초학력보장</a>
+												<ul>
+											</ul>
+										</li>
+									<li class="mnGroup">
+										
+											<a href="/edu7/subList/30300001385" data-type="subPage" data-mnSeq="30300001385">보건교육, 성교육</a>
+												<ul>
+											<li >
+												
+												<a href="/edu7/subList/30300001388" data-type="subPage" data-mnSeq="30300001388">보건교육(중등)</a>
+													</li>
+											<li >
+												
+												<a href="/edu7/subList/30300001389" data-type="subPage" data-mnSeq="30300001389">성교육(중등)</a>
+													</li>
+											</ul>
+										</li>
+									</ul>  
+								</li>   
+								<li class="mnGroup">
+									<a href="/edu7/subList/20000000165" data-type="subPage" data-mnSeq="20000000165">성장중심평가</a>
+										<ul>
+									<li class="mnGroup">
+										
+											<a href="/edu7/subList/30300000971" data-type="subPage" data-mnSeq="30300000971">초등평가자료실</a>
+												<ul>
+											<li >
+												
+												<a href="/edu7/subList/20000000165" data-type="subPage" data-mnSeq="20000000165">공지사항</a>
+													</li>
+											<li >
+												
+												<a href="/edu7/subList/30300000983" data-type="subPage" data-mnSeq="30300000983">자료실</a>
+													</li>
+											<li >
+												
+												<a href="/edu7/subList/30300000984" data-type="subPage" data-mnSeq="30300000984">지침</a>
+													</li>
+											<li >
+												
+												<a href="/edu7/subList/30300001368" data-type="subPage" data-mnSeq="30300001368">연구-실천사례</a>
+													</li>
+											</ul>
+										</li>
+									<li class="mnGroup">
+										
+											<a href="/edu7/subList/30300000972" data-type="subPage" data-mnSeq="30300000972">중등평가자료실</a>
+												<ul>
+											<li >
+												
+												<a href="/edu7/subList/30300000987" data-type="subPage" data-mnSeq="30300000987">공지사항</a>
+													</li>
+											<li >
+												
+												<a href="/edu7/subList/30300000973" data-type="subPage" data-mnSeq="30300000973">자료실</a>
+													</li>
+											<li >
+												
+												<a href="/edu7/subList/30300000990" data-type="subPage" data-mnSeq="30300000990">지침</a>
+													</li>
+											</ul>
+										</li>
+									</ul>  
+								</li>   
+								<li class="mnGroup">
+									<a href="/edu7/subList/30300001029" data-type="subPage" data-mnSeq="30300001029">기초학력보장</a>
+										<ul>
+									<li class="mnGroup">
+										
+											<a href="/edu7/subList/30300001028" data-type="subPage" data-mnSeq="30300001028">기초학력보장자료실</a>
+												<ul>
+											<li >
+												
+												<a href="/edu7/subList/30300001029" data-type="subPage" data-mnSeq="30300001029">경기기초학력보장소개</a>
+													</li>
+											<li >
+												
+												<a href="/edu7/subList/30300001030" data-type="subPage" data-mnSeq="30300001030">3R&amp;apos;s</a>
+													</li>
+											<li >
+												
+												<a href="/edu7/subList/30300001031" data-type="subPage" data-mnSeq="30300001031">입문기(초1~초2)</a>
+													</li>
+											<li >
+												
+												<a href="/edu7/subList/30300001032" data-type="subPage" data-mnSeq="30300001032">초등교과기초(초3~초6)</a>
+													</li>
+											<li >
+												
+												<a href="/edu7/subList/30300001033" data-type="subPage" data-mnSeq="30300001033">중등교과기초(중1~고1)</a>
+													</li>
+											</ul>
+										</li>
+									<li class="mnGroup">
+										
+											<a href="/edu7/subList/30300001034" data-type="subPage" data-mnSeq="30300001034">학습종합클리닉센터자료실</a>
+												<ul>
+											<li >
+												
+												<a href="/edu7/subList/30300001035" data-type="subPage" data-mnSeq="30300001035">학습종합클리닉센터소개</a>
+													</li>
+											<li >
+												
+												<a href="/edu7/subList/30300001036" data-type="subPage" data-mnSeq="30300001036">학습종합클리닉센터 운영</a>
+													</li>
+											</ul>
+										</li>
+									<li >
+										
+											<a href="/edu7/subList/30300001041" data-type="subPage" data-mnSeq="30300001041">읽기곤란(난독증) 통합게시판</a>
+												<ul>
+											</ul>
+										</li>
+									</ul>  
+								</li>   
+								<li class="mnGroup">
+									<a href="/edu7/subList/20000000151" data-type="subPage" data-mnSeq="20000000151">교육과정편성(2023년 이전)</a>
+										<ul>
+									<li >
+										
+											<a href="/edu7/subList/20000000181" data-type="subPage" data-mnSeq="20000000181">교육과정 정책자료</a>
+												<ul>
+											</ul>
+										</li>
+									<li >
+										
+											<a href="/edu7/subList/20000000182" data-type="subPage" data-mnSeq="20000000182">교사교육과정(학교자율과정)</a>
+												<ul>
+											</ul>
+										</li>
+									<li >
+										
+											<a href="/edu7/subList/20000000183" data-type="subPage" data-mnSeq="20000000183">성장배려학년제</a>
+												<ul>
+											</ul>
+										</li>
+									</ul>  
+								</li>   
+								<li class="mnGroup">
+									<a href="/edu7/subList/20000000152" data-type="subPage" data-mnSeq="20000000152">교육과정운영(2023년 이전)</a>
+										<ul>
+									<li >
+										
+											<a href="/edu7/subList/20000000184" data-type="subPage" data-mnSeq="20000000184">교육과정 운영 장학자료</a>
+												<ul>
+											</ul>
+										</li>
+									<li class="mnGroup">
+										
+											<a href="/edu7/subList/20000000159" data-type="subPage" data-mnSeq="20000000159">연구대회</a>
+												<ul>
+											<li >
+												
+												<a href="/edu7/subList/20000000643" data-type="subPage" data-mnSeq="20000000643">교육방송</a>
+													</li>
+											<li >
+												
+												<a href="/edu7/subList/20000000519" data-type="subPage" data-mnSeq="20000000519">수업혁신사례 연구대회</a>
+													</li>
+											</ul>
+										</li>
+									<li >
+										
+											<a href="/edu7/subList/30300001127" data-type="subPage" data-mnSeq="30300001127">초등교과특성화학교</a>
+												<ul>
+											</ul>
+										</li>
+									<li >
+										
+											<a href="/edu7/subList/30300001274" data-type="subPage" data-mnSeq="30300001274">학생중심교육과정 홈페이지 공지사항</a>
+												<ul>
+											</ul>
+										</li>
+									</ul>  
+								</li>   
+								<li>
+						<div class="hdmenu"> 
+							<ul class="data m_navTop" style="display:none;">
+								<li><a href="#"  data-href="hdftrmenuLinkUrl" data-attr="hdftrmenuNm" data-target="hdftrmenuTyCode"></a></li>
+								<li><a href="#"  data-href="hdftrmenuLinkUrl" data-attr="hdftrmenuNm" data-target="hdftrmenuTyCode"></a></li>
+								<li><a href="#"  data-href="hdftrmenuLinkUrl" data-attr="hdftrmenuNm" data-target="hdftrmenuTyCode"></a></li>
+								<li><a href="#"  data-href="hdftrmenuLinkUrl" data-attr="hdftrmenuNm" data-target="hdftrmenuTyCode"></a></li>
+								<li><a href="#"  data-href="hdftrmenuLinkUrl" data-attr="hdftrmenuNm" data-target="hdftrmenuTyCode"></a></li>
+								<li><a href="#"  data-href="hdftrmenuLinkUrl" data-attr="hdftrmenuNm" data-target="hdftrmenuTyCode"></a></li>
+								<li><a href="#"  data-href="hdftrmenuLinkUrl" data-attr="hdftrmenuNm" data-target="hdftrmenuTyCode"></a></li>
+								<li><a href="#"  data-href="hdftrmenuLinkUrl" data-attr="hdftrmenuNm" data-target="hdftrmenuTyCode"></a></li>
+								<li><a href="#"  data-href="hdftrmenuLinkUrl" data-attr="hdftrmenuNm" data-target="hdftrmenuTyCode"></a></li>
+								<li><a href="#"  data-href="hdftrmenuLinkUrl" data-attr="hdftrmenuNm" data-target="hdftrmenuTyCode"></a></li>
+								<li><a href="#"  data-href="hdftrmenuLinkUrl" data-attr="hdftrmenuNm" data-target="hdftrmenuTyCode"></a></li>
+								<li><a href="#"  data-href="hdftrmenuLinkUrl" data-attr="hdftrmenuNm" data-target="hdftrmenuTyCode"></a></li>
+							</ul>		
+						</div>
+					 </li> 
+				</ul>
+				
+				<div id="lnbBg"></div>
+				
+		</div><!-- end menu -->
+	</div>
+	
+	
+	
+
+</div>
+<style id="headMenuStyle">
+
+</style>
+<script> menuCss = {}</script>
+        
+
+<link type="text/css" href="/css/wzwg/cmm/layout.css" rel="stylesheet" />
+<link rel="stylesheet" href="/css/wzwg/cmm/font.css" type="text/css" />
+
+<!-- 교수학습 지원센터용 서브페이지 스타일시트 -->
+<link rel="stylesheet" href="/css/goest/sub_tongtong.css" type="text/css" />
+
+
+	<script> 
+		var b_loginVO = 'false';	 
+		var s_subPrefix = '';	 
+		var s_prefix = '';		 
+		var s_subsiteKey = '"';		 
+
+		sessionStorage.setItem('siteKey', 'edu7');
+	</script>
+	
+	<script src="/js/wzwg/site/siteWizbuilder.js"></script>
+
+<script>
+
+
+
+
+function fnTopButtonBuild(){
+	var topBtn = '';
+		topBtn += '<link rel="stylesheet" href="/css/wzwg/module/sideQuick/sidequick.css" type="text/css" />';
+	
+		topBtn += '<div id="topBtnDiv" class="subQuickMenu topBtnOnly" style="height:0; top:unset; bottom:0;">';
+		topBtn += 	'<div class="position">';
+		topBtn +=		'<div class="floating">';
+		topBtn +=			'<div class="quick wzAffix" data-topspace="0" data-fix-point="" data-affix="off" data-affix-bottom="0" style="right: 0px; position: relative;">';
+		topBtn +=				'<div id="topBtn" class="moveTop">';
+		topBtn +=					'<a href="#_top" title="맨 위로 올리기" onclick="$(\'html, body\').animate({scrollTop: \'0\'})">TOP</a>';
+		topBtn +=				'</div>';
+		topBtn +=			'</div>';
+		topBtn +=		'</div>';
+		topBtn +=	'</div>';
+		topBtn += '</div>';
+		     
+	$('#footer').before(topBtn);
+	
+	$(document).scroll(function(){ 
+		var movScrolpx = $(document).scrollTop();
+		var innerHeight = $('.head-group').outerHeight(true) + $('#sub_visual').outerHeight(true) - 100;
+		
+		if(movScrolpx > innerHeight){     
+			$('.quick').css('display', 'block');
+			
+			movScrolpx - $('#footer').outerHeight();
+			$('.quick').css('position','fixed');
+			$('.quick').css('bottom', '0');		
+		}else{    
+			$('.quick').css('display', 'none');
+			$('.quick').css('position','relative');
+			$('.quick').css('bottom', '');	
+		}
+		
+		var endScroll = $(document).height() - $(window)[0].innerHeight;
+		
+		var footerTop = endScroll - $('#footer').outerHeight(true);
+		if (footerTop <= movScrolpx){
+			var bottomValChange = movScrolpx - footerTop; 
+			$('.quick').css('bottom', bottomValChange);
+		}    
+	})
+}             
+ 
+
+$(document).ready(function(){
+	
+	if($('link[href="/widesign/widesigncore.css"]').length == 0){
+		var widesignCss = '<link rel="stylesheet" href="/widesign/widesigncore.css" type="text/css" />';
+		var jqueryuiJs = '<script type="text/javascript" src="/js/wzwg/cmm/jquery-ui.js"/>';
+		var widesignJs = '<script type="text/javascript" src="/widesign/widesign.js"/>';
+		$('head').append(widesignCss);
+		$('head').append(jqueryuiJs);
+		$('head').append(widesignJs);
+	}
+	
+	if($('#skipnavi').length == 0){
+		var skipnavi = '';
+			skipnavi += '<div id="skipnavi">';
+			skipnavi += 	'<ul>';
+			skipnavi += 		'<li><a href="#mainContent" title="본문내용 바로가기">본문내용 바로가기</a></li>';
+			skipnavi += 		'<li><a href="#gnb" title="주메뉴 바로가기">주메뉴 바로가기</a></li>';
+			skipnavi += 		'<li><a href="#footer" title="하단바로가기">하단 바로가기</a></li>';
+			skipnavi += 	'</ul>';
+			skipnavi += '</div>';
+			
+		$('body').prepend(skipnavi);
+	}
+	$('.menu .lnb').attr('id', 'gnb')
+	$('.inner .subCon').attr('id', 'mainContent');
+	
+	
+	
+	$.ajax({
+        type:'POST'
+        , url: '/edu7/module/sideQuick/selectSideQuickUsrListAjax.do'
+        , dateType:'html'
+        , data: {test : "test"}
+		, async : true
+        , success:function (result) {
+			$('.sub_div_wrap').append(result);
+			$('.sub_div_wrap').css('clear', 'both');
+			
+
+			wzAffixInit(); 
+			
+			
+			
+			
+			if($('#subQuickMenu').length == 0){
+				fnTopButtonBuild();
+			}else{
+				$('body').css('overflow-x', 'hidden');
+			}
+        }
+        , complate: function(){
+        	 
+        }
+    });
+	
+	
+	
+	
+     $("#content").css("height",$(document).height());
+     $("#content").css("left", $("#content").css("width")+10+'px');
+ 
+    
+     
+     
+      
+    subMenuHomeChange()
+    fnSetMenu();
+     
+ 	setTimeout(addMenuGroupClass, 0);
+ 	fnHederScroll();
+});  
+
+
+function subMenuHomeChange() {
+	
+	if(s_subPrefix == '/subMngr' || s_subPrefix == '/subsite') {
+		$('#menuLocationPath').find('li').find('a').attr('href','/subsite/'+s_subsiteKey);		
+	}else{
+		$('#menuLocationPath').find('li').find('a').attr('href','/edu7/');	
+	}
+}
+
+
+function leftMenuParsing() { 
+    var startMenuLv = 1;
+    var stopMenuLv = 2;
+    
+var nowMenuNo = '20000000516'; 
+    $('#left').each(function (index, parentEle) {
+        $.ajax({
+            type:'POST'
+          , url:'/edu7/module/scrin/scrinSubMenuJson.do' 
+          , data:{menuSeq:nowMenuNo}
+          , success:function (data) {  
+              var cntntsNm = jsonFilter(data,'menuLv', '1')[0]["menuNm"];  
+              $("#left").find(".menuNm").html(cntntsNm);
+              
+              var cntntsDc = jsonFilter(data,'menuLv', '1')[0]["menuDc"];  
+              $("#left").find(".menuDc").html(cntntsDc);
+              
+             var firstMenu = jsonFilter(data,'menuLv', '2'); 
+                $("#left").find(".data").each(function (pIndex, pChildEle) {  
+                    $(this).children().each(function (index, childEle) {
+                    if (firstMenu.length > index) {  
+                        if(firstMenu[index].menuSeq == nowMenuNo){ 
+                            $(childEle).children("a").addClass("on");
+                        }else{
+                            $(childEle).children("a").removeClass("on");
+                        }
+                        
+                         var subMenu  = jsonFilter(data,'upperMenuSeq', firstMenu[index].menuSeq);
+                        
+                         $(childEle).find("*").each(function(i,cl){ 
+                             for(var key in firstMenu[index]){ 
+                                if(key ==  $(cl).data("attr")){
+                                    $(cl).html(firstMenu[index][key]); 
+                                }
+                                if(key ==  $(cl).data("href")){
+                                    if(subMenu.length> 0){
+                                    }else{
+                                        $(cl).attr("href",'/edu7/subList/'+firstMenu[index][key]);
+                                    }
+                                }
+                                
+                                if(key ==  $(cl).data("src")){
+                                    $(cl).attr("src",firstMenu[index][key]);   
+                                }
+                            }
+                         });
+                         
+                         $(childEle).find(".sub-menu").children().each(function (indexSub, childSubEle) {  
+                             if(subMenu.length > indexSub){
+                                 if(indexSub ==0){
+
+                                        if(subMenu[indexSub].menuSeq == nowMenuNo){ 
+                                            $(childEle).addClass("on");
+                                        }else{
+                                            $(childEle).removeClass("on");
+                                        }
+                                 }
+                             $(childSubEle).find("*").each(function(i,cl){
+                                 for(var key in subMenu[indexSub]){ 
+                                    if(key ==  $(cl).data("attr")){
+                                        $(cl).html(subMenu[indexSub][key]);   
+                                    }
+                                    if(key ==  $(cl).data("href")){
+                                        $(cl).attr("href",'/edu7/subList/'+subMenu[indexSub][key]);   
+                                    }
+                                    
+                                    if(key ==  $(cl).data("src")){
+                                        $(cl).attr("src",subMenu[indexSub][key]);   
+                                    }
+                                }
+                             });
+                             }else{
+                                 $(childSubEle).remove();
+                             }
+                         });
+                        if(subMenu.length ==0){
+                            $(childEle).find(".sub-menu").remove();
+                        }
+                    }else{
+                        $(childEle).remove();
+                    }
+                   
+                });
+                });
+                
+            }
+            , dataType: 'json'
+        });
+    });
+}
+
+
+ 
+ function fnSetMenu(){  
+    $("#menuTitle").html($("#menuNm").val());
+    var menuNms = $('#menuPath').val().split(">");
+    var menuSeqs = $('#menuPathSeq').val().split(">");
+    
+    
+    for (var i = 0 ; menuNms.length; i++){
+        var nm = menuNms[i];
+        if(nm == ''){
+            break;
+        }
+        
+        var locationTag = '';
+        
+        if(s_subPrefix == '/subMngr' || s_subPrefix == '/subsite') {
+        	locationTag = '<li><a href="/edu7/subsite/'+s_subsiteKey+'/subList/' + menuSeqs[i] + '">' + nm + '</a></li>';
+        }else {
+        	locationTag = '<li><a href="/edu7/subList/' + menuSeqs[i] + '">' + nm + '</a></li>';
+        }
+        
+        $('#menuLocationPath').append($(locationTag));
+        
+    } 
+        
+ } 
+
+ $(function() { 
+	 if($('#submenu').attr('data-type') == 'wide'){
+		 
+		 $('.location li').eq(2).append($('.slidebar'));
+		 
+		 
+		 $('.location > li').eq(3).find('a').each(function(){
+			var locationMenu = $(this); 
+			$('.slidebar ul').each(function(){
+				var depth3List = $(this);
+					$(this).find('a').each(function(){
+
+						if($(this).attr('href') == locationMenu.attr('href')){
+							locationMenu.after(depth3List.clone());
+						}
+
+					});
+			});
+		 });
+		 
+		 
+		 
+	     $('#menuLocationPath>li>a').attr('data-lv', '1');
+	     $('#menuLocationPath>li>ul>li>a').attr('data-lv', '2');
+	     $('#menuLocationPath>li>ul>li>ul>li>a').attr('data-lv', '3');
+	     
+	     
+	     var lv3Link = $('.location > li').eq(2).find('a[data-lv="3"]').eq(0);
+		 var lv2Link = $('.location > li').eq(2).find('a[data-lv="2"]').eq(0);
+		 if(lv2Link.siblings('ul').length == 0){
+			 $($('.location > li').eq(1).find('a')[0]).attr('href', lv2Link.attr('href'));
+		 }
+		 
+		 if(lv2Link.siblings('ul').length == 1){
+			 if(lv3Link.length == 1){
+				 lv2Link.attr('href', lv3Link.attr('href'));
+				 $($('.location > li').eq(1).find('a')[0]).attr('href', lv3Link.attr('href'));
+			 }
+		 }
+		 
+		 
+		 $('.location > li').eq(2).find('a').each(function(){
+		   if($(this).siblings('ul').length > 0){
+		     $(this).attr('href', 'javascript:void(0);');
+		   }
+		 })
+		 
+		 
+		 $('.location > li a').each(function(){
+			 var linkHref =$(this).attr('href');
+			 if(linkHref.indexOf('http') == 0 || linkHref.indexOf('javascript') == 0){
+			 }else if(linkHref.indexOf('/edu7') == -1){
+				 $(this).attr('href', '/edu7' + linkHref);
+			 }else{
+				 $(this).attr('href', linkHref);
+				 
+			 }
+		 })
+	    
+	 }else{
+		 $('.subMenu .slidebar').show(); 
+		 
+	     $('.slidebar').tendina({
+	         animate: true,
+	         speed: 500,
+	         onHover: false,
+	         hoverDelay: 300,
+	         activeMenu: $('.deepest'),
+	         openCallback: function(clickedEl) {
+	           console.log('Hey dude!');
+	         },
+	         closeCallback: function(clickedEl) {
+	           console.log('Bye dude!');
+	         }
+	      });  
+		 
+	 }
+      
+ });
+</script>   <form name="menuFrm" id="menuFrm" method="post">    <input type="hidden" name="menuSeq" id="menuSeq" value="20000000516">    <input type="hidden" name="menuNm" id="menuNm" value="초.중등학교">    <input type="hidden" name="menuPath" id="menuPath" value="교육과정지침>2009년 개정 교육과정>초.중등학교>">    <input type="hidden" name="menuPathSeq" id="menuPathSeq" value="20000000511>20000000515>20000000516">    <input type="hidden" name="menuDc" id="menuDc" value="">   </form>   <!-- middle_contents -->   <!--  ------------------------------>   <!--  ------------------------------>   <div class="inner">    <div id="sub_visual" class="mainBanner topSubImgOrign wzwgContextMenu">     <img src="/edu7/module/upload/image/selectImageDetail.do?usrimgId=2050" alt="">     <div class="bluebg">      <div class="sub_titbox bTextAlign">       <p class="bTitle"></p>       <strong class="bContent"></strong>      </div>     </div>    </div>    <div class="sub_div_wrap">                        <div class="subMenu">
+				<h3 class="menuNm">교육과정지침<span></span></h3>
+				<ul class="slidebar">
+					<li >
+				    	<a href="https://www.edunet.net/nedu/ncicsvc/listSub7thForm.do?menu_id=853" target="_blank"  data-href="menuLinkSeq" data-attr="menuNm">
+								7차 교육과정</a>
+						<ul>
+							</ul>
+				    </li>
+				    <li >
+				    	<a href="https://www.edunet.net/nedu/ncicsvc/listSub2007Form.do?menu_id=852" target="_blank"  data-href="menuLinkSeq" data-attr="menuNm">
+								2007년 개정 교육과정</a>
+						<ul>
+							</ul>
+				    </li>
+				    <li >
+				    	<a href="/subList/20000000515"  data-href="menuLinkSeq" data-attr="menuNm" >
+								2009년 개정 교육과정<span></span></a>
+						<ul>
+							<li >
+						  		<a href="/subList/20000000515"  data-href="menuLinkSeq" data-attr="menuNm" >
+		                        		<span class="bull">&bull;</span>유치원</a>
+		                        </li>
+						  	<li class="deepest">
+						  		<a href="/subList/20000000516"  data-href="menuLinkSeq" data-attr="menuNm" class="on">
+		                        		<span class="bull">&bull;</span>초.중등학교</a>
+		                        </li>
+						  	<li >
+						  		<a href="/subList/20000000517"  data-href="menuLinkSeq" data-attr="menuNm" >
+		                        		<span class="bull">&bull;</span>고등학교</a>
+		                        </li>
+						  	<li >
+						  		<a href="/subList/20000000518"  data-href="menuLinkSeq" data-attr="menuNm" >
+		                        		<span class="bull">&bull;</span>특수교육</a>
+		                        </li>
+						  	<li >
+						  		<a href="/subList/20000000800"  data-href="menuLinkSeq" data-attr="menuNm" >
+		                        		<span class="bull">&bull;</span>핵심 성취기준</a>
+		                        </li>
+						  	</ul>
+				    </li>
+				    <li >
+				    	<a href="/subList/20000000801"  data-href="menuLinkSeq" data-attr="menuNm" >
+								경기도 교육과정<span></span></a>
+						<ul>
+							<li >
+						  		<a href="/subList/20000000801"  data-href="menuLinkSeq" data-attr="menuNm" >
+		                        		<span class="bull">&bull;</span>교육과정 편성 운영 지침</a>
+		                        </li>
+						  	<li >
+						  		<a href="/subList/30300001415"  data-href="menuLinkSeq" data-attr="menuNm" >
+		                        		<span class="bull">&bull;</span>신설 교과목 교과 교육과정(2015개정)</a>
+		                        </li>
+						  	<li >
+						  		<a href="/subList/20000000176"  data-href="menuLinkSeq" data-attr="menuNm" >
+		                        		<span class="bull">&bull;</span>경기도 교육과정(2012년 이전)</a>
+		                        </li>
+						  	<li >
+						  		<a href="/subList/20000000177"  data-href="menuLinkSeq" data-attr="menuNm" >
+		                        		<span class="bull">&bull;</span>2012년 경기도교육과정</a>
+		                        </li>
+						  	<li >
+						  		<a href="/subList/20000000178"  data-href="menuLinkSeq" data-attr="menuNm" >
+		                        		<span class="bull">&bull;</span>2013년 경기도교육과정</a>
+		                        </li>
+						  	<li >
+						  		<a href="/subList/20000000179"  data-href="menuLinkSeq" data-attr="menuNm" >
+		                        		<span class="bull">&bull;</span>2014년 경기도교육과정</a>
+		                        </li>
+						  	</ul>
+				    </li>
+				    <li >
+				    	<a href="/subList/20000000180"  data-href="menuLinkSeq" data-attr="menuNm" >
+								2015년 개정 교육과정</a>
+						<ul>
+							</ul>
+				    </li>
+				    </ul>
+			</div>
+		                <div class="subCon">      <ul class="location" id="menuLocationPath">       <li class="home"><a href="/">HOME</a></li>       <!-- <li>MENU</li>					<li class="ftbd" id="menuSubTitle">SUBMENU</li> -->      </ul>      <h4 class="tit" id="menuTitle"></h4>      <p id="menuInfo"></p>      <div>       
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+		
+			
+			
+			
+			
+				
+			
+		
+	
+
+
+	
+
+	
+
+<link rel="stylesheet" href="/css/wzwg/cmm/jquery-ui.css">
+<script src="/js/wzwg/cmm/jquery-ui.js"></script>
+
+<link href="/css/wzwg/cmm/jquery.contextMenu.css" rel="stylesheet" type="text/css" />
+<script src="/js/wzwg/cmm/jquery.contextMenu.js" type="text/javascript"></script>
+
+<link rel="stylesheet" href="/design/module/sample/css/swiper.min.css" type="text/css">
+<script src="/design/module/sample/js/swiper.jquery.min.js"></script>
+
+
+
+
+<link rel="stylesheet" href="/css/wzwg/cmm/layout.css" type="text/css" />
+<link rel="stylesheet" href="/css/wzwg/cmm/empty_line.css" type="text/css" />
+<link rel="stylesheet" href="/css/wzwg/module/cntnts/cntnts.css" type="text/css" />
+<script src="/js/wzwg/screen/usrScreen.js"></script>
+
+
+	<script>
+		$(document).ready(function(){
+				
+			$('#cnrs_btn').click(function(){
+				$.ajax({
+			        type:'POST'
+			      , url:'/edu7/module/cmm/snsCnrs/selectSnsCnrsPopup.do'
+			      , cache : false
+			      , async : false
+			      , data:'param_menuSeq=20000000516&param_nttSj=1-5-2 초.중등학교&param_mobileAt=N'
+			      , success:function (data) {
+			    	  var title = '공유';
+			    	  wzAjaxModal('popup_la', title, data, true);
+			      }
+			      , error:function (request, status, error) {
+			    	  alert('에러가 발생했습니다!');
+			      }
+			      , dateType: 'html'
+			 	});
+			});
+		
+			$('#print_btn').click(function(){
+				var printWindow = window.open("", "_blank");
+				var printContents = $('#cntntsCn').html();
+				
+				printWindow.document.write('<head>');
+				printWindow.document.write($('head').html());
+				printWindow.document.write('</head>');
+				
+				printWindow.document.write('<div>');
+				printWindow.document.write(printContents);
+				printWindow.document.write('</div>');
+				
+				printWindow.print();
+				printWindow.document.close();
+			});
+			
+		});
+		
+	</script>
+	
+	
+	
+
+
+<div id="cntntsCn"><table class="__se_tbl wd100 mxwd1300 t_rule001">
+    	<tbody>
+        	<tr>
+            	<td class="s_cate" colspan="2">
+                	총론 다운로드
+                </td>
+            </tr>
+            <tr>
+            	<td class="wd50 linkbtn">
+                	<a href="/edu7/module/upload/usr/file/fileDown.do?usrfileSeq=20000000006" target="_blank" title="다운로드"><b>초ㆍ중등학교 총론 </b><i class="fa fa-download"></i></a>
+                </td>
+                <td class="wd50 linkbtn">
+                    <a href="http://ncic.go.kr/nation.kri.org4.inventoryList.do" target="_blank" title="새창열기"><b>링크 바로가기</b><i class="fa fa-link"></i></a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <table class="__se_tbl wd100 mxwd1300 t_rule001">
+    	<tbody>
+        	<tr>
+            	<td class="s_cate">
+                	고시문
+                </td>
+            </tr>
+            <tr>
+            	<td class="jae">
+                	교육과학기술부 고시 제 2009-41 호<br>
+                    초ㆍ중등교육법 제23조 제2항에 의거하여 초ㆍ중등학교 교육과정을 다음과 같이 고시합니다.
+                </td>
+            </tr>
+            <tr>
+            	<td class="date">
+                	2009년 12월 23일<br>
+                    교육과학기술부장관
+                </td>
+            </tr>
+            <tr><td class="hgt50 p0"></td></tr>
+            <tr>
+            	<td class="jae_txt">
+                	1. 초ㆍ중등학교 교육과정은【별책 1】과 같습니다.
+                </td>
+            </tr>
+            <tr>
+            	<td class="jae_txt">
+                    2. 초등학교 교육과정은【별책 2】와 같습니다.
+                </td>
+            </tr>
+            <tr>
+            	<td class="jae_txt">
+                    3. 중학교 교육과정은【별책 3】과 같습니다.
+                </td>
+            </tr>
+            <tr>
+            	<td class="jae_txt">
+                    4. 고등학교 교육과정은【별책 4】와 같습니다.
+                </td>
+            </tr>
+            <tr>
+            	<td class="jae_txt">
+                    5. 국어과 교육과정은【별책 5】와 같습니다.
+                </td>
+            </tr>
+            <tr>
+            	<td class="jae_txt">
+                    6. 도덕과 교육과정은【별책 6】과 같습니다.
+                </td>
+            </tr>
+            <tr>
+            	<td class="jae_txt">
+                    7. 사회과 교육과정은【별책 7】과 같습니다.
+                </td>
+            </tr>
+            <tr>
+            	<td class="jae_txt">
+                    8. 수학과 교육과정은【별책 8】과 같습니다.
+                </td>
+            </tr>
+            <tr>
+            	<td class="jae_txt">
+                    9. 과학과 교육과정은【별책 9】와 같습니다.
+                </td>
+            </tr>
+            <tr>
+            	<td class="jae_txt">
+                    10. 실과(기술ㆍ가정) 교육과정은【별책 10】과 같습니다.
+                </td>
+            </tr>
+            <tr>
+            	<td class="jae_txt">
+                    11. 체육과 교육과정은【별책 11】과 같습니다.
+                </td>
+            </tr>
+            <tr>
+            	<td class="jae_txt">
+                    12. 음악과 교육과정은【별책 12】와 같습니다.
+                </td>
+            </tr>
+            <tr>
+            	<td class="jae_txt">
+                    13. 미술과 교육과정은【별책 13】과 같습니다.
+                </td>
+            </tr>
+            <tr>
+            	<td class="jae_txt">
+                    14. 외국어과 교육과정은【별책 14】와 같습니다.
+                </td>
+            </tr>
+            <tr>
+            	<td class="jae_txt">
+                    15. 중학교 선택 과목 교육과정은【별책 16】과 같습니다.
+                </td>
+            </tr>
+            <tr>
+            	<td class="jae_txt">
+                    16. 한문, 교양 선택 과목 교육과정은【별책 17】과 같습니다.
+                </td>
+            </tr>
+            <tr>
+            	<td class="jae_txt">
+                    17. 창의적 체험활동 교육과정은【별책 18】과 같습니다.
+                </td>
+            </tr>
+            <tr>
+            	<td class="jae_txt">
+                    18. 외국어 계열 전문 교과 교육과정은【별책 27】과 같습니다.
+                </td>
+            </tr>
+            <tr>
+            	<td class="jae_txt">
+                    19. 국제 계열 전문 교과 교육과정은【별책 28】과 같습니다.
+                </td>
+            </tr>
+            <tr><td class="hgt50 p0"></td></tr>
+            <tr>
+            	<td class="jae fw600 txt-c">
+                	부칙
+                </td>
+            </tr>
+            <tr>
+            	<td class="jae_txt">
+                	1. 이 교육과정은 학교 급별, 학년별로 다음과 같이 시행합니다.
+                </td>
+            </tr>
+            <tr>
+            	<td class="hang">
+                    가. 2011년 3월 1일 : 초등학교 1, 2학년, 중학교 1학년, 고등학교 1학년
+                </td>
+            </tr>
+            <tr>
+            	<td class="hang">
+                    나. 2012년 3월 1일 : 초등학교 3, 4학년, 중학교 2학년, 고등학교 2학년
+                </td>
+            </tr>
+            <tr>
+            	<td class="hang">
+                    다. 2013년 3월 1일 : 초등학교 5, 6학년, 중학교 3학년, 고등학교 3학년
+                </td>
+            </tr>
+            <tr>
+            	<td class="hang">
+                    라. 단, 고등학교 보통 교과 중 화법과 작문ⅠㆍⅡ, 독서와 문법ⅠㆍⅡ, 문학ⅠㆍⅡ, 한국지리, 세계지리, 동아시아사, 세계사, 법과 정치, 경제, 사회ㆍ문화, 생활과 윤리, 윤리와 사상, 
+                    물리ⅠㆍⅡ, 화학ⅠㆍⅡ, 생명과학ⅠㆍⅡ, 지구과학ⅠㆍⅡ, 운동과 건강 생활, 스포츠 문화, 스포츠 과학, 음악 실기, 음악과 사회, 음악의 이해, 미술과 삶, 미술 감상, 미술 창작, 농업 생명 과학, 공학 기술, 가정 과학, 창업과 경영, 해양 과학, 정보, 
+                    독일어ⅠㆍⅡ, 프랑스어ⅠㆍⅡ, 스페인어ⅠㆍⅡ, 중국어ⅠㆍⅡ, 일본어ⅠㆍⅡ, 러시아어ⅠㆍⅡ, 아랍어ⅠㆍⅡ, 한문ⅠㆍⅡ는 2012년부터 적용하며, 고등학교 보통 교과 중 ‘*’표가 된 과목의 경우는 2011년 3월 1일부터 2014년 2월 28일까지 적용합니다.
+                </td>
+            </tr>
+        </tbody>
+    </table>
+	
+	
+	<style>
+								
+		.t_rule001 {margin:50px auto;}
+		.t_rule001:nth-child(1) {margin-top:0;}
+		.t_rule001 td {vertical-align:top; color:#000; line-height:1.6em;}
+		.t_rule001 td.s_cate::before {content:""; position:absolute; top:0; left:0; width:40px; height:2px; background:#ffa800;}
+		.t_rule001 td.s_cate {position:relative; font-weight:600; font-size:22px; padding-top:1%; text-align:left;}
+		.t_rule001 td.date {font-size:14px; text-align:right;}
+		.t_rule001 td.jae {padding:10px 0 10px 15px; font-size:20px;}
+		.t_rule001 td.jae_txt {padding:5px 0 5px 30px; font-size:18px;}
+		.t_rule001 td.hang {padding:5px 0 5px 76px; font-size:17px; text-indent:-24px;}
+		
+		.t_rule001 td a {display:block; width:80%; margin:15px auto; font-size:18px; line-height:1.4em; padding:15px 30px; box-sizing:border-box; border:2px solid #666; border-radius:25px; vertical-align:middle; word-break:keep-all;}
+		.t_rule001 td a:hover {background:#ffa800; border-color:#ffa800; color:#fff;}
+		.t_rule001 td a:active {background:#666; border-color:#666; box-shadow:2px 2px 2px 0 rgba(0,0,0,0.5) inset;}
+		
+		.t_rule001 td a b {display:block; width:80%; font-weight:400;}
+		.t_rule001 td a i {width:100%; text-align:right;}
+		
+		@media (max-width:999px){
+			
+			.t_rule001 td a {width:94%; padding:10px 20px; font-size:16px; border-radius:20px;}
+			
+		}
+
+		@media (max-width:799px){
+			
+			.t_rule001 {margin:20px auto;}			
+			.t_rule001 td {padding-top:10px; padding-bottom:10px; vertical-align:top;}
+			.t_rule001 td.s_cate::before {content:""; position:absolute; top:6px; left:0; width:2px; height:24px;}
+			.t_rule001 td.s_cate {width:auto !important; padding-left:10px; font-size:18px;}
+			.t_rule001 td.date {font-size:12px;}
+			.t_rule001 td.jae {font-size:16px;}
+			.t_rule001 td.jae_txt {font-size:15px;}
+			.t_rule001 td.hang {font-size:14px; text-indent:-20px;}
+			
+			.t_rule001 td a {border-radius:15px;}
+			
+		}
+		
+		@media (max-width:599px){
+			
+			.t_rule001 td.linkbtn a {width:95%; margin:5px auto;}
+			
+		}
+		
+	</style></div>
+
+<div class="mt20">
+	
+		
+		
+		
+	
+</div>
+      </div>     </div>    </div>   </div>   <!-- inner 끝 -->                
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+		
+			
+			
+			
+			
+				
+			
+		
+	
+
+
+	
+
+	
+  
+
+	<div class="footer" id="footer">
+		<div class="footer-list-001">
+			<div class="footer-center-001 inner ftrmenu">
+				<ul class="data">
+					<li><a href="#" data-href="hdftrmenuLinkUrl" data-attr="hdftrmenuNm" data-target="hdftrmenuTyCode"></a></li>
+					<li><a href="#" data-href="hdftrmenuLinkUrl" data-attr="hdftrmenuNm" data-target="hdftrmenuTyCode"></a></li>
+					<li><a href="#" data-href="hdftrmenuLinkUrl" data-attr="hdftrmenuNm" data-target="hdftrmenuTyCode"></a></li>
+					<li><a href="#" data-href="hdftrmenuLinkUrl" data-attr="hdftrmenuNm" data-target="hdftrmenuTyCode"></a></li>
+					<li><a href="#" data-href="hdftrmenuLinkUrl" data-attr="hdftrmenuNm" data-target="hdftrmenuTyCode"></a></li>
+					<li><a href="#" data-href="hdftrmenuLinkUrl" data-attr="hdftrmenuNm" data-target="hdftrmenuTyCode"></a></li>
+					<li><a href="#" data-href="hdftrmenuLinkUrl" data-attr="hdftrmenuNm" data-target="hdftrmenuTyCode"></a></li>
+					<li><a href="#" data-href="hdftrmenuLinkUrl" data-attr="hdftrmenuNm" data-target="hdftrmenuTyCode"></a></li>
+					<li><a href="#" data-href="hdftrmenuLinkUrl" data-attr="hdftrmenuNm" data-target="hdftrmenuTyCode"></a></li>
+					<li><a href="#" data-href="hdftrmenuLinkUrl" data-attr="hdftrmenuNm" data-target="hdftrmenuTyCode"></a></li>
+					<li><a href="#" data-href="hdftrmenuLinkUrl" data-attr="hdftrmenuNm" data-target="hdftrmenuTyCode"></a></li>
+					<li><a href="#" data-href="hdftrmenuLinkUrl" data-attr="hdftrmenuNm" data-target="hdftrmenuTyCode"></a></li>
+					<li><a href="#" data-href="hdftrmenuLinkUrl" data-attr="hdftrmenuNm" data-target="hdftrmenuTyCode"></a></li>
+					<li><a href="#" data-href="hdftrmenuLinkUrl" data-attr="hdftrmenuNm" data-target="hdftrmenuTyCode"></a></li>
+					<li><a href="#" data-href="hdftrmenuLinkUrl" data-attr="hdftrmenuNm" data-target="hdftrmenuTyCode"></a></li>
+				</ul>
+			</div>
+		</div> 
+		<div class="footer-area-001 ftrinfo">
+			<div class="addressArea data">
+				<div class="inner">
+					<h2 class="footerLogo">
+						<img src="" alt="" />
+					</h2>
+					<div class="p_wrap">
+						<p data-attr="adres">서울시 동대문구 왕산로 9길 8 (주)WIZWIG<br></p>
+						<p> <span  data-attr="tel"> 070-5129-2979</span>   FAX.<span  data-attr="fax"> 070-000-0000</span></p>
+						<p data-attr="cpyrhtCn">ⓒ WIZWIG CORPORATION. ALL RIGHTS RESERVED</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div> 
+ <div id="google_translate_element2">
+</body>
+</html>

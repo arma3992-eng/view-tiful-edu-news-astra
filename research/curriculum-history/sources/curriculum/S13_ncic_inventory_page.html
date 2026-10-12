@@ -1,0 +1,1945 @@
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="ko">
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta name="format-detection" content="telephone=no" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta property="og:image" content="/images/default/main/myimage.jpg" /><!-- 이미지 FULL URL 주소 -->
+		
+		<meta name="description" content="국가교육과정정보센터(NCIC)는 국가교육위원회와 한국교육과정평가원에서 공동 운영하고 있는 국내외 교육과정의 정보 공유 시스템입니다.">
+	
+<meta property="og:title" content="NCIC 국가교육과정정보센터">
+<meta property="og:type" content="website"> 
+<meta property="og:url" content="https://ncic.re.kr">
+<meta property="og:description" content="국가교육과정정보센터(NCIC)는 국가교육위원회와 한국교육과정평가원에서 공동 운영하고 있는 국내외 교육과정의 정보 공유 시스템입니다.">
+		
+		<meta name="_csrf" content="af45920d-b70c-48fc-84e1-ed7448285299"/>
+		<meta name="_csrf_header" content="X-CSRF-TOKEN"/>
+		
+		<title>NCIC 국가교육과정정보센터</title>
+		
+		<link rel="shortcut icon" href="/images/default/main/favicon.ico" type="image/x-icon" />
+		<link rel="stylesheet" type="text/css" href="/css/base.css" media="screen" />
+		<link rel="stylesheet" type="text/css" href="/css/board.css" media="screen" />
+		<link rel="stylesheet" type="text/css" href="/css/calendar.css" media="screen" />
+		<link rel="stylesheet" type="text/css" href="/css/member.css?v=0.1" media="screen" />
+		<link rel="stylesheet" type="text/css" href="/css/xeicon.css" media="screen" />
+		<link rel="stylesheet" type="text/css" href="/css/remixicon.css" media="screen" />
+		<link rel="stylesheet" type="text/css" href="/css/krds/common.css" media="screen" />
+		<link rel="stylesheet" type="text/css" href="/css/krds/component.css" media="screen" />
+		<link rel="stylesheet" type="text/css" href="/css/krds/krds_tokens.css" media="screen" />
+		<link rel="stylesheet" type="text/css" href="/css/default/layout.css?v=0.6" media="screen" />
+		<link rel="stylesheet" type="text/css" href="/css/default/layout_content.css?v=0.3" media="screen" />
+		<link rel="stylesheet" type="text/css" href="/css/default/content.css?v=0.3" media="screen" />
+		<link rel="stylesheet" href="//code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css">
+		<link rel="stylesheet" type="text/css" href="/css/plugin/jquery-ui-timepicker-addon.css" media="screen">
+		<link rel="stylesheet" href="/css/plugin/swiper.min.css"/>
+		<link rel="stylesheet" href="/css/plugin/font-awesome.min.css" />
+		<link rel="stylesheet" href="/js/plugin/lightbox/jquery.magnify.min.css" />
+		<link rel="stylesheet" href="/js/plugin/modal/jquery.modal.min.css" />
+		<link rel="stylesheet" href="/css/plugin/preloader.css">
+		<link rel="stylesheet" href="/js/plugin/tree/skin-win8/ui.fancytree.min.css" />
+		
+		<script type="text/javascript" src="/js/jquery-1.10.2.min.js"></script>
+		<script type="text/javascript" src="/js/jquery_ui-1.12.1.js"></script>
+		<script type="text/javascript" src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/MotionPathPlugin.min.js"></script>
+		<script type="text/javascript" src="/js/common.js"></script> 
+		<script type="text/javascript" src="/js/content.js"></script>
+		<script type="text/javascript" src="/js/plugin/jquery-ui-timepicker-addon.js"></script>	
+		<script type="text/javascript" src="/js/menu/menu.js"></script>
+		<script type="text/javascript" src="/js/plugin/jquery.bxslider.min.js"></script>
+		
+		<script type="text/javascript" src="/js/core/dc_ajax.js"></script>
+		
+		<script src="/js/plugin/swiper.min.js"></script>
+		<script src="/js/plugin/lightbox/jquery.magnify.min.js"></script>
+		<script src="/js/plugin/modal/jquery.modal.min.js"></script>
+		<script src="/js/plugin/jquery.preloader.min.js"></script>
+		<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+		<script type="text/javascript" src="/js/krds/ui-script.js"></script>
+		
+		<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+		<script src="/js/plugin/tree/jquery.fancytree-all-deps.min.js"></script>
+		<script type="text/javascript" src="/js/ncic/search.js"></script>
+		
+		<!-- Google tag (gtag.js) -->
+		<script async src="https://www.googletagmanager.com/gtag/js?id=G-JDL5M35V3P"></script>
+		<script>
+		  window.dataLayer = window.dataLayer || [];
+		  function gtag(){dataLayer.push(arguments);}
+		  gtag('js', new Date());
+		
+		  gtag('config', 'G-JDL5M35V3P');
+		</script>
+		
+		
+		
+		<script>
+			var sub = ''
+			var csTkn = $("meta[name='_csrf']").attr("content")
+			var csTknH = $("meta[name='_csrf_header']").attr("content");
+			
+			//메뉴관련
+			var menuCode = '';
+			var leftMenuUse = '1';
+			var tapMenuUse = '0';
+			
+			const ST = {
+		        
+		            SUCCESS: 'success',
+		        
+		            NODATA: 'NoData',
+		        
+		            ERROR: 'fail',
+		        
+		            ERROR_MSG: '정상적인 접근이 아닙니다.'
+		        
+		    };
+			
+			$(document).ready(function(){
+				
+				//이용약관 등의 회원 서비스일 경우 로그인 했을 때 로그인 등의 메뉴를 지우기 위한 함수
+				if($('.left_title').text() == '회원서비스'){
+					var userLevelNum = '0';
+					removeLeftMenu($('ul.left_menu_ul li'), userLevelNum);
+				}
+				
+				if('N' != 'Y'){
+					$('.krds-side-navigation').hide();
+				}
+		        
+		        /* START : 임시비밀번호 발급 여부 확인 */
+	            let isTempPw = '';      // 임시 비밀번호 발급 여부, 1: 발급
+	            let currPath = $(location).attr('pathname');
+	            let returnPath = "/mbr/edit_account_confirm.do";
+	            let exceptPaths = [
+	                
+	                    "/mbr/edit_account_confirm.do",
+	                
+	                    "/mbr/edit_account.do",
+	                
+	                    "/mbr/mypage.do"
+	                
+	            ];        // 비밀번호 변경 시 수행되는 api는 제외 
+	            
+	            if(isTempPw == '1' && exceptPaths.indexOf(currPath) < 0){
+	                openAlertPopup('임시 비밀번호를 발급받으신 경우 [회원정보 수정] 페이지에서 비밀번호를 변경하셔야 합니다.', function() {
+	                    location.href = returnPath;
+	                });
+	            } 
+	            /* END */
+				
+				//모바일 탭메뉴
+				$('.left_menu > ul').addClass('tab_ul');
+				var ts = 0;
+				$('.tab_view').click(function(){
+					if(ts == 0){
+						$(this).addClass('on');
+						$('.tab_ul').slideDown(300);
+						ts = 1;
+					}else{
+						$(this).removeClass('on');
+						$('.tab_ul').slideUp(300);
+						ts = 0;
+					}
+				});
+				$(window).resize(function(){
+					if($(window).width() > 1030){
+					  $('.tab_ul').css('display','flex');
+					}else{
+					  $('.tab_ul').css('display','');
+					  $('.tab_view').removeClass('on');
+					  ts = 0;
+					}
+				});
+				
+				//alert 팝업 닫기버튼
+				$('#alert .ico-popup-close').click(function(){
+					$(this).parent().parent().parent().hide();
+				});
+				
+				//최근 검색어
+				renderRecentSearchesTop();
+				getPplrWord();		//인기검색어
+			})
+			
+			function total_search(){
+				var searchTxt = $.trim($('input[id="search"]').val());
+				if(searchTxt == ''){
+					openAlertPopup('검색어를 입력해주세요');
+					$('input[id="search"]').focus()
+					return false;
+				} else {
+					$('form[id="search-form"]').submit();
+				}
+			}
+		</script>
+	</head>
+	<body>
+	
+	   <!-- 2) 커스텀 셀렉트 -->
+		<div id="skipNavi">
+		    <h1><a href="#container">본문 바로가기</a></h1>
+		    <h1><a href="#nav">주메뉴 바로가기</a></h1>
+		    <h1><a href="#footer">하단메뉴 바로가기</a></h1>
+		</div>
+		
+		<div id="wrap">
+			<!-- header -->
+			<header id="krds-header">
+				<!-- 헤더 컨텐츠 영역  -->
+				<div class="header-in">
+					<!-- 헤더 상단 기타메뉴 -->
+					<div class="header-container">
+						<div class="inner">
+							<div class="header-utility">
+								<ul class="utility-list">
+									<li class="lang_select krds-drop-wrap">
+										<i class="svg-icon ico-global"></i>
+										<!-- <label for="langSelect" class="sr-only">언어 선택</label>
+ 										 <select id="langSelect" aria-label="언어 선택">
+										  <option value="ko">한국어</option>
+										  <option value="en">English</option>
+										</select> -->
+										
+										<button type="button" class="krds-btn small text drop-btn">언어변경 <i class="svg-icon ico-toggle"></i></button>
+										<div class="drop-menu">
+											<div class="drop-in">
+												<ul class="drop-list" id="langSelect" aria-label="언어 선택">
+													<li><button class="item-link" type="button" value="ko">한국어</button></li>
+													<li><button class="item-link" type="button" value="en">English</button></li>
+												</ul>
+											</div>
+										</div>
+					                </li>
+									<li><a class="krds-btn small text"  href="/cntnt/sitemap.do">누리집안내지도</a></li>
+									<!-- resize -->
+									<li class="krds-drop-wrap krds-resize" data-adjust="scale">
+									  <button type="button" class="krds-btn small text drop-btn">화면크기 <i class="svg-icon ico-toggle"></i></button>
+									  <div class="drop-menu">
+									    <div class="drop-in">
+									      <ul class="drop-list">
+									        <li><button type="button" class="item-link sm" data-adjust-scale="sm">작게</button></li>
+									        <li><button type="button" class="item-link md active" data-adjust-scale="md">보통</button></li>
+									        <li><button type="button" class="item-link lg" data-adjust-scale="lg">조금 크게</button></li>
+									        <li><button type="button" class="item-link xlg" data-adjust-scale="xlg">크게</button></li>
+									        <li><button type="button" class="item-link xxlg" data-adjust-scale="xxlg">가장크게</button></li>
+									      </ul>
+									      <div class="drop-bottom">
+									        <button type="button" class="krds-btn medium text" data-adjust-scale="md"><i class="svg-icon ico-reset"></i> 초기화</button>
+									      </div>
+									    </div>
+									  </div>
+									</li>
+									<!-- //resize -->
+								</ul>
+							</div>
+							<div class="header-branding">
+								<h2 class="logo">
+									<a href="/index.do">
+										<img src="/images/default/main/logo.svg" alt="NCIC 국가교육과정정보센터" />
+									</a>
+								</h2>
+								<div class="header-actions">
+									<button type="button" class="btn-navi navi-row sch open-modal" title="통합검색 레이어" data-target="popTotalSch" tabindex="0">통합검색</button>
+									
+										
+											<a href="/login.do" class="btn-navi  navi-row login">로그인</a>
+											<a href="/mbr/signup/1.do" class="btn-navi navi-row join">회원가입</a>
+										
+										
+									
+									<button type="button" class="btn-navi all" aria-controls="mobile-nav">전체메뉴</button>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- //헤더 상단 기타메뉴 -->
+					
+				    <!-- 메인메뉴 : 데스크탑 -->
+				    <nav class="krds-main-menu">
+				      <div class="inner">
+				      	<ul class='gnb-menu'><li><a href='/inv/org/list.do' class='gnb-main-trigger is-link first content109 org_list' data-trigger='gnb'>우리나라 교육과정</a></li><li><a href='/inv/wldorg/list.do' class='gnb-main-trigger is-link first content121 ' data-trigger='gnb'>세계 교육과정</a></li><li><a href='/edu/localCurriculum/list.do' class='gnb-main-trigger is-link first content135 localCurriculum' data-trigger='gnb'>지역 교육과정</a></li><li><button type="button" class="gnb-main-trigger content144 " data-trigger="gnb">교육과정 자료실</button><div class='gnb-toggle-wrap'><div class='gnb-main-list'><div class='gnb-sub-list single-list between'><div class='gnb-sub-content'><ul><li><a href='/bbs/report/list.do'>국가교육과정 조사ㆍ분석ㆍ점검 결과 보고서</a></li><li><a href='/cntnt/198.do'>2022 개정 교육과정 자료</a></li><li><a href='/cntnt/199.do'>2015 개정 교육과정 자료</a></li><li><a href='/bbs/standard/list.do'>성취수준</a></li><li><a href='/cntnt/147.do'>정책 자료</a></li></ul></div></div></div></div></li><li><a href='javascript:openBlank(&quot;https://ncic.re.kr/ncrc/index.do&quot;)' class='gnb-main-trigger is-link first content213  blank' data-trigger='gnb'>국가교육과정연구센터</a></li><li><button type="button" class="gnb-main-trigger content152 " data-trigger="gnb">NCIC 소개</button><div class='gnb-toggle-wrap'><div class='gnb-main-list'><div class='gnb-sub-list single-list between'><div class='gnb-sub-content'><ul><li><a href='/cntnt/153.do'>NCIC란?</a></li><li><a href='/cntnt/154.do'>원문&amp;표준 인벤토리란?</a></li><li><a href='/bbs/site/list.do'>유용한 사이트</a></li></ul></div></div></div></div></li><li><button type="button" class="gnb-main-trigger content148 " data-trigger="gnb">안내</button><div class='gnb-toggle-wrap'><div class='gnb-main-list'><div class='gnb-sub-list single-list between'><div class='gnb-sub-content'><ul><li><a href='/bbs/ncicnotice/list.do'>공지사항</a></li><li><a href='/bbs/faq/list.do'>FAQ</a></li><li><a href='/cntnt/151.do'>Q&amp;A</a></li></ul></div></div></div></div></li></ul>
+				      </div>
+				    </nav>
+				    <!-- //메인메뉴 : 데스크탑 -->
+				</div>
+				<!-- //헤더 컨텐츠 영역  -->
+					
+	
+				<!-- 메인메뉴 : 모바일 -->
+				<div id="mobile-nav" class="krds-main-menu-mobile">
+					<div class="gnb-wrap">
+						<!-- gnb-header -->
+						<div class="gnb-header">
+							<!-- gnb-utils -->
+							<div class="gnb-utils">
+								<ul class="utility-list">
+									<li class="lang_select krds-drop-wrap">
+										<!-- 2) 커스텀 셀렉트 -->
+										<i class="svg-icon ico-global"></i>
+	 									<!-- <label for="langSelect" class="sr-only">언어 선택</label>
+										<select id="langSelect" aria-label="언어 선택">
+										  <option value="ko">한국어</option>
+										  <option value="en">English</option>
+										</select>  -->
+										
+										<button type="button" class="krds-btn small text drop-btn">언어변경<i class="svg-icon ico-toggle"></i></button>
+										<div class="drop-menu">
+											<div class="drop-in">
+												<ul class="drop-list" id="langSelect" aria-label="언어 선택">
+													<li><button class="item-link" type="button" value="ko">한국어</button></li>
+													<li><button class="item-link" type="button" value="en">English</button></li>
+												</ul>
+											</div>
+										</div>
+					                </li>
+									<li><a class="krds-btn xsmall text"  href="/cntnt/sitemap.do">누리집안내지도</a></li>
+									<!-- resize -->
+									<li class="krds-drop-wrap krds-resize" data-adjust="scale">
+									  <button type="button" class="krds-btn xsmall text drop-btn">화면크기 <i class="svg-icon ico-toggle"></i></button>
+									  <div class="drop-menu">
+									    <div class="drop-in">
+									      <ul class="drop-list">
+									        <li><button type="button" class="item-link sm" data-adjust-scale="sm">작게</button></li>
+									        <li><button type="button" class="item-link md active" data-adjust-scale="md">보통</button></li>
+									        <li><button type="button" class="item-link lg" data-adjust-scale="lg">조금 크게</button></li>
+									        <li><button type="button" class="item-link xlg" data-adjust-scale="xlg">크게</button></li>
+									        <li><button type="button" class="item-link xxlg" data-adjust-scale="xxlg">가장크게</button></li>
+									      </ul>
+									      <div class="drop-bottom">
+									        <button type="button" class="krds-btn medium text" data-adjust-scale="md"><i class="svg-icon ico-reset"></i> 초기화</button>
+									      </div>
+									    </div>
+									  </div>
+									</li>
+									<!-- //resize -->
+								</ul>
+							</div>
+							<!-- //gnb-utils -->
+							<!-- gnb-login -->
+							<div class="gnb-login">
+								
+									
+										<a href="/login.do" class="krds-btn large text"><i class="svg-icon ico-log"></i> 로그인을 해주세요</a>
+									
+									
+								
+							</div>
+							<!-- //gnb-login -->
+						</div>
+						<!-- //gnb-header -->
+						
+						<!-- gnb-body -->
+						<div class="gnb-body">
+							<div class='gnb-menu'><div class='menu-wrap'><ul><li><a href='#mGnb-anchor1' class='gnb-main-trigger'>우리나라 교육과정</a></li><li><a href='#mGnb-anchor2' class='gnb-main-trigger'>세계 교육과정</a></li><li><a href='#mGnb-anchor3' class='gnb-main-trigger'>지역 교육과정</a></li><li><a href='#mGnb-anchor4' class='gnb-main-trigger'>교육과정 자료실</a></li><li><a href='#mGnb-anchor5' class='gnb-main-trigger'>국가교육과정연구센터</a></li><li><a href='#mGnb-anchor6' class='gnb-main-trigger'>NCIC 소개</a></li><li><a href='#mGnb-anchor7' class='gnb-main-trigger'>안내</a></li></ul></div><div class='submenu-wrap'><div class='gnb-sub-list' id='mGnb-anchor1'><h2 class="sub-title"><a href="/inv/org/list.do" class="content109 org_list">우리나라 교육과정</a></h2></div><div class='gnb-sub-list' id='mGnb-anchor2'><h2 class="sub-title"><a href="/inv/wldorg/list.do" class="content121 ">세계 교육과정</a></h2></div><div class='gnb-sub-list' id='mGnb-anchor3'><h2 class="sub-title"><a href="/edu/localCurriculum/list.do" class="content135 localCurriculum">지역 교육과정</a></h2></div><div class='gnb-sub-list' id='mGnb-anchor4'><h2 class="sub-title">교육과정 자료실</h2><ul><li><a href='/bbs/report/list.do' class='gnb-sub-trigger content220 '>국가교육과정 조사ㆍ분석ㆍ점검 결과 보고서</a></li><li><a href='#' class='gnb-sub-trigger has-depth3 content198 '>2022 개정 교육과정 자료</a><div class='depth3-wrap'><ul><li><a href='/bbs/eduNotice2022/list.do' class='depth3-trigger content219 '>공지사항</a></li><li><a href='/bbs/eduSian2022/list.do' class='depth3-trigger content201 '>개정시안</a></li><li><a href='/bbs/eduRef2022/list.do' class='depth3-trigger content202 '>홍보물</a></li></ul></div></li><li><a href='#' class='gnb-sub-trigger has-depth3 content199 '>2015 개정 교육과정 자료</a><div class='depth3-wrap'><ul><li><a href='/bbs/eduNotice2015/list.do' class='depth3-trigger content203 '>공지사항</a></li><li><a href='/bbs/eduSian2015/list.do' class='depth3-trigger content204 '>개정시안</a></li><li><a href='/bbs/eduRef2015/list.do' class='depth3-trigger content205 '>관련자료</a></li></ul></div></li><li><a href='/bbs/standard/list.do' class='gnb-sub-trigger content146 '>성취수준</a></li><li><a href='#' class='gnb-sub-trigger has-depth3 content147 '>정책 자료</a><div class='depth3-wrap'><ul><li><a href='/bbs/raw/list.do' class='depth3-trigger content160 '>관련 법령</a></li><li><a href='/bbs/etc/list.do' class='depth3-trigger content161 '>기타 자료</a></li></ul></div></li></ul></div><div class='gnb-sub-list' id='mGnb-anchor5'><h2 class="sub-title"><a href="javascript:openBlank(&quot;https://ncic.re.kr/ncrc/index.do&quot;)" class="content213  blank">국가교육과정연구센터</a></h2></div><div class='gnb-sub-list' id='mGnb-anchor6'><h2 class="sub-title">NCIC 소개</h2><ul><li><a href='/cntnt/153.do' class='gnb-sub-trigger content153 '>NCIC란?</a></li><li><a href='/cntnt/154.do' class='gnb-sub-trigger content154 '>원문&amp;표준 인벤토리란?</a></li><li><a href='/bbs/site/list.do' class='gnb-sub-trigger content155 '>유용한 사이트</a></li></ul></div><div class='gnb-sub-list' id='mGnb-anchor7'><h2 class="sub-title">안내</h2><ul><li><a href='/bbs/ncicnotice/list.do' class='gnb-sub-trigger content149 '>공지사항</a></li><li><a href='/bbs/faq/list.do' class='gnb-sub-trigger content150 '>FAQ</a></li><li><a href='/cntnt/151.do' class='gnb-sub-trigger content151 '>Q&amp;A</a></li></ul></div></div></div>
+						</div>
+						<!-- //gnb-body -->
+						
+						<!-- gnb-close -->
+						<button type="button" class="krds-btn medium icon" id="close-nav">
+							<span class="sr-only">전체메뉴 닫기</span>
+							<i class="svg-icon ico-popup-close"></i>
+						</button>
+						<!-- //gnb-close -->
+					</div>
+				</div>
+				<!-- //메인메뉴 : 모바일 -->
+				
+				<!-- 통합검색 팝업 -->
+				<div id="popTotalSch" class="krds-modal fade" data-type="full" aria-labelledby="tit_total_sch_type1" role="dialog">
+			      <!-- modal-dialog -->
+			      <div class="modal-dialog">
+			        <div class="modal-content">
+			          <!-- modal title -->
+			          <div class="modal-header sr-only">
+			            <h2 id="tit_total_sch_type1" class="modal-title">통합검색</h2>
+			          </div>
+			          <!-- //modal title -->
+			          <!-- modal contents -->
+			          <div class="modal-conts">
+			            <!-- 통합검색 -->
+			            <div class="pop-total-serch-wrap">
+			              <!-- 통합검색 정보입력 영역 -->
+			              <div class="search-total-top">
+			                <!-- 검색어 타이틀 -->
+			                <div class="search-tit">
+			                  <label for="search-total-input-id-type1">검색어를 입력해주세요</label>
+			                </div>
+			                <!-- //검색어 타이틀 -->
+			
+			                <!-- 검색어 입력 폼 -->
+			                <div class="sch-form-wrap vert">
+			                  <form class="sch-form-wrap vert" id="search-form" action="/srch/total_search.do" method="get" accept-charset="utf-8">
+			                  <div class="sch-input">
+			                    <input type="text" class="krds-input xlarge" name="search" id="search" placeholder="검색어 입력" >
+			                    <button type="button" onclick="total_search()" class="krds-btn icon xlarge ico-search">
+			                      <span class="sr-only">검색</span>
+			                      <i class="svg-icon ico-sch"></i>
+			                    </button>
+			                  </div>
+			                  </form>
+			                </div>
+			                <!-- //검색어 입력 폼 -->
+			              </div>
+			              <!-- //통합검색 정보입력 영역 -->
+			
+			              <!-- 검색어 리스트 -->
+			              <div class="search-text">
+			              	<ul class="sch-info-list">
+			              		<li class="li1">
+			              			<h3 class="subject">인기검색어</h3>
+			              			<div class="tab-area">
+			              				<div class="tab line full">
+	                                         <ul role="tablist">
+	                                            
+	                                             <li id="tab_search_02" role="tab" aria-selected="false" aria-controls="panel_search_01" class="active"><button type="button" class="btn-tab" onclick="click_rrpl_tabs($(this))">주간<i class="sr-only created"> 선택됨</i></button></li>
+	                                             <li id="tab_search_03" role="tab" aria-selected="false" aria-controls="panel_search_02" class=""><button type="button" class="btn-tab" onclick="click_rrpl_tabs($(this))">월간</button></li>
+	                                         </ul>
+	                                     </div>
+	                                     <div class="tab-conts-wrap">
+	                                     	<section id="panel_search_01" role="tabpanel"  class="tab-conts active">
+	                                     		<ol class="list">
+									                <li>
+									                    <a href="/srch/total_search.do?search=교육과정정보">
+									                        <span class="ranking-txt">교육과정정보</span>
+									                        <span class="ranking-state new">
+									                            <em class="sr-only">신규</em>NEW
+									                        </span>
+									                    </a>
+									                </li>
+									                <li>
+									                    <a href="/srch/total_search.do?search=학교교육개선">
+									                        <span class="ranking-txt">학교교육개선</span>
+									                        <span class="ranking-state up">
+									                            <em class="sr-only">상승</em>1
+									                        </span>
+									                    </a>
+									                </li>
+									                <li>
+									                    <a href="/srch/total_search.do?search=교육정책">
+									                        <span class="ranking-txt">교육정책</span>
+									                        <span class="ranking-state down">
+									                            <em class="sr-only">하락</em>1
+									                        </span>
+									                    </a>
+									                </li>
+									                <li>
+									                    <a href="/srch/total_search.do?search=학습자료공유">
+									                        <span class="ranking-txt">학습자료공유</span>
+									                        <span class="ranking-state same">
+									                            <em class="sr-only">동일</em>
+									                        </span>
+									                    </a>
+									                </li>
+									            </ol>
+	                                     	</section>
+	                                     	<section id="panel_search_02" role="tabpanel" aria-labelledby="tab_search_02" class="tab-conts ">
+	                                     		<ol class="list">
+									                <li>
+									                    <a href="/srch/total_search.do?search=성취기준">
+									                        <span class="ranking-txt">성취기준</span>
+									                        <span class="ranking-state new">
+									                            <em class="sr-only">신규</em>NEW
+									                        </span>
+									                    </a>
+									                </li>
+									                <li>
+									                    <a href="/srch/total_search.do?search=한국어 표준 교육과정 ksl 차이">
+									                        <span class="ranking-txt">한국어 표준 교육과정 ksl 차이</span>
+									                        <span class="ranking-state up">
+									                            <em class="sr-only">상승</em>1
+									                        </span>
+									                    </a>
+									                </li>
+									                <li>
+									                    <a href="/srch/total_search.do?search=수상안전 교육자료">
+									                        <span class="ranking-txt">수상안전 교육자료</span>
+									                        <span class="ranking-state down">
+									                            <em class="sr-only">하락</em>1
+									                        </span>
+									                    </a>
+									                </li>
+									                <li>
+									                    <a href="/srch/total_search.do?search=학교 설명회 중학교 교육연구부 발표자료">
+									                        <span class="ranking-txt">학교 설명회 중학교 교육연구부 발표자료</span>
+									                        <span class="ranking-state same">
+									                            <em class="sr-only">동일</em>
+									                        </span>
+									                    </a>
+									                </li>
+									                <li>
+									                    <a href="/srch/total_search.do?search=교육시설안전성평가">
+									                        <span class="ranking-txt">교육시설안전성평가</span>
+									                        <span class="ranking-state same">
+									                            <em class="sr-only">동일</em>
+									                        </span>
+									                    </a>
+									                </li>
+									            </ol>
+	                                     	</section>
+	                                     </div>
+			              			</div>
+			              		</li>
+			              		<li class="li2">
+			              			<h3 class="subject">최근검색어</h3>
+			              			<ol class="list" id="recentSearchWord">
+			              				<li><a href="/srch/total_search.do?search=호수"><span class="word-txt">호수</span></a>
+			              					<button class="btn svg-icon ico-delete-fill small" data-index="0"><span class="sr-only">삭제</span></button>
+			              				</li>
+			              			</ol>
+			              			<button type="button" class="btn btn-txt ico-delete-fill sm" id="delete-all" onclick="clearSearches()">최근검색어 전체 삭제</button>
+			              		</li>
+			              	</ul>   
+			              </div>
+			              <!-- //검색어 리스트 -->
+			            </div>
+			            <!-- //통합검색 -->
+			          </div>
+			          <!-- //modal contents -->
+			          <!-- close button -->
+			          <button type="button" class="krds-btn xlarge icon btn-close close-modal">
+			            <span class="sr-only">닫기</span>
+			            <i class="svg-icon ico-popup-close"></i>
+			          </button>
+			          <!-- //close button -->
+			        </div>
+			      </div>
+			      <!-- //modal-dialog -->
+			      <div class="modal-back in"></div>
+			    </div>
+			    <!-- //통합검색 팝업 -->
+			</header>
+			<!-- //header -->
+			
+			
+			<div class="" id="sepration" style="background: url('/images/default/content/sub_visual05.webp') 50% 0px no-repeat;" >
+				<h2>
+	 				
+				</h2>
+			</div>
+			
+			<div id="container">
+				<!-- side navigation -->
+				<nav class="krds-side-navigation">
+				  <h2 class="lnb-tit"></h2>
+				  <!-- lnb-list -->
+				  <ul class="lnb-list" role="menubar">
+				  	
+				  </ul>
+				  <!-- //lnb-list -->
+				</nav>
+				<!-- //side navigation -->
+	
+				
+				<div class="contents">
+					<div id="sub_menu_title">
+						<!-- breadcrumb -->
+						<!--  <nav class="krds-breadcrumb-wrap" aria-label="현재 경로" id="breadcrumb">
+						  <ol class="breadcrumb">
+						    
+						  </ol>
+						</nav> -->
+						<!-- breadcrumb -->
+
+						<div class="page-title-wrap" data-type="responsive">
+							<h1 class="h-tit"></h1>
+							<div class="krds-drop-wrap h-tit-drop">
+							  <button type="button" class="h-tit drop-btn" aria-expanded="false"></button>
+							  <div class="drop-menu" style="display: none;">
+								<div class="drop-in">
+								  <ul class="drop-list">
+								  	
+								  </ul>
+								</div>
+							  </div>
+							</div>
+						</div>
+					</div>
+					<ul class="tab_ul"></ul>	<!-- 탭메뉴 미사용시 삭제 -->
+					<div class="content_body">
+						
+
+
+
+
+
+<script async src="https://cse.google.com/cse.js?cx=f10c7d25aefa64bb8"></script>
+
+<script>
+
+$(document).ready(function(){
+	$('.page-title-wrap .h-tit').html('통합검색 더보기');
+	$('#sepration').hide();
+	$('.breadcrumb').html('<li class="home"><a href="/" class="txt">홈</a></li> <li><a href="#"><strong>통합검색</strong></a></li>');
+	
+	/* 검색어 하이라이트 처리 */
+	$('.tab-conts-wrap').each(function(){
+        var html = $(this).html();
+        html = html
+          .replace(/<!--HS-->([\s\S]*?)<!--HE-->/g, '<mark>$1</mark>')
+          .replace(/<!HS>([\s\S]*?)<!HE>/g, '<mark>$1</mark>');
+        $(this).html(html);
+    });
+	
+	
+})
+
+
+/* 인벤토리 상세보기 */
+function move_view(type, year, location, seq, nationCd = null){
+	var w = window.screen.width;
+    var h = window.screen.height;
+    window.open('', 'inv_view', 'width=' + w + ',height=' + h + ',top=0,left=0,scrollbars=yes,resizable=yes');
+    
+    $('form[name="inv_view_form"]').find('input[name="openYear"]').val(year);
+    
+    if(type == 'std'){ // 우리나라 표준인벤토리일 경우
+       $('form[name="inv_view_form"]').find('input[name="nationCd"]').val("1000");
+       
+    }else if(type == 'wld'){
+    	$('form[name="inv_view_form"]').find('input[name="nationCd"]').val(nationCd);   
+    }
+    
+    $('form[name="inv_view_form"]').attr('action', '/inv/' + type + '/view.do');
+    $('form[name="inv_view_form"]').find('input[name="location"]').val(location);
+    $('form[name="inv_view_form"]').find('input[name="seq"]').val(seq);
+    $('form[name="inv_view_form"]').find('input[name="orgType"]').val(type);
+    
+    $('form[name="inv_view_form"]').submit();
+}
+
+/* 파일 다운로드 */
+function file_down(filePath, fileName, fileOrg, fileIdx, fileTbl){
+    $('form[name="down_form"]').find('input[name="filePath"]').val(filePath);
+    $('form[name="down_form"]').find('input[name="fileName"]').val(fileName);
+    $('form[name="down_form"]').find('input[name="fileOrg"]').val(fileOrg);
+    $('form[name="down_form"]').find('input[name="fileIdx"]').val(fileIdx);
+    $('form[name="down_form"]').find('input[name="fileTbl"]').val(fileTbl);
+    
+    $('form[name="down_form"]').submit();
+}
+
+function board_down_file(uploadName, articleIdx){
+    $('form[name="board_down_form"]').find('input[name="fileName"]').val(uploadName);
+    $('form[name="board_down_form"]').find('input[name="articleIdx"]').val(articleIdx);
+    
+    $('form[name="board_down_form"]').submit(); 
+}
+
+function org_down_file(attNo, year){
+    $('form[name="inv_down_form"]').find('input[name="year"]').val(year);
+    $('form[name="inv_down_form"]').find('input[name="seq"]').val(attNo);
+    
+    $('form[name="inv_down_form"]').prop('action', '/inv/org/download.do');
+    $('form[name="inv_down_form"]').submit();
+}
+
+function wld_down_file(stNo){
+    $('form[name="inv_down_form"]').find('input[name="seq"]').val(stNo);
+    $('form[name="inv_down_form"]').find('input[name="year"]').val('');
+    
+    $('form[name="inv_down_form"]').prop('action', '/inv/wldorg/download.do');
+    $('form[name="inv_down_form"]').submit();
+}
+
+function total_down(){
+    $('form[name="total_down_form"]').submit();
+}
+
+function total_down_board(){
+    $('form[name="total_down_form_board"]').submit();
+}
+
+/* 다운로드 모달 열기 */
+function open_down_modal(obj, year, seq, degreeCd = null, classCd = null, mon = null, sub = null, nationCd = null){
+	const targetName = obj.data('target');
+    const target = $('#' + targetName);
+    
+    const offset = obj.offset();
+    const height = obj.height();
+    
+    let baseTop = target.data('base-top');  // 초기값 저장
+    if (baseTop === undefined) {
+        baseTop = target.offset().top;
+        target.data('base-top', baseTop);
+    }
+    
+    let top = (baseTop - offset.top)*(-1) + height + 20;
+    
+    var orgType = "";
+    
+    switch(year){
+        case '1852':
+            orgType = "ogi1";
+            break;
+        case '1899':
+            orgType = "ogi2";
+            break;
+        case '1910':
+            orgType = "ogi3";
+            break;
+        default:
+            orgType = "ogi4";
+            break;
+    }
+    
+    // tblType 구분
+    var cate = 'kr_original';
+    var tblType = '';
+    if(cate === 'intl_original') {
+    	tblType = 'wldorg';
+    	orgType = 'wld';
+    } else if(cate === 'kr_comment') {
+        tblType = 'dwn';
+        orgType = 'ogi4';
+    } else {
+    	tblType = 'org';
+    }
+    
+    // 다운로드 위해 추가
+    $('form[name="inv_down_form"] input[name="orgType"]').val(orgType);
+    $('form[name="total_down_form"] input[name="orgType"]').val(orgType);
+    $('form[name="total_down_form"] input[name="tblType"]').val(tblType);
+    
+    $.ajax({
+        url:'/api/inv/invFileList.do',
+        type:'post',
+        dataType:'json',
+        data:{
+            'invSeq':seq, 
+            'invYear':year,
+            'orgType':orgType,
+            'degreeCode':degreeCd, 
+            'classCode':classCd, 
+            'openYear':year, 
+            'openMonth':mon, 
+            'subjectCode':sub,
+            'nationCode':nationCd,
+            'type': tblType
+        },
+        success:function(data){
+            target.find('.upload-list').empty();
+            
+            var list = "";
+            
+            if(data.data.invFiles.length > 0){
+                for(var i=0; i<data.data.invFiles.length; i++){
+                    var row = data.data.invFiles[i];
+                    list += '<li>';
+                    list += '<div class="file-info m-column">';
+                    list += '<div class="file-name"><i class="svg-icon file_' + row.fileExt.toLowerCase() + '"></i> '+row.fileOrg+' ['+row.fileType+'] </div>';
+                    list += '<button type="button" class="krds-btn medium text" onclick="org_down_file(\''+row.orgAttNo+'\', \''+row.openYear+'\')">다운로드 <i class="svg-icon ico-down"></i></button>';
+                    list += '</div></li>';
+                }
+                
+                target.find('.upload-list').append(list);
+                target.css({top: top + 'px'});
+                if(!target.hasClass('in')){
+                    target.toggleClass('in');
+                }
+                
+                // 전체 다운로드 위해 추가
+                $('form[name="total_down_form"] input[name="year"]').val(row.openYear);
+                $('form[name="total_down_form"] input[name="degree"]').val(row.degreeCode);
+                $('form[name="total_down_form"] input[name="cls"]').val(row.classCode);
+                $('form[name="total_down_form"] input[name="subject"]').val(row.subjectCode);
+                $('form[name="total_down_form"] input[name="nationCd"]').val(row.nationCode);
+                $('form[name="total_down_form"] input[name="mon"]').val(row.openMonth);
+                
+            } else {
+                openAlertPopup('첨부파일이 없습니다.');
+                target.removeClass('in');
+            }
+        }
+    });
+}
+
+
+/**게시판 파일 목록 */
+function board_down_modal(obj, boardIdx, articleIdx){
+    var targetName = obj.data('target');
+    var target = $('#' + targetName);
+    
+    const offset = obj.offset();
+    const height = obj.height();
+    
+    let baseTop = target.data('base-top');  // 초기값 저장
+    if (baseTop === undefined) {
+        baseTop = target.offset().top;
+        target.data('base-top', baseTop);
+    }
+    
+    let top = (baseTop - offset.top)*(-1) + height + 20;
+    
+    // 전체 다운로드 위해 추가
+    $('form[name="total_down_form_board"] input[name="articleIdx"]').val(articleIdx);
+    
+    var data = {'boardIdx':boardIdx, 'articleIdx':articleIdx};
+    
+    dcpost(sub + '/api/bbs/getArticleFileList.do', data )
+            .success(function(data){
+                target.find('.upload-list').empty();
+                
+                var list = "";
+                
+                if(data.fileList.length > 0){
+                    for(var i=0; i<data.fileList.length; i++){
+                        var row = data.fileList[i];
+                        list += '<li>';
+                        list += '<div class="file-info m-column">';
+                        list += '<div class="file-name"><i class="svg-icon file_'+row.fileExt+'"></i> '+row.fileOriginName+' ['+row.fileExt+'] </div>';
+                        list += '<button type="button" class="krds-btn medium text" onclick="board_down_file(\''+row.fileUploadName+'\', \''+row.articleIdx+'\')">다운로드 <i class="svg-icon ico-down"></i></button>';
+                        list += '</div></li>';
+                    }
+                    
+                    target.find('.upload-list').append(list);
+                    
+                    target.css({top: top + 'px'});
+                    if(!target.hasClass('in')){
+                        target.toggleClass('in');
+                    }
+                } else {
+                    openAlertPopup('첨부파일이 없습니다.');
+                    target.removeClass('in');
+                }
+            
+            });
+}
+	  
+</script>
+
+<style>
+	.sch-detail .form-conts {flex-direction: row;}
+	.sch-detail #dateStartRange {margin-right: 1rem;}
+	.sch-detail #dateEndRange {margin-left: 1rem;}
+	#sepration{display:none;}
+</style>  
+
+<!-- 검색 게시판 카테고리 -->
+<div class="con">
+	<div class="global_search ">
+		<!-- 검색 상단 -->
+		<div class="total-search" style="display:none;">
+			<div class="schform-area">
+				<!-- 검색어 입력 // 자동완성 -->
+				<div class="sch-form-wrap">
+					<div class="search-input">
+						<form id="search_form" name="search_form" class="search_form" method="get" >
+							<fieldset>
+								<div class="sch-input">
+									<label class="sr_only" for="searchWord">검색어</label>
+									<input type="text" name="search" id="searchWord" maxlength="100" class="krds-input keyWord" placeholder="검색어 입력" value="2015교육과정">
+									<button type="button" name="btn_submit" class="krds-btn xlarge icon ico-search btnSearch">
+					                  <span class="sr-only">검색</span>
+					                  <i class="svg-icon ico-sch"></i>
+					                </button>
+								</div>
+							</fieldset>
+						</form>
+					</div>
+					<button type="button" class="krds-btn large text detailBtn" ><i class="svg-icon ico-sch-plus"></i>상세검색</button>
+				</div>
+				<!-- //검색어 입력 // 자동완성 -->
+				<!-- 상세검색 -->
+				<div class="sch-detail" style="display:none;">
+					<h2 class="sr-only">검색 필터</h2>
+					<ul class="search-filter basic-search">
+						<li>
+							<strong class="tit">결과 내 재검색</strong>
+							<div class="input-group">
+		                          <div class="chip-wrap">
+		                            <div class="krds-form-check sm">
+		                              <input type="radio" class="radio" name="rdo_word" id="rdo_word1" value="1" >
+		                              <label class="" for="rdo_word1">검색어 포함</label>
+		                            </div>
+		                            <div class="krds-form-check sm">
+		                              <input type="radio" class="radio" name="rdo_word" id="rdo_word2" value="2" >
+		                              <label class="" for="rdo_word2">검색어 제외</label>
+		                            </div>
+		                          </div>
+		                        <div class="form-group">
+		                        	<label class="sr_only" >검색어</label>
+		                        	<input type="text" name="detailKeyword" id="detailSearch" class="krds-input medium" placeholder="검색어를 입력" value="">
+		                        </div>
+							</div>
+						</li>
+						<li>
+							<strong class="tit">검색기간</strong>
+							<div class="input-group">
+								<div class="form-group">
+		                          <div class="chip-wrap">
+		                            <div class="krds-form-chip small">
+		                              <input type="radio" class="radio" name="rdo_chip_data" id="rdo_chip_date1aa">
+		                              <label class="krds-form-chip-outline" for="rdo_chip_date1aa">1개월</label>
+		                            </div>
+		                            <div class="krds-form-chip small">
+		                              <input type="radio" class="radio" name="rdo_chip_data" id="rdo_chip_date1ba" checked="">
+		                              <label class="krds-form-chip-outline" for="rdo_chip_date1ba">3개월</label>
+		                            </div>
+		                            <div class="krds-form-chip small">
+		                              <input type="radio" class="radio" name="rdo_chip_data" id="rdo_chip_date1ca">
+		                              <label class="krds-form-chip-outline" for="rdo_chip_date1ca">6개월</label>
+		                            </div>
+		                            <div class="krds-form-chip small">
+		                              <input type="radio" class="radio" name="rdo_chip_data" id="rdo_chip_date1da">
+		                              <label class="krds-form-chip-outline" for="rdo_chip_date1da">1년</label>
+		                            </div>
+		                          </div>
+		                        </div>
+		                        <div class="form-group">
+		                          <div class="form-conts calendar-conts">
+		                            <input type="text" title="시작 기간 입력" id="dateStartRange" class="krds-input datepicker medium" autocomplete="off" placeholder="yyyy-mm-dd" name="sd" value="" data-startdate="" data-enddate="" readonly> ~ 
+		                            <input type="text" title="종료 기간 입력" id="dateEndRange" class="krds-input datepicker medium" autocomplete="off" placeholder="yyyy-mm-dd" name="sd" value="" data-startdate="" data-enddate="" readonly>
+		                          </div>
+		                        </div>
+							</div>
+						</li>
+					</ul>
+					<div class="">
+						<button type="button" class="krds-btn searchBtn" onclick="search_details()">검색</button>
+						<button type="button" class="krds-btn tertiary resetBtn" onclick="javascript:location.href='/srch/total_search.do?search=2015교육과정'">초기화</button>
+					</div>
+				</div>
+				<!-- 상세검색 -->
+			</div>
+			<!-- 최근검색어 -->
+			<div class="g_rec_keyword">
+				<strong class="tit">최근검색어</strong>
+				<div class="input-group _rentWord" id="rent_word">
+					<a href="/srch/total_search.do?search=교육과정정보">#교육과정정보 <button type="button" class="btn-del svg-icon ico-del" onclick=""> <span class="sr-only">삭제</span></button></a>
+					<a href="/srch/total_search.do?search=학교교육개선">#학교교육개선 <button type="button" class="btn-del svg-icon ico-del" onclick=""> <span class="sr-only">삭제</span></button></a>
+					<a href="/srch/total_search.do?search=교육정책">#교육정책 <button type="button" class="btn-del svg-icon ico-del" onclick=""> <span class="sr-only">삭제</span></button></a>
+					<a href="/srch/total_search.do?search=학습자료공유">#학습자료공유 <button type="button" class="btn-del svg-icon ico-del" onclick=""> <span class="sr-only">삭제</span></button></a>
+				</div>
+			</div>
+			<!-- //최근검색어 -->
+		</div>
+		<!-- //검색 상단 -->
+		
+		<!-- 항목별 검색 수 합산 -->
+		
+		
+		<div class="tab-area">
+			<div class="search-between-conts">
+				<div class="search-contents krds-tab-area">
+					<div class="tab-conts-wrap">
+					<!-- 플랫폼 검색결과 -->
+					<section id="panel_sch_01" role="tabpanel" aria-labelledby="tab_sch_01" class="tab-conts active">
+						<!-- 메뉴명 탭 -->
+						<div class="tab fill full cate-tab">
+							<ul role="tablist">
+							  <li id="totalTab01" aria-selected="false" aria-controls="totalTabpanel01" role="tab" data-listener-attached="true" class="">
+                                <button type="button" class="btn-tab" onclick="location.href='/srch/total_search.do?search=2015교육과정'">전체(270)<i class="sr-only">선택됨</i></button>
+                              </li>
+                              <li id="totalTab02" aria-selected="false" aria-controls="totalTabpanel02" role="tab" data-listener-attached="true" class="">
+                                <button type="button" class="btn-tab" onclick="location.href='/srch/result_more.do?search=2015교육과정&page=1&cate=kr_comment'">우리나라 교육과정 (원문 및 해설서)(10)</button>
+                                
+                              </li>
+                              <li id="totalTab03" aria-selected="false" aria-controls="totalTabpanel03" role="tab" data-listener-attached="true" class="active">
+                                <button type="button" class="btn-tab" onclick="location.href='/srch/result_more.do?search=2015교육과정&page=1&cate=kr_original'">우리나라 교육과정(원문)(49)</button>
+                                <i class="sr-only">선택됨</i>
+                              </li>
+                              <li id="totalTab04" aria-selected="false" aria-controls="totalTabpanel04" role="tab" data-listener-attached="true" class="">
+                                <button type="button" class="btn-tab" onclick="location.href='/srch/result_more.do?search=2015교육과정&page=1&cate=kr_standard'">우리나라 교육과정(표준)(0)</button>
+                                
+                              </li>
+                              <li id="totalTab05" aria-selected="false" aria-controls="totalTabpanel05" role="tab" data-listener-attached="true" class="">
+                                <button type="button" class="btn-tab" onclick="location.href='/srch/result_more.do?search=2015교육과정&page=1&cate=intl_original'">세계 교육과정(원문)(0)</button>
+                                
+                              </li>
+                              <li id="totalTab06" aria-selected="false" aria-controls="totalTabpanel06" role="tab" data-listener-attached="true" class="">
+                                <button type="button" class="btn-tab" onclick="location.href='/srch/result_more.do?search=2015교육과정&page=1&cate=intl_standard'">세계 교육과정(표준)(3)</button>
+                                
+                              </li>
+                              <li id="totalTab07" aria-selected="false" aria-controls="totalTabpanel07" role="tab" data-listener-attached="true" class="">
+                                <button type="button" class="btn-tab" onclick="location.href='/srch/result_more.do?search=2015교육과정&page=1&cate=board'">게시판(202)</button>
+                                
+                              </li>
+                              <li id="totalTab08" aria-selected="false" aria-controls="totalTabpanel08" role="tab" data-listener-attached="true" class="">
+                                <button type="button" class="btn-tab" onclick="location.href='/srch/result_more.do?search=2015교육과정&page=1&cate=attach'">첨부파일(1)</button>
+                                
+                              </li>
+                              <li id="totalTab09" aria-selected="false" aria-controls="totalTabpanel09" role="tab" data-listener-attached="true" class="">
+                                <button type="button" class="btn-tab" onclick="location.href='/srch/result_more.do?search=2015교육과정&page=1&cate=menu'">메뉴(4)</button>
+                                
+                              </li>
+                              <li id="totalTab10" aria-selected="false" aria-controls="totalTabpanel10" role="tab" data-listener-attached="true" class="">
+                                <button type="button" class="btn-tab" onclick="location.href='/srch/result_more.do?search=2015교육과정&page=1&cate=contents'">콘텐츠(1)</button>
+                                
+                              </li>
+							</ul>
+						</div>
+						<!-- 메뉴명 탭 -->
+						
+						<!-- 리스트 상단 -->
+						<div class="search-list-top border">
+						  <ul class="sch-info" aria-live="polite">
+							<li>적용된 검색어 ‘<span class="point">2015교육과정</span>’</li>
+							<li>검색 결과 <span class="point">49</span>개</li>
+						  </ul>
+						  <ul class="sch-sort">
+							<li>
+							  <strong class="sort-label"><label for="sort1">정렬기준</label></strong>
+							  <div>
+							  	<button type="button" class="dateSort active" value="DATE/DESC" onclick="javascript:location.href='/srch/result_more.do?search=2015교육과정&cate=kr_original&sort=date&order=desc'">최신순</button>
+								<button type="button" class="rankSort " value="RANK/DESC" onclick="javascript:location.href='/srch/result_more.do?search=2015교육과정&cate=kr_original&sort=rank'">관련도순</button>
+							  </div>
+							</li>
+						  </ul>
+						</div>
+						<!-- //리스트 상단 -->
+						
+						<article class="result-section">
+						<!-- 검색결과 - 우리나라 원문인벤토리 --> 
+						
+							<div class="deth2-list">
+								<h5 class="sub-title">원문 인벤토리  <span class="num">(49)</span></h5>
+								<ul class="board-list">
+								
+									<li class="total-search-item">										
+										<div class="info-body">
+											<a href="javascript:move_view('org', '2015', '2009 개정 시기 > 고등학교(2012.07) > 총론', '10043239');">
+												<p class="tit">고시문</p>
+												<div class="txt">초  ·  중등<!HS>교육<!HE>법 제23조 제2항에 의거하여 초  ·  중등학교 <!HS>교육<!HE><!HS>과정<!HE>(<!HS>교육<!HE>과학기술부 고시 ... 고등학교 1학년, 고등학교 2학년(영어)  다. <!HS>2015<!HE>년 3월 1일 : 초등학교 5, 6학년, 중학교 ...</div>
+											</a>
+										</div>
+										<div class="info-btm">
+											<ul class="i-cate sch_route">
+												<li>2009 개정 시기 > 고등학교(2012.07) > 총론</li>
+											</ul>
+											<div class="btn-group download-wrap">
+												<button type="button" class="krds-btn medium text open-down" data-target="modal_down1" onclick="open_down_modal($(this), '2015', '10043239')">다운로드 <i class="svg-icon ico-down"></i></button>
+												<a href="javascript:move_view('org', '2015', '2009 개정 시기 > 고등학교(2012.07) > 총론', '10043239');" class="krds-btn medium link basic">자세히보기 <i class="svg-icon ico-more"></i></a>
+											</div>
+										</div>
+									</li>
+								
+									<li class="total-search-item">										
+										<div class="info-body">
+											<a href="javascript:move_view('org', '2015', '2009 개정 시기 > 고등학교(2012.12) > 총론', '10046524');">
+												<p class="tit">고시문</p>
+												<div class="txt"><!HS>교육<!HE>과학기술부 고시 제 2012 - 31호  초ㆍ중등<!HS>교육<!HE>법 제23조제2항에 의거하여 초?중등학교 <!HS>교육<!HE><!HS>과정<!HE>(<!HS>교육<!HE>과학기술부 고시 제 2012-14호, 2012. 7. 9.)  【별책 1】총론을 ...</div>
+											</a>
+										</div>
+										<div class="info-btm">
+											<ul class="i-cate sch_route">
+												<li>2009 개정 시기 > 고등학교(2012.12) > 총론</li>
+											</ul>
+											<div class="btn-group download-wrap">
+												<button type="button" class="krds-btn medium text open-down" data-target="modal_down1" onclick="open_down_modal($(this), '2015', '10046524')">다운로드 <i class="svg-icon ico-down"></i></button>
+												<a href="javascript:move_view('org', '2015', '2009 개정 시기 > 고등학교(2012.12) > 총론', '10046524');" class="krds-btn medium link basic">자세히보기 <i class="svg-icon ico-more"></i></a>
+											</div>
+										</div>
+									</li>
+								
+									<li class="total-search-item">										
+										<div class="info-body">
+											<a href="javascript:move_view('org', '2015', '2009 개정 시기 > 초ㆍ중등학교(2012.03) > 총론', '10042090');">
+												<p class="tit">고시문</p>
+												<div class="txt"><!HS>교육<!HE>과학기술부 고시 제  2011 - 361  호  초  중등<!HS>교육<!HE>법 제  23  조 제  2  항에 의거하여 초·중등학교 <!HS>교육<!HE><!HS>과정<!HE>을 다음과 같이 고시합니다  .  2011  년  8 ...</div>
+											</a>
+										</div>
+										<div class="info-btm">
+											<ul class="i-cate sch_route">
+												<li>2009 개정 시기 > 초ㆍ중등학교(2012.03) > 총론</li>
+											</ul>
+											<div class="btn-group download-wrap">
+												<button type="button" class="krds-btn medium text open-down" data-target="modal_down1" onclick="open_down_modal($(this), '2015', '10042090')">다운로드 <i class="svg-icon ico-down"></i></button>
+												<a href="javascript:move_view('org', '2015', '2009 개정 시기 > 초ㆍ중등학교(2012.03) > 총론', '10042090');" class="krds-btn medium link basic">자세히보기 <i class="svg-icon ico-more"></i></a>
+											</div>
+										</div>
+									</li>
+								
+									<li class="total-search-item">										
+										<div class="info-body">
+											<a href="javascript:move_view('org', '2015', '2009 개정 시기 > 초ㆍ중등학교(2011.08) > 총론', '10029903');">
+												<p class="tit">고시문</p>
+												<div class="txt"><!HS>교육<!HE>과학기술부 고시 제  2011 - 361  호  초ㆍ중등<!HS>교육<!HE>법 제  23  조 제  2  항에 의거하여 초ㆍ중등학교 <!HS>교육<!HE><!HS>과정<!HE>을 다음과 같이  고시합니다  .  2011  8  월 ...</div>
+											</a>
+										</div>
+										<div class="info-btm">
+											<ul class="i-cate sch_route">
+												<li>2009 개정 시기 > 초ㆍ중등학교(2011.08) > 총론</li>
+											</ul>
+											<div class="btn-group download-wrap">
+												<button type="button" class="krds-btn medium text open-down" data-target="modal_down1" onclick="open_down_modal($(this), '2015', '10029903')">다운로드 <i class="svg-icon ico-down"></i></button>
+												<a href="javascript:move_view('org', '2015', '2009 개정 시기 > 초ㆍ중등학교(2011.08) > 총론', '10029903');" class="krds-btn medium link basic">자세히보기 <i class="svg-icon ico-more"></i></a>
+											</div>
+										</div>
+									</li>
+								
+									<li class="total-search-item">										
+										<div class="info-body">
+											<a href="javascript:move_view('org', '2015', '2009 개정 시기 > 초ㆍ중등학교(2012.07) > 총론', '10042389');">
+												<p class="tit">고시문</p>
+												<div class="txt">초  ·  중등<!HS>교육<!HE>법 제23조 제2항에 의거하여 초  ·  중등학교 <!HS>교육<!HE><!HS>과정<!HE>(<!HS>교육<!HE>과학기술부 고시 ... 고등학교 1학년, 고등학교 2학년(영어)  다. <!HS>2015<!HE>년 3월 1일 : 초등학교 5, 6학년, 중학교 ...</div>
+											</a>
+										</div>
+										<div class="info-btm">
+											<ul class="i-cate sch_route">
+												<li>2009 개정 시기 > 초ㆍ중등학교(2012.07) > 총론</li>
+											</ul>
+											<div class="btn-group download-wrap">
+												<button type="button" class="krds-btn medium text open-down" data-target="modal_down1" onclick="open_down_modal($(this), '2015', '10042389')">다운로드 <i class="svg-icon ico-down"></i></button>
+												<a href="javascript:move_view('org', '2015', '2009 개정 시기 > 초ㆍ중등학교(2012.07) > 총론', '10042389');" class="krds-btn medium link basic">자세히보기 <i class="svg-icon ico-more"></i></a>
+											</div>
+										</div>
+									</li>
+								
+									<li class="total-search-item">										
+										<div class="info-body">
+											<a href="javascript:move_view('org', '2015', '2009 개정 시기 > 초ㆍ중등학교(2012.12) > 총론', '10043534');">
+												<p class="tit">고시문</p>
+												<div class="txt"><!HS>교육<!HE>과학기술부 고시 제 2012 - 31호  초ㆍ중등<!HS>교육<!HE>법 제23조제2항에 의거하여 초  ㆍ  중등학교 <!HS>교육<!HE><!HS>과정<!HE>(<!HS>교육<!HE>과학기술부 고시 제 2012-14호, 2012. 7. 9.)  【별책 ...</div>
+											</a>
+										</div>
+										<div class="info-btm">
+											<ul class="i-cate sch_route">
+												<li>2009 개정 시기 > 초ㆍ중등학교(2012.12) > 총론</li>
+											</ul>
+											<div class="btn-group download-wrap">
+												<button type="button" class="krds-btn medium text open-down" data-target="modal_down1" onclick="open_down_modal($(this), '2015', '10043534')">다운로드 <i class="svg-icon ico-down"></i></button>
+												<a href="javascript:move_view('org', '2015', '2009 개정 시기 > 초ㆍ중등학교(2012.12) > 총론', '10043534');" class="krds-btn medium link basic">자세히보기 <i class="svg-icon ico-more"></i></a>
+											</div>
+										</div>
+									</li>
+								
+									<li class="total-search-item">										
+										<div class="info-body">
+											<a href="javascript:move_view('org', '2015', '2009 개정 시기 > 특수교육(2011.11) > 총론', '10043564');">
+												<p class="tit">고시문</p>
+												<div class="txt"><!HS>교육<!HE>과학기술부 고시 제2011-501호  장애인 등에 대한 특수<!HS>교육<!HE>법 제20조 및 동법 시행규칙 제3조의2에 의거하여 특수<!HS>교육<!HE> <!HS>교육<!HE><!HS>과정<!HE>을 다음과 같이 고시합니다.  2011년 11월 ...</div>
+											</a>
+										</div>
+										<div class="info-btm">
+											<ul class="i-cate sch_route">
+												<li>2009 개정 시기 > 특수교육(2011.11) > 총론</li>
+											</ul>
+											<div class="btn-group download-wrap">
+												<button type="button" class="krds-btn medium text open-down" data-target="modal_down1" onclick="open_down_modal($(this), '2015', '10043564')">다운로드 <i class="svg-icon ico-down"></i></button>
+												<a href="javascript:move_view('org', '2015', '2009 개정 시기 > 특수교육(2011.11) > 총론', '10043564');" class="krds-btn medium link basic">자세히보기 <i class="svg-icon ico-more"></i></a>
+											</div>
+										</div>
+									</li>
+								
+									<li class="total-search-item">										
+										<div class="info-body">
+											<a href="javascript:move_view('org', '2015', '2009 개정 시기 > 특수교육(2011.11) > 총론 > 고시문', '10045405');">
+												<p class="tit">고시문</p>
+												<div class="txt"><!HS>교육<!HE>과학기술부 고시 제2011-501호  장애인 등에 대한 특수<!HS>교육<!HE>법 제20조 및 동법 시행규칙 제3조의2에 의거하여 특수<!HS>교육<!HE> <!HS>교육<!HE><!HS>과정<!HE>을 다음과 같이 고시합니다.  2011년 11월 ...</div>
+											</a>
+										</div>
+										<div class="info-btm">
+											<ul class="i-cate sch_route">
+												<li>2009 개정 시기 > 특수교육(2011.11) > 총론 > 고시문</li>
+											</ul>
+											<div class="btn-group download-wrap">
+												<button type="button" class="krds-btn medium text open-down" data-target="modal_down1" onclick="open_down_modal($(this), '2015', '10045405')">다운로드 <i class="svg-icon ico-down"></i></button>
+												<a href="javascript:move_view('org', '2015', '2009 개정 시기 > 특수교육(2011.11) > 총론 > 고시문', '10045405');" class="krds-btn medium link basic">자세히보기 <i class="svg-icon ico-more"></i></a>
+											</div>
+										</div>
+									</li>
+								
+									<li class="total-search-item">										
+										<div class="info-body">
+											<a href="javascript:move_view('org', '2015', '2009 개정 시기 > 특수교육(2010.12) > 총론', '10026624');">
+												<p class="tit">고시문</p>
+												<div class="txt">...  1.  3  조의  2  에 의거하여 「특수<!HS>교육<!HE> <!HS>교육<!HE><!HS>과정<!HE>」을 다음과 같이 개정  .  2.  ㅇ ... ,  개정 등의 조치를 하여야 하는 기한은  <!HS>2015<!HE>  년  2  월  28  일까지로 함  .  2010 ...</div>
+											</a>
+										</div>
+										<div class="info-btm">
+											<ul class="i-cate sch_route">
+												<li>2009 개정 시기 > 특수교육(2010.12) > 총론</li>
+											</ul>
+											<div class="btn-group download-wrap">
+												<button type="button" class="krds-btn medium text open-down" data-target="modal_down1" onclick="open_down_modal($(this), '2015', '10026624')">다운로드 <i class="svg-icon ico-down"></i></button>
+												<a href="javascript:move_view('org', '2015', '2009 개정 시기 > 특수교육(2010.12) > 총론', '10026624');" class="krds-btn medium link basic">자세히보기 <i class="svg-icon ico-more"></i></a>
+											</div>
+										</div>
+									</li>
+								
+								
+								</ul>
+							</div>
+						
+						<!-- //검색결과 --> 
+						
+						<!-- 검색결과 - 우리나라 표준인벤토리 --> 
+                        
+                        <!-- //검색결과 --> 
+                        
+                        <!-- 검색결과 - 원문 및 해설서 --> 
+                        
+                        <!-- //검색결과 --> 
+                        
+                        <!-- 검색결과 - 세계 원문인벤토리 --> 
+                        
+                        <!-- //검색결과 --> 
+                        
+                        <!-- 검색결과 - 세계 표준인벤토리 --> 
+                        
+                        <!-- //검색결과 --> 
+                        
+                        <!-- 검색결과 - 게시판 --> 
+                        
+                        <!-- //검색결과 --> 
+                        
+                        <!-- 검색결과 - 첨부파일 --> 
+                        
+                        <!-- //검색결과 --> 
+                        
+                        <!-- 검색결과 - 메뉴 --> 
+                        
+                        <!-- //검색결과 --> 
+                        
+                        <!-- 검색결과 - 콘텐츠 --> 
+                        
+                        
+                        <!-- 다운로드 팝업 -->
+                        <div class="download-wrap"> 
+                            <section class="krds-modal fade down-modal " id="modal_down1" role="dialog" aria-labelledby="tit_modal_down1-1">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h2 class="modal-title">다운로드</h2>
+                                        <div class="down-link">
+                                            <button type="button" class="krds-btn xsmall" onclick="total_down();"><i class="svg-icon ico-down"></i> 전체 압축파일 받기</button>
+                                        </div>
+                                    </div>
+                                    <div class="modal-conts krds-file-upload">
+                                        <div class="file-list">
+                                            <ul class="upload-list">
+                                                <li>
+                                                    <div class="file-info m-column">
+                                                        <div class="file-name"><i class="svg-icon file_pdf"></i> [별책15] 바른 생활, 슬기로운 생활, 즐거운 생활 교육과정 [pdf, 17KB] </div>
+                                                        <button type="button" class="krds-btn medium text">다운로드 <i class="svg-icon ico-down"></i></button>
+                                                    </div>
+                                                </li>
+                                                <li>
+                                                    <div class="file-info m-column">
+                                                        <div class="file-name"><i class="svg-icon file_hwp"></i> [별책15] 바른 생활, 슬기로운 생활, 즐거운 생활 교육과정 [hwp, 17KB] </div>
+                                                        <button type="button" class="krds-btn medium text">다운로드 <i class="svg-icon ico-down"></i></button>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <button type="button" class="krds-btn medium icon btn-close close-modal">
+                                        <span class="sr-only">닫기</span>
+                                        <i class="svg-icon ico-popup-close"></i>
+                                    </button>
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
+                        <!-- 다운로드 팝업 -->
+                        
+                        <!-- 게시판 다운로드 팝업 -->
+                        <div class="download-wrap"> 
+                            <section class="krds-modal fade down-modal " id="modal_down3" role="dialog" aria-labelledby="tit_modal_down1-1">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h2 class="modal-title">다운로드</h2>
+                                        <div class="down-link">
+                                            <button type="button" class="krds-btn xsmall" onclick="total_down_board()"><i class="svg-icon ico-down"></i> 전체 압축파일 받기</button>
+                                        </div>
+                                    </div>
+                                    <div class="modal-conts krds-file-upload">
+                                        <div class="file-list">
+                                            <ul class="upload-list">
+                                                <li>
+                                                    <div class="file-info m-column">
+                                                        <div class="file-name"><i class="svg-icon file_pdf"></i> [별책15] 바른 생활, 슬기로운 생활, 즐거운 생활 교육과정 [pdf, 17KB] </div>
+                                                        <button type="button" class="krds-btn medium text">다운로드 <i class="svg-icon ico-down"></i></button>
+                                                    </div>
+                                                </li>
+                                                <li>
+                                                    <div class="file-info m-column">
+                                                        <div class="file-name"><i class="svg-icon file_hwp"></i> [별책15] 바른 생활, 슬기로운 생활, 즐거운 생활 교육과정 [hwp, 17KB] </div>
+                                                        <button type="button" class="krds-btn medium text">다운로드 <i class="svg-icon ico-down"></i></button>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <button type="button" class="krds-btn medium icon btn-close close-modal">
+                                        <span class="sr-only">닫기</span>
+                                        <i class="svg-icon ico-popup-close"></i>
+                                    </button>
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
+                        <!-- 게시판 다운로드 팝업 -->
+                        
+                        </article>
+                        <!-- //검색결과 --> 
+                        
+					</section>
+					</div>
+				</div>
+				
+				<!-- 인기 검색어 -->
+				<div class="aside ">
+					<h2 class="section-tit">인기 검색어</h2>
+					<div class="krds-tab-area">
+					<ul class="chip-wrap"  role="tablist">
+						<li id="tab_rank_01" role="tab" aria-selected="true" aria-controls="panel_rank_01" class="active"><button type="button" class="btn-tab">주간<i class="sr-only created"> 선택됨</i></button></li>
+						<li id="tab_rank_02" role="tab" aria-selected="false" aria-controls="panel_rank_02" class=""><button type="button" class="btn-tab">월간</button></li>
+					</ul>
+					<div  class="tab-conts-wrap">
+					<section id="panel_rank_01" role="tabpanel" aria-labelledby="tab_rank_01" class="tab-conts active">
+						<ol class="list">
+							
+								<li>
+									<a href="/srch/total_search.do?search=2022 개정 교육과정">
+										<span class="ranking-txt">2022 개정 교육과정</span>
+										
+											
+											
+											
+											
+												<span class="ranking-state same"><em class="sr-only">동일</em></span>
+											
+										
+									</a>
+								</li>
+							
+								<li>
+									<a href="/srch/total_search.do?search=2015">
+										<span class="ranking-txt">2015</span>
+										
+											
+											
+											
+											
+												<span class="ranking-state same"><em class="sr-only">동일</em></span>
+											
+										
+									</a>
+								</li>
+							
+								<li>
+									<a href="/srch/total_search.do?search=2015 개정 교육과정">
+										<span class="ranking-txt">2015 개정 교육과정</span>
+										
+											
+											
+											
+											
+												<span class="ranking-state same"><em class="sr-only">동일</em></span>
+											
+										
+									</a>
+								</li>
+							
+								<li>
+									<a href="/srch/total_search.do?search=2022 개정">
+										<span class="ranking-txt">2022 개정</span>
+										
+											
+											
+												<span class="ranking-state up"><em class="sr-only">상승</em></span>
+											
+											
+											
+										
+									</a>
+								</li>
+							
+								<li>
+									<a href="/srch/total_search.do?search=2022개정">
+										<span class="ranking-txt">2022개정</span>
+										
+											
+											
+												<span class="ranking-state up"><em class="sr-only">상승</em></span>
+											
+											
+											
+										
+									</a>
+								</li>
+							
+								<li>
+									<a href="/srch/total_search.do?search=수학">
+										<span class="ranking-txt">수학</span>
+										
+											
+											
+												<span class="ranking-state up"><em class="sr-only">상승</em></span>
+											
+											
+											
+										
+									</a>
+								</li>
+							
+								<li>
+									<a href="/srch/total_search.do?search=학교 설명회 중학교 교육연구부 발표자료">
+										<span class="ranking-txt">학교 설명회 중학교 교육연구부 발표자료</span>
+										
+											
+											
+											
+											
+												<span class="ranking-state same"><em class="sr-only">동일</em></span>
+											
+										
+									</a>
+								</li>
+							
+								<li>
+									<a href="/srch/total_search.do?search=2022 개정 교육과정 성취기준">
+										<span class="ranking-txt">2022 개정 교육과정 성취기준</span>
+										
+											
+											
+											
+											<span class="ranking-state down"><em class="sr-only">하락</em></span>
+											
+											
+										
+									</a>
+								</li>
+							
+								<li>
+									<a href="/srch/total_search.do?search=100대">
+										<span class="ranking-txt">100대</span>
+										
+											
+											
+											
+											<span class="ranking-state down"><em class="sr-only">하락</em></span>
+											
+											
+										
+									</a>
+								</li>
+							
+								<li>
+									<a href="/srch/total_search.do?search=국어 2015 개정 교육과정">
+										<span class="ranking-txt">국어 2015 개정 교육과정</span>
+										
+											
+												<span class="ranking-state new"><em class="sr-only">신규</em>NEW</span>
+											
+											
+											
+											
+										
+									</a>
+								</li>
+							
+						</ol>
+					</section>
+					<section id="panel_rank_02" role="tabpanel" aria-labelledby="tab_rank_02" class="tab-conts ">
+						<ol class="list">
+							
+								<li>
+									<a href="/srch/total_search.do?search=2022 개정 교육과정">
+										<span class="ranking-txt">2022 개정 교육과정</span>
+										
+											
+											
+											
+											
+												<span class="ranking-state same"><em class="sr-only">동일</em></span>
+											
+										
+									</a>
+								</li>
+							
+								<li>
+									<a href="/srch/total_search.do?search=2015 개정 교육과정">
+										<span class="ranking-txt">2015 개정 교육과정</span>
+										
+											
+											
+											
+											
+												<span class="ranking-state same"><em class="sr-only">동일</em></span>
+											
+										
+									</a>
+								</li>
+							
+								<li>
+									<a href="/srch/total_search.do?search=2022 개정 교육과정 영어">
+										<span class="ranking-txt">2022 개정 교육과정 영어</span>
+										
+											
+											
+												<span class="ranking-state up"><em class="sr-only">상승</em></span>
+											
+											
+											
+										
+									</a>
+								</li>
+							
+								<li>
+									<a href="/srch/total_search.do?search=2022 개정 교육과정 성취기준">
+										<span class="ranking-txt">2022 개정 교육과정 성취기준</span>
+										
+											
+											
+											
+											
+												<span class="ranking-state same"><em class="sr-only">동일</em></span>
+											
+										
+									</a>
+								</li>
+							
+								<li>
+									<a href="/srch/total_search.do?search=2015 개정 교육과정 교수 학습 자료">
+										<span class="ranking-txt">2015 개정 교육과정 교수 학습 자료</span>
+										
+											
+											
+												<span class="ranking-state up"><em class="sr-only">상승</em></span>
+											
+											
+											
+										
+									</a>
+								</li>
+							
+								<li>
+									<a href="/srch/total_search.do?search=가정">
+										<span class="ranking-txt">가정</span>
+										
+											
+												<span class="ranking-state new"><em class="sr-only">신규</em>NEW</span>
+											
+											
+											
+											
+										
+									</a>
+								</li>
+							
+								<li>
+									<a href="/srch/total_search.do?search=2015">
+										<span class="ranking-txt">2015</span>
+										
+											
+											
+												<span class="ranking-state up"><em class="sr-only">상승</em></span>
+											
+											
+											
+										
+									</a>
+								</li>
+							
+								<li>
+									<a href="/srch/total_search.do?search=2015 개정 교육과정 중등">
+										<span class="ranking-txt">2015 개정 교육과정 중등</span>
+										
+											
+											
+											
+											
+												<span class="ranking-state same"><em class="sr-only">동일</em></span>
+											
+										
+									</a>
+								</li>
+							
+								<li>
+									<a href="/srch/total_search.do?search=학교 설명회 중학교 교육연구부 발표자료">
+										<span class="ranking-txt">학교 설명회 중학교 교육연구부 발표자료</span>
+										
+											
+											
+											
+											<span class="ranking-state down"><em class="sr-only">하락</em></span>
+											
+											
+										
+									</a>
+								</li>
+							
+								<li>
+									<a href="/srch/total_search.do?search=2022 특수교육">
+										<span class="ranking-txt">2022 특수교육</span>
+										
+											
+											
+												<span class="ranking-state up"><em class="sr-only">상승</em></span>
+											
+											
+											
+										
+									</a>
+								</li>
+							
+						</ol>
+					</section>
+					</div>
+					</div>
+				</div>
+				<!-- 인기 검색어 -->
+			</div>
+		</div>
+	</div>
+	
+
+    <div class="boardPageNav">
+        <div class='krds-pagination'><a class='page-navi prev' href='/srch/result_more.do?search=2015교육과정&cate=kr_original&sort=date&order=desc&page=4' title='이전 4페이지'>이전</a><div class='page-links'><a href='/srch/result_more.do?search=2015교육과정&cate=kr_original&sort=date&order=desc&page=1' title='1페이지 이동' class='page-link'>1</a><a href='/srch/result_more.do?search=2015교육과정&cate=kr_original&sort=date&order=desc&page=2' title='2페이지 이동' class='page-link'>2</a><a href='/srch/result_more.do?search=2015교육과정&cate=kr_original&sort=date&order=desc&page=3' title='3페이지 이동' class='page-link'>3</a><a href='/srch/result_more.do?search=2015교육과정&cate=kr_original&sort=date&order=desc&page=4' title='4페이지 이동' class='page-link'>4</a><a href='/srch/result_more.do?search=2015교육과정&cate=kr_original&sort=date&order=desc&page=5' title='현재 5페이지' class='page-link active'>5</a></div></div>
+    </div>
+
+
+</div>
+
+<form name="inv_view_form" action="" method="post" target="inv_view">
+    <input type="hidden" name="_csrf" value="af45920d-b70c-48fc-84e1-ed7448285299" />
+    <input type="hidden" name="openYear" value="" />
+    <input type="hidden" name="seq" value="" />
+    <input type="hidden" name="location" value="" />
+    <input type="hidden" name="orgType" value="" />
+    <input type="hidden" name="nationCd" value="" />
+</form>
+
+<form name="down_form" action="/srch/download.do" method="post">
+    <input type="hidden" name="_csrf" value="af45920d-b70c-48fc-84e1-ed7448285299" />
+    <input type="hidden" name="filePath" value="" />
+    <input type="hidden" name="fileName" value="" />
+    <input type="hidden" name="fileOrg" value="" />
+    <input type="hidden" name="fileIdx" value="" />
+    <input type="hidden" name="fileTbl" value="" />
+</form>
+
+<form name="board_down_form" action="/bbs/download.do" method="post">
+    <input type="hidden" name="_csrf" value="af45920d-b70c-48fc-84e1-ed7448285299" />
+    <input type="hidden" name="fileName" value="" />
+    <input type="hidden" name="articleIdx" value="" />
+</form>
+
+<form name="inv_down_form" action="" method="get">
+    <input type="hidden" name="year" value="" />
+    <input type="hidden" name="seq" value="" />
+    <input type="hidden" name="orgType" value="" />
+</form>
+
+<form name="total_down_form" action="/inv/org/total_download.do" method="get">
+    <input type="hidden" name="year" value="" />
+    <input type="hidden" name="degree" value="" />
+    <input type="hidden" name="cls" value="" />
+    <input type="hidden" name="subject" value="" />
+    <input type="hidden" name="mon" value="" />
+    <input type="hidden" name="orgType" value="" />
+    <input type="hidden" name="nationCd" value="" />
+    <input type="hidden" name="tblType" value="" />
+</form>
+
+<form name="total_down_form_board" action="/bbs/total_download.do" method="get">
+    <input type="hidden" name="articleIdx" value="" />
+</form>
+			
+					</div>
+				</div>
+			</div>
+			
+			
+			<!-- footer -->
+			<footer id="krds-footer">
+			  <div class="foot-quick">
+			    <div class="inner">
+			      <button type="button" class="link" onclick="window.open('https://www.ne.go.kr/index.do')" title="새창으로 열림">국가교육위원회</button>
+			      <button type="button" class="link" onclick="window.open('https://www.kice.re.kr/main.do?s=kice')" title="새창으로 열림">한국교육과정평가원</button>
+			    </div>
+			  </div>
+			  <div class="inner">
+			    <div class="f-logo">
+			    	<div class="logo1">
+			    		<img src="/images/default/main/f_logo1.svg" alt="대통령 소속 국가교육위원회">
+			    	</div>
+			    	<div class="logo2">
+			    		<img src="/images/default/main/f_logo2.svg" alt="한국교육과정평가원">
+			    	</div>
+			    </div>
+			    <div class="f-cnt">
+			      <div class="f-info">
+			        <p class="info-addr">(우) 27873 충청북도 진천군 덕산읍 교학로 8 한국교육과정평가원</p>
+			      </div>
+			    </div>
+			
+			    <div class="f-btm">
+			      <div class="f-btm-text">
+			        <div class="f-menu">
+			          <a href="/mbr/terms.do" class="">이용약관 </a>
+			          <a class="f-pri-quick" href="/mbr/privacy.do" class="">개인정보처리방침</a>
+			          <a href="/mbr/policy.do" class="">저작권 정책</a>
+			        </div>
+				    <p class="f-copy">
+				        
+						Copyright(C) 2026 by NCIC. ALL RIGHTS RESERVED. 
+					</p>
+			      </div>
+			    </div>
+			  </div>
+			</footer>
+			<!-- //footer -->
+		</div>
+		
+		<!-- 2023-11-22 웹 접근성 전용 confirm 레이어 팝업 추가 bk -->
+		<div class="layer_pop">
+			<div class="pop_con" tabindex="0">
+				<h4>팝업 제목이 나타납니다.</h4>
+				<p>팝업의 내용이 나타납니다.</p>
+				<div class="pop_btn">
+					<button type="button" class="pop_cancel"> 취소</button>
+					<button type="button" class="pop_confirm"> 확인</button>
+				</div>
+			</div>
+		</div>
+		
+		<!-- 자동로그아웃 팝업 -->
+		<div id="autoLogout_comp" class="con_pop" style="display:none;">
+			<div class="popin alert">
+				<h3>자동로그아웃</h3>
+				<p class="close"><a href="javascript:close_comp();"><span>닫기</span><i class="xi-close-thin"></i></a></p>
+				<div class="txt">
+					<img src="/images/default/content/img_alert.png"  alt="" style="width:7rem;">
+					<h4>연장되었습니다.</h4>
+					<p class="logo"><img src="/images/default/main/logo_b.svg"  alt=""></p>
+				</div>
+			</div>
+		</div>
+		<!-- //자동로그아웃 팝업 -->
+	
+		<!-- 자동로그아웃 팝업 -->
+		<div id="autoLogout" class="con_pop" style="display:none;">
+			<div class="popin">
+				<h3>자동로그아웃</h3>
+				<p class="close"><a href="javascript:closeLogPop()"><span>닫기</span><i class="xi-close-thin"></i></a></p>
+				<div class="txt ac">
+					로그아웃까지 남은 시간
+					<h4 class="time">60초</h4>
+					장시간 활동이 없어 자동으로 로그아웃 됩니다.<br/>
+					계속 이용 하시려면 로그인 시간을 연장해주세요.
+				</div>
+				<div class="bottom_button">
+					<a href="/logout">로그아웃</a>
+					<a href="javascript:saveTime()" class="confirm">로그인시간 연장</a>
+				</div>
+			</div>
+		</div>
+		<!-- //자동로그아웃 팝업 -->
+		
+		<!-- 로딩 팝업 -->
+		<div class="con_pop" id="loading" style="display:none;">
+			<div class="popin">
+			<svg class="loading_spinner" xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 100 100" style="filter: drop-shadow(rgba(0, 0, 0, 0.1) 0px 4px 16px);">
+				<circle cx="50" cy="50" r="30" fill="none" stroke="#D6DBE0" stroke-width="8"></circle>
+				<circle cx="50" cy="50" r="30" fill="none" stroke="var(--main)" stroke-width="8" stroke-linecap="butt" transform="rotate(-90 50 50)">
+				<animate attributeName="stroke-dasharray" values="0,188.4;188.4,0;188.4,188.4" dur="3s" repeatCount="indefinite"></animate>
+				<animate attributeName="stroke-dashoffset" values="0;0;-188.4" dur="3s" repeatCount="indefinite"></animate></circle>
+			</svg>
+			<p>잠시만 기다려주십시오</p>
+			</div>
+		</div>
+		<!-- //로딩 팝업 -->
+		
+		<!-- common alert 팝업 -->
+        <section id="commonAlert" class="notice_pop krds-modal fade shown" role="dialog" aria-labelledby="commonAlert">
+          <div class="modal-dialog">
+            <div class="modal-content">
+             <div class="modal_inn"> 
+                  <!-- modal title -->
+                  <div class="modal-header">
+                    <div class="pop_icon cmAlert">
+                        <span></span>
+                    </div>
+                    <h2 id="tit_modal_sample_01" class="modal-title">
+                      정상적인 접근이 아닙니다.
+                    </h2>
+                  </div>
+                  <!-- //modal title -->
+                  <!-- modal contents (별다른 내용이 없으면 안나오게 처리하셔도 무방합니다.) -->
+                  <div class="modal-conts" style="display: none;">
+                    <div class="conts-area">
+                     비교할 항목을 선택한 뒤 다시 시도해주세요
+                    </div>
+                  </div>
+               </div>
+              <!-- //modal contents (별다른 내용이 없으면 안나오게 처리하셔도 무방합니다.) -->
+              <!-- modal btn -->
+              <div class="modal-btn btn-wrap">
+                <button type="button" class="krds-btn medium primary close-modal">확인</button>
+              </div>
+              <!-- //modal btn -->
+              <!-- close button -->
+              <button type="button" class="krds-btn medium icon btn-close close-modal" style="display: none;">
+                <span class="sr-only">닫기</span>
+                <i class="svg-icon ico-popup-close"></i>
+              </button>
+              <!-- //close button -->
+            </div>
+          </div>
+          <div class="modal-back in"></div>
+        </section>
+        <!-- //common alert 팝업 -->
+        
+        <!-- 언어 번역 -->
+        <div id="gtranslate_wrapper"></div>
+    
+	    <script>
+	        window.gtranslateSettings = {
+	            default_language: "ko", // 원본 언어
+	            languages: ["ko", "en"],  // 표시할 언어만 지정
+	            wrapper_selector: "#gtranslate_wrapper",
+	            detect_browser_language: false // 자동 감지 비활성화
+	        };
+	    </script>
+	    
+	    <script src="https://cdn.gtranslate.net/widgets/latest/float.js" defer></script>
+	    <!-- // 언어 번역 -->
+	    
+
+<script>
+$(function () {
+  var SRC = "ko"; // 원본 언어
+
+  // --- 쿠키 유틸 ---
+  function setCookie(name, value, opts) {
+    opts = opts || {};
+    var c = name + "=" + value + "; path=/";
+    if (opts["max-age"]) c += "; max-age=" + opts["max-age"];
+    if (opts.domain)     c += "; domain=" + opts.domain;
+    document.cookie = c;
+  }
+  function clearGoogTrans() {
+    var past = "Thu, 01 Jan 1970 00:00:00 GMT";
+    var host = location.hostname.replace(/^www\./, "");
+    var domains = [location.hostname, "." + host];
+    $.each(domains, function(_, d){
+      document.cookie = "googtrans=; expires=" + past + "; path=/; domain=" + d;
+    });
+    document.cookie = "googtrans=; expires=" + past + "; path=/";
+    // 해시 제거(구버전 호환)
+    if (location.hash.indexOf("#googtrans/") === 0) {
+      try { history.replaceState(null, "", location.pathname + location.search); } catch(e){}
+    }
+  }
+  function setGoogTransCookie(src, tgt) {
+    var val = "/" + src + "/" + tgt;
+    var host = location.hostname.replace(/^www\./, "");
+    var domains = [location.hostname, "." + host];
+    $.each(domains, function(_, d){
+      setCookie("googtrans", val, {"max-age": 60*60*24*365, domain: d});
+    });
+    setCookie("googtrans", val, {"max-age": 60*60*24*365});
+    try { window.location.hash = "#googtrans/" + src + "/" + tgt; } catch(e){}
+  }
+
+  $('#langSelect .item-link').on('click', function(){
+    // 버튼 value가 'en' 또는 'kr' (혹은 'ko') 라고 하셨으니 정규화
+    var selVal = $(this).val();
+    var tgt = (selVal === 'kr') ? 'ko' : selVal;  // 'kr' -> 'ko'로 통일
+
+    if (selVal === SRC) {
+      // [한국어 복귀 시] GTranslate 설정을 원본(ko)으로 맞추고 캐시 우회 새로고침
+      try {
+        localStorage.setItem('__GT_TRANSLATE_LANGS', JSON.stringify({ srcLang: SRC, tgtLang: 'ko' })); // 로컬스토리지 값을 'ko'로 변경
+        if (typeof window.doGTranslate === 'function') {
+          window.doGTranslate('ko|ko');
+        }
+      } catch(e) {}
+      // 한국어 복귀: 쿠키/해시 삭제 후 리로드
+      clearGoogTrans();
+      window.location.reload();
+      return;
+    }
+
+    // 영어 등 타 언어: 쿠키 설정 후 리로드
+    clearGoogTrans();               // 이전 흔적 정리
+    setGoogTransCookie(SRC, tgt);   // 예: /ko/en
+    window.location.reload();
+  });
+});
+</script>
+	    
+	    <!-- 구글 번역 소스 백업
+	    <div id="google_translate_element" style="display:none;"></div>     // 숨김처리
+	        
+	    // 구글 번역 초기화 - 시작
+	    <script>
+	        function googleTranslateElementInit() {
+	            new google.translate.TranslateElement({
+	                pageLanguage: 'ko',
+	                includedLanguages: 'ko,en',
+	                autoDisplay: false
+	            }, 'google_translate_element');
+	        }
+	        
+	        document.addEventListener('DOMContentLoaded', function() {
+	            const select = document.getElementById('customTranslateSelect');
+	            
+	            select.addEventListener('change', function() {
+	                const lang = this.value;
+	                const googleCombo = document.querySelector('.goog-te-combo');
+	              
+	                if (!googleCombo) return;
+	
+	                if (lang === 'en') {
+	                    googleCombo.value = 'en';
+	                    googleCombo.dispatchEvent(new Event('change'));
+	                    
+	                } else if (lang === 'ko') {
+	                    // 원본 복원 - cookie 삭제 후 페이지 리로드
+	                    const domain = window.location.hostname;
+	                    document.cookie = 'googtrans=/ko/ko; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+	                    document.cookie = `googtrans=/ko/ko; expires=Thu, 01 Jan 1970 00:00:00 UTC; domain=; path=/;`;
+	                    location.reload();
+	                }
+	            });
+	        });
+	    </script>
+	    // 구글 번역 초기화 - 종료
+	     
+	    <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>  // 스크립트 로드
+	    -->
+	    <script type="text/javascript">var _TRK_LID = "114470";var _L_TD = "ssl.logger.co.kr";var _TRK_CDMN = ".ncic.re.kr";</script>
+		<script type="text/javascript">var _CDN_DOMAIN = location.protocol == "https:" ? "https://fs.bizspring.net" : "http://fs.bizspring.net"; 
+		(function (b, s) { var f = b.getElementsByTagName(s)[0], j = b.createElement(s); j.async = true; j.src = "//fs.bizspring.net/fs4/bstrk.1.js"; f.parentNode.insertBefore(j, f); })(document, "script");
+		</script>
+		<noscript><img alt="Logger Script" width="1" height="1" src="https://ssl.logger.co.kr/tracker.1.tsp?u=114470&amp;js=N"/></noscript>
+		
+		
+		<!-- AceCounter Log Gathering Script V.8.0.AMZ2019080601 -->
+		<script language='javascript'>
+			var _AceGID=(function(){var Inf=['gtt6.acecounter.com','8080','AH6A35709843245','AW','0','NaPm,Ncisy','ALL','0']; var _CI=(!_AceGID)?[]:_AceGID.val;var _N=0;var _T=new Image(0,0);if(_CI.join('.').indexOf(Inf[3])<0){ _T.src ="https://"+ Inf[0] +'/?cookie'; _CI.push(Inf);  _N=_CI.length; } return {o: _N,val:_CI}; })();
+			var _AceCounter=(function(){var G=_AceGID;var _sc=document.createElement('script');var _sm=document.getElementsByTagName('script')[0];if(G.o!=0){var _A=G.val[G.o-1];var _G=(_A[0]).substr(0,_A[0].indexOf('.'));var _C=(_A[7]!='0')?(_A[2]):_A[3];var _U=(_A[5]).replace(/\,/g,'_');_sc.src='https:'+'//cr.acecounter.com/Web/AceCounter_'+_C+'.js?gc='+_A[2]+'&py='+_A[4]+'&gd='+_G+'&gp='+_A[1]+'&up='+_U+'&rd='+(new Date().getTime());_sm.parentNode.insertBefore(_sc,_sm);return _sc.src;}})();
+		</script>
+		<!-- AceCounter Log Gathering Script End -->
+		
+		
+		<script>
+(function () {
+	try {
+		var u   = (location.pathname + location.search).slice(0, 512);
+		var ref = (document.referrer || '').slice(0, 1000);
+		fetch('/api/stat/hit.do?u=' + encodeURIComponent(u) + '&ref=' + encodeURIComponent(ref),
+		      { credentials: 'same-origin' }).catch(function () {});
+	} catch (e) {}
+})();
+</script>
+
+		
+		
+	</body>
+</html>
