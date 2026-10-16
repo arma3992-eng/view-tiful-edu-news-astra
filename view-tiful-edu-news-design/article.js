@@ -31,6 +31,7 @@
     item.textContent = text;
     list.append(item);
   });
+  window.ReaderGuide.article(story);
   if (location.hash === '#summary') {
     requestAnimationFrame(() => document.querySelector('#summary').scrollIntoView({block: 'start'}));
   }

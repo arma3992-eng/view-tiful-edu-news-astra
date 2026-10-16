@@ -380,6 +380,14 @@ class Store:
                 approval = dict(binding, id=str(uuid.uuid4()), final_report_id=report["id"], reviewer=reviewer,
                                 acknowledgements=acknowledgements, approved_at=now_iso(), resolutions=checked_resolutions,
                                 review_basis="ai_and_human" if checked_resolutions else "ai_only")
+                if draft["content"].get("reader_guide") is not None:
+                    approval["reader_guide_review"] = {
+                        "initial": draft["metadata"].get("reader_guide_initial"),
+                        "latest": draft["metadata"].get("reader_guide_latest"),
+                        "final": draft["content"]["reader_guide"],
+                        "note": draft["metadata"].get("reader_guide_note", ""),
+                        "approved": True,
+                    }
                 db.execute("INSERT INTO article_approvals (id, article_id, approval_json, created_at) VALUES (?, ?, ?, ?)",
                            (approval["id"], article_id, json.dumps(approval, ensure_ascii=False), approval["approved_at"]))
                 db.execute("UPDATE articles SET updated_at=? WHERE id=?", (approval["approved_at"], article_id))

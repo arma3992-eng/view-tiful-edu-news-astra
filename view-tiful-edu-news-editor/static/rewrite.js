@@ -1,4 +1,4 @@
-/* 기존 원문·근거 화면과 분리한 기사 재작성·편집 컨트롤러. */
+/* 기존 원문·근거 화면과 분리한 기사 초안 작성·편집 컨트롤러. */
 window.createRewriteEditor = function (host) {
   "use strict";
   const $ = id => document.getElementById(id);
@@ -6,6 +6,8 @@ window.createRewriteEditor = function (host) {
   const kinds = {fact:"사실·과거 사례·트렌드", analysis:"편집자 분석", opinion:"기자 의견·주장", guidance:"학습 제안", interview:"인터뷰·취재"};
   const audiences = {student:"학생", parent:"학부모", teacher:"교사"};
   let article = null, baselinePlan = "", baselineDraft = "", hasDraft = false, generating = false;
+  let baselineGuideNote = "";
+  const readerGuide = window.createReaderGuideEditor(host.onChange);
   let sectionRefs = [], factRefs = [], guidanceRefs = {};
   function node(tag, text, className = "") {
     const item = document.createElement(tag); item.textContent = text;
@@ -53,7 +55,13 @@ window.createRewriteEditor = function (host) {
     })), editor_note:$("editor-note").value};
   }
   function planChanged() { return !!article && JSON.stringify(readPlan()) !== baselinePlan; }
-  function draftChanged() { return hasDraft && JSON.stringify(readDraft()) !== baselineDraft; }
+  function draftChanged() { return hasDraft && (JSON.stringify(readDraft()) !== baselineDraft || readerGuide.note() !== baselineGuideNote); }
+  function articleBodyChanged() {
+    if (!hasDraft || !baselineDraft) return true;
+    const current = readDraft(), saved = JSON.parse(baselineDraft);
+    delete current.reader_guide; delete saved.reader_guide;
+    return JSON.stringify(current) !== JSON.stringify(saved);
+  }
   function defaultPlan(next) {
     const report = next.verification_report;
     return {decisions:report ? [...report.checks, ...(report.unanchored_checks || [])].map(check => ({
@@ -127,10 +135,12 @@ window.createRewriteEditor = function (host) {
       row.append(node("h4", label), field("안내 제목", "input", "guidance-heading", item.heading, 120), field("학습·준비 제안 · 내용이 없으면 생략", "textarea", "guidance-text", item.text, 2500));
       $("draft-guidance").append(row);
     }
+    readerGuide.load(content.reader_guide, content.audience_guidance, article?.draft?.metadata || {});
+    baselineGuideNote = readerGuide.note();
     baselineDraft = JSON.stringify(readDraft());
   }
   function readDraft() {
-    return {category:$("draft-category").value,title:$("draft-title").value,
+    return {...(readerGuide.read() === null ? {} : {reader_guide:readerGuide.read()}),category:$("draft-category").value,title:$("draft-title").value,
       summary:[$("draft-summary-1").value,$("draft-summary-2").value],
       sections:[...$("draft-sections").children].map(row => ({heading:row.querySelector(".section-heading").value,
         kind:row.querySelector(".section-kind").value,text:row.querySelector(".section-text").value,item_ids:sectionRefs[Number(row.dataset.ref)]})),
@@ -144,13 +154,17 @@ window.createRewriteEditor = function (host) {
     const body = readDraft();
     preview.append(node("p", body.category, "secondary"), node("h2", body.title || "기사 제목을 입력하세요"));
     const summary = node("div", "", "draft-summary"); body.summary.forEach(text => summary.append(node("p", text))); preview.append(summary);
-    const facts = node("div", "", "draft-fact-grid");
-    body.key_facts.forEach(fact => {const card = node("div", "", "draft-fact"); card.append(node("strong",fact.label),node("p",fact.value));facts.append(card);}); preview.append(facts);
     for (const section of body.sections) {
       const box = node("section", "", "draft-preview-section");
       box.append(node("span", kinds[section.kind], "verdict-label"), node("h3",section.heading),node("p",section.text)); preview.append(box);
     }
-    if (body.audience_guidance.length) {
+    // Future tables, charts and source downloads belong below the article body.
+    const visualization = node("section", "", "draft-visualization");
+    visualization.id = "draft-preview-visualization";
+    visualization.hidden = true;
+    visualization.setAttribute("aria-label", "기사 데이터 시각화");
+    preview.append(visualization);
+    if (body.reader_guide == null && body.audience_guidance.length) {
       preview.append(node("h3", "이 기사를 읽은 뒤 · 편집자의 제안"));
       const grid = node("div", "", "draft-audience-grid");
       for (const guidance of body.audience_guidance) {
@@ -159,10 +173,12 @@ window.createRewriteEditor = function (host) {
       }
       preview.append(grid);
     }
+    readerGuide.render(preview);
     preview.append(node("h3", "원문과 연결한 근거"));
     if (article.original_url) appendLink(preview, "원문 기사", article.original_url);
     const items = article.draft ? article.draft.metadata.items : [];
     const usedItems = new Set([...body.sections,...body.key_facts,...body.audience_guidance].flatMap(part => part.item_ids));
+    readerGuide.refs().forEach(id=>usedItems.add(id));
     const usedSources = new Set(items.filter(item => usedItems.has(item.id)).flatMap(item => item.source_ids));
     if (article.approval_status === "approved") {
       for (const item of article.approval.resolutions || []) for (const citation of item.evidence) usedSources.add(citation.source_id);
@@ -186,6 +202,7 @@ window.createRewriteEditor = function (host) {
     $("save-plan").disabled = !ready;
     $("manual-draft").disabled = !ready;
     $("generate-draft").disabled = !ready || !state.configured;
+    $("generate-reader-guide").disabled = !ready || !state.configured || !article?.draft || articleBodyChanged() || planChanged() || article.rewrite_plan_status !== "current";
     $("generate-draft").textContent = generating ? "AI 초안 작성 중…" : "AI로 초안 작성";
     $("draft-fields").disabled = !article || state.busy;
     $("save-draft").disabled = !ready || !article.rewrite_plan || article.rewrite_plan_status !== "current" || planChanged();
@@ -256,6 +273,7 @@ window.createRewriteEditor = function (host) {
       if (previousDraft) {
         // 새 보고서의 claim 번호에 이전 소재 연결을 잘못 붙이지 않는다.
         for (const block of [...previousDraft.sections,...previousDraft.key_facts,...previousDraft.audience_guidance]) block.item_ids = [];
+        for (const a of previousDraft.reader_guide?.audiences || []) for (const s of a.sections) for (const i of s.items) i.item_ids=[];
         renderDraft(previousDraft); baselineDraft = "";
       }
       tell("rewrite-message","새 검증 결과를 불러왔습니다. 같은 원문 인용의 결정과 추가 내용·초안은 화면에 보관했습니다. 결정을 다시 확인해 저장하고, 초안의 근거 연결은 새로 작성하거나 재검증할 때 확인해주세요.");
@@ -287,7 +305,7 @@ window.createRewriteEditor = function (host) {
   $("draft-fields").addEventListener("input",host.onChange);
   $("draft-fields").addEventListener("change",host.onChange);
   $("add-draft-section").addEventListener("click",()=>{addSection();host.onChange();});
-  const addKeyFact=node("button","+ 핵심 정보 추가","text-button");addKeyFact.type="button";addKeyFact.id="add-draft-fact";
+  const addKeyFact=node("button","+ 데이터 항목 추가","text-button");addKeyFact.type="button";addKeyFact.id="add-draft-fact";
   addKeyFact.addEventListener("click",()=>{addFact();host.onChange();});$("draft-facts").after(addKeyFact);
   $("save-plan").addEventListener("click",async()=>{
     if(!workAllowed())return;host.setBusy(true);
@@ -313,11 +331,21 @@ window.createRewriteEditor = function (host) {
       baselineDraft="";tell("rewrite-message","직접 작성하는 초안입니다. 제목·요약 두 문장·본문을 채운 뒤 초안 저장을 누르세요.");}
     catch(error){tell("rewrite-message",error.message,true);}finally{host.setBusy(false);}
   });
+  $("generate-reader-guide").addEventListener("click",async()=>{
+    if(!workAllowed() || !article.draft || articleBodyChanged() || planChanged())return;
+    if(!window.confirm("저장된 기사 본문을 기준으로 AI 제안을 받을까요? 현재 가이드 편집안과 저장하지 않은 가이드 메모는 교체됩니다. 생성 후 최종 재검증·승인이 다시 필요합니다."))return;
+    host.setBusy(true);
+    try{
+      const data=await host.api("/api/articles/"+article.id+"/reader-guide/generate",{method:"POST",body:JSON.stringify({...basePayload(),expected_draft_revision:article.draft_revision})});
+      host.applyArticle(data);tell("draft-message","AI 제안을 저장했습니다. 추천과 내용을 검토하고 사용 여부를 선택한 뒤 초안을 저장하세요.");
+      await host.refreshArticles();
+    }catch(error){tell("draft-message",error.message,true);}finally{host.setBusy(false);}
+  });
   $("draft-form").addEventListener("submit",async event=>{
     event.preventDefault();if(!workAllowed())return;
     if(planChanged()){tell("draft-message","편집 결정을 먼저 저장해주세요.",true);return;}
     host.setBusy(true);
-    try{const data=await host.api("/api/articles/"+article.id+"/draft",{method:"PUT",body:JSON.stringify({...basePayload(),expected_draft_revision:article.draft_revision || 0,content:readDraft()})});
+    try{const data=await host.api("/api/articles/"+article.id+"/draft",{method:"PUT",body:JSON.stringify({...basePayload(),expected_draft_revision:article.draft_revision || 0,content:readDraft(),reader_guide_note:readerGuide.note()})});
       host.applyArticle(data);tell("draft-message","초안을 저장했습니다. 최종 재검증과 승인 전 상태입니다.");await host.refreshArticles();}
     catch(error){tell("draft-message",error.message,true);}finally{host.setBusy(false);}
   });
@@ -331,6 +359,7 @@ window.createRewriteEditor = function (host) {
     return match?[match.index,match.index+match[0].length]:null;
   }
   function openLocation(id, quote = "", reviewedText = "") {
+    if(id.startsWith("reader-") && readerGuide.openLocation(id))return;
     let input = null, match, factRow = null;
     if (/^title_/.test(id)) input = $("draft-title");
     else if ((match = /^summary_(\d+)_/.exec(id))) input = $("draft-summary-"+match[1]);
@@ -353,6 +382,7 @@ window.createRewriteEditor = function (host) {
         if(quote.startsWith(prefix)){targetQuote=quote.slice(prefix.length);range=quoteRange(input.value,targetQuote);}
       }
     }
+    if (factRow) $("draft-data-options").open = true;
     (input || $("draft-area")).scrollIntoView({behavior:"smooth",block:"center"});
     if(!input){tell("draft-message","검증 결과에 연결된 기사 입력칸을 찾지 못했습니다. 현재 초안의 해당 항목을 확인해주세요.",true);return;}
     input.focus({preventScroll:true});

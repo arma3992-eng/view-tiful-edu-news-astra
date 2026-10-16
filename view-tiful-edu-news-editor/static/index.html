@@ -4,13 +4,13 @@
   <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
   <title>교육뉴스 편집실</title>
   <link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
-  <link rel="stylesheet" href="/static/style.css?v=newsroom-20261005"><script src="/static/research.js?v=newsroom-20261005" defer></script><script src="/static/rewrite.js?v=newsroom-20261005" defer></script><script src="/static/final.js?v=newsroom-20261005" defer></script><script src="/static/app.js?v=newsroom-20261005" defer></script>
+  <link rel="stylesheet" href="/static/style.css?v=reader-guide-1"><script src="/static/research.js?v=newsroom-20261005" defer></script><script src="/static/reader-guide-editor.js?v=reader-guide-1" defer></script><script src="/static/rewrite.js?v=reader-guide-1" defer></script><script src="/static/final.js?v=newsroom-20261005" defer></script><script src="/static/app.js?v=newsroom-20261005" defer></script>
 </head>
 <body>
 <header class="app-header"><div class="brand"><span class="brand-mark">E</span><span>교육뉴스 편집실</span></div><span class="header-caption">원문·근거 비교형</span><span class="stage-badge">최종 검증·승인</span></header>
 <main class="app-main">
   <div class="heading"><div><h1>원문을 읽고, 근거를 모으세요.</h1><p>원문과 확인 자료를 함께 보관하고, 사실 검증을 준비합니다.</p></div><button type="button" id="new-article" class="button">새 기사</button></div>
-  <nav class="workflow" aria-label="기사 제작 단계"><span class="current">원문·근거 등록</span><button type="button" id="nav-verify" class="workflow-action" disabled>원문 검증 실행</button><button type="button" id="nav-rewrite" class="workflow-action" disabled>기사 재작성</button><button type="button" id="nav-final" class="workflow-action" disabled>최종 재검증·승인</button></nav>
+  <nav class="workflow" aria-label="기사 제작 단계"><span class="current">원문·근거 등록</span><button type="button" id="nav-verify" class="workflow-action" disabled>원문 검증 실행</button><button type="button" id="nav-rewrite" class="workflow-action" disabled>기사 초안 작성</button><button type="button" id="nav-final" class="workflow-action" disabled>최종 재검증·승인</button></nav>
   <div class="work-grid">
     <section class="panel" aria-labelledby="original-heading">
       <div class="panel-header"><h2 id="original-heading">원문 기사</h2><button type="button" id="sample-article" class="text-button">가상 예시 넣기</button></div>
@@ -32,14 +32,6 @@
       <p id="verify-help" class="secondary">원문을 저장하고 근거를 등록한 뒤 실행하세요.</p>
       <details id="ai-setup" class="ai-setup"><summary>AI 설정 안내</summary><p>프로젝트의 .env.example을 .env로 복사하고 OPENAI_API_KEY에 본인의 키를 입력하세요. 서버를 다시 실행하고 화면을 새로고침하면 사용할 수 있습니다.</p><p>키는 서버에서만 사용합니다. 기사와 등록한 근거의 관련 발췌가 AI API로 전송됩니다.</p></details>
       <p id="verification-message" class="message" role="status" aria-live="polite"></p>
-      <div id="verification-meta" class="verification-meta" hidden></div>
-      <div class="verification-placeholder" id="check-list">
-        <div class="check-row"><span>날짜·숫자</span><span>확인 대기</span></div>
-        <div class="check-row"><span>적용 대상·범위</span><span>확인 대기</span></div>
-        <div class="check-row"><span>예외·추가 조건</span><span>확인 대기</span></div>
-        <div class="check-row"><span>주장의 공식 근거</span><span>확인 대기</span></div>
-      </div>
-      <div class="notice">판정은 실제로 읽은 근거의 발췌를 대조한 AI 검토 결과입니다. 적용 학년도·조건과 누락된 주장은 사람이 확인해야 합니다.</div>
       <h3 class="source-heading">근거 자료 등록</h3>
       <form id="source-form"><fieldset id="source-fields" disabled>
         <label>자료 이름<input id="source-name" required maxlength="200" placeholder="공식 안내·모집요강·참고 기사 등"></label>
@@ -64,16 +56,30 @@
       <div id="source-list" class="source-list" aria-live="polite"><p class="secondary">원문을 저장하면 근거를 등록할 수 있습니다.</p></div>
     </section>
   </div>
+  <section class="saved-section" id="verification-results" aria-labelledby="verification-results-heading">
+    <div class="panel-header"><h2 id="verification-results-heading">원문 검증 결과</h2></div>
+      <div id="verification-meta" class="verification-meta" hidden></div>
+      <div class="verification-placeholder" id="check-list">
+        <div class="check-row"><span>날짜·숫자</span><span>확인 대기</span></div>
+        <div class="check-row"><span>적용 대상·범위</span><span>확인 대기</span></div>
+        <div class="check-row"><span>예외·추가 조건</span><span>확인 대기</span></div>
+        <div class="check-row"><span>주장의 공식 근거</span><span>확인 대기</span></div>
+      </div>
+      <div class="notice">판정은 실제로 읽은 근거의 발췌를 대조한 AI 검토 결과입니다. 적용 학년도·조건과 누락된 주장은 사람이 확인해야 합니다.</div>
+  </section>
   <section class="saved-section" id="rewrite-panel" aria-labelledby="rewrite-heading">
-    <div class="panel-header"><h2 id="rewrite-heading">기사 재작성</h2><span id="draft-status" class="status-badge">초안 작성 전</span></div>
+    <div class="panel-header"><h2 id="rewrite-heading">기사 초안 작성</h2><span id="draft-status" class="status-badge">초안 작성 전</span></div>
     <p id="rewrite-help" class="panel-intro">원문 검증 결과를 저장하면 편집 결정을 선택할 수 있습니다.</p>
     <fieldset id="rewrite-fields" disabled>
       <details class="rewrite-decisions"><summary>검증 항목별 포함·수정·보류·제외</summary><div id="decision-list"></div></details>
       <p id="decision-summary" class="notice"></p>
+      <details class="draft-options">
+        <summary>추가 배경 내용 · 편집 요청</summary>
       <h3 class="source-heading">추가 배경 내용</h3>
       <p class="secondary">사실·편집자 분석·기자 의견·학습 제안·인터뷰를 선택해 작성하세요. 인터뷰는 실제 취재 기록을 연결하고, 근거 없는 추가 사실은 자동 검색을 사용할 때 최종 재검증에서 확인합니다.</p>
       <div id="addition-list"></div><button type="button" id="add-background" class="text-button">+ 추가 내용 넣기</button>
       <label>편집 요청 <span class="optional">표현·구성에 관한 요청</span><textarea id="editor-note" class="small-textarea" maxlength="2000" placeholder="쉽게 설명할 독자, 강조할 조건, 문장 길이 등을 적어주세요."></textarea></label>
+      </details>
       <div class="rewrite-actions"><button type="button" id="save-plan" class="button">편집 결정 저장</button><button type="button" id="generate-draft" class="button primary">AI로 초안 작성</button><button type="button" id="manual-draft" class="button">직접 초안 작성</button></div>
       <p class="secondary">AI 작성 버튼을 누를 때 API를 한 번 호출합니다. 보류·제외 항목은 작성 소재에서 빼고, 원문은 그대로 보관합니다.</p>
     </fieldset>
@@ -81,14 +87,29 @@
     <div id="draft-area" hidden>
       <div class="draft-work-grid">
         <form id="draft-form"><fieldset id="draft-fields">
-          <h3 class="source-heading">초안 편집</h3>
+          <h3 class="source-heading">기사 편집</h3>
           <label>기사 분류<select id="draft-category"><option>입시·수능</option><option>영재·특목</option><option>AI·디지털교육</option><option>학교·교육정책</option><option>진로·대학</option><option>기타</option></select></label>
           <label>기사 제목<input id="draft-title" required maxlength="200"></label>
           <label>요약 첫 문장<textarea id="draft-summary-1" required class="small-textarea" maxlength="1000"></textarea></label>
           <label>요약 둘째 문장<textarea id="draft-summary-2" required class="small-textarea" maxlength="1000"></textarea></label>
           <h3>세부 항목</h3><div id="draft-sections"></div><button type="button" id="add-draft-section" class="text-button">+ 세부 항목 추가</button>
-          <h3 class="source-heading">핵심 정보</h3><div id="draft-facts"></div>
-          <h3 class="source-heading">독자별 안내</h3><div id="draft-guidance"></div>
+          <details class="draft-options" id="draft-data-options">
+            <summary>시각화용 데이터 · 기존 핵심 정보 (선택)</summary>
+            <p class="secondary">기존 데이터는 저장·최종 검토에 유지됩니다. 현재 미리보기에는 표시하지 않으며, 표·그래프 생성은 아직 지원하지 않습니다.</p>
+            <div id="draft-facts"></div>
+          </details>
+          <section id="reader-guide-editor" aria-labelledby="reader-guide-heading">
+            <h3 class="source-heading" id="reader-guide-heading">독자 가이드</h3>
+            <label>사용 여부<select id="reader-guide-mode"><option value="legacy">기존 안내 유지 · 새 가이드 미설정</option><option value="on">사용</option><option value="off">사용하지 않음</option></select></label>
+            <p id="reader-guide-recommendation" class="secondary"></p>
+            <button type="button" id="generate-reader-guide" class="button">AI 제안 받기</button>
+            <p class="secondary">초안·편집 결정을 먼저 저장하세요. AI 제안은 사용하지 않음으로 저장되며, 내용 확인 후 사용을 선택합니다. 변경 후 최종 재검증·승인이 필요합니다.</p>
+            <button type="button" id="reader-guide-import" class="text-button">기존 안내 가져오기</button>
+            <div id="reader-guide-edit" hidden><div id="reader-guide-audiences"></div><button type="button" id="reader-guide-add" class="text-button">+ 대상 추가</button></div>
+            <label>수정 이유 · 편집 메모<textarea id="reader-guide-note" class="small-textarea" maxlength="2000"></textarea></label>
+            <details><summary>AI 최초 제안 보기</summary><pre id="reader-guide-initial"></pre></details>
+          </section>
+          <div id="legacy-guidance"><h3 class="source-heading">기존 독자별 안내</h3><div id="draft-guidance"></div></div>
           <button type="submit" id="save-draft" class="button primary">초안 저장</button>
         </fieldset></form>
         <div><h3 class="source-heading">기사 미리보기</h3><p id="draft-preview-status" class="notice">편집 초안 · 최종 재검증과 사람의 승인 전입니다.</p><article id="draft-preview" class="draft-preview"></article></div>
@@ -125,6 +146,6 @@
   </section>
   <section class="saved-section" aria-labelledby="saved-heading"><div class="panel-header"><h2 id="saved-heading">저장한 기사</h2><button type="button" id="refresh-articles" class="text-button">목록 새로고침</button></div><div id="article-list" class="article-list"><p class="secondary">저장한 기사를 불러옵니다.</p></div></section>
 </main>
-<footer>원문 검증 → 기사 재작성 → 최종 재검증 → 사람의 승인 → 기사 내보내기</footer>
+<footer>원문 검증 → 기사 초안 작성 → 최종 재검증 → 사람의 승인 → 기사 내보내기</footer>
 </body>
 </html>

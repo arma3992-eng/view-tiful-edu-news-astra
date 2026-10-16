@@ -106,3 +106,18 @@
 @media(max-width:1100px){.side-item .side-story{font-size:12px}}
 @media(max-width:800px){.side-item .side-story{font-size:13px}}
 @media(max-width:520px){.side-item .side-story{font-size:11px}}
+
+/* Article-specific reader guide; preserves the original pale section and white cards. */
+#guide[hidden],#article-reader-guide[hidden]{display:none!important}
+#guide .guide-tabs{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+#guide .role-grid,#article-reader-guide .role-grid{grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:24px}
+#guide .role,#article-reader-guide .role{border:0;padding:0;min-width:0;overflow-wrap:anywhere}
+#guide .role-heading p,#article-reader-guide .role-heading p{font-size:13px;margin-top:8px}
+#guide-read{margin-left:auto;white-space:nowrap;color:var(--blue);font-size:12px}
+.guide-sources{display:flex;flex-wrap:wrap;gap:10px 18px;margin-top:22px;font-size:12px}
+.guide-sources a{color:var(--blue)}
+#article-reader-guide{margin:32px 0;scroll-margin-top:24px}
+#guide .role-grid[data-count="2"],#article-reader-guide .role-grid[data-count="2"]{grid-template-columns:repeat(2,minmax(0,1fr))}
+#guide .role-grid[data-count="3"],#article-reader-guide .role-grid[data-count="3"]{grid-template-columns:repeat(3,minmax(0,1fr))}
+#guide .role-grid[data-count="4"],#article-reader-guide .role-grid[data-count="4"]{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media(max-width:800px){#guide .role-grid,#article-reader-guide .role-grid{grid-template-columns:1fr!important}}

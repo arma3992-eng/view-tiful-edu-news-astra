@@ -93,3 +93,35 @@ footer{padding:0 28px 28px;text-align:center;color:var(--muted);font-size:12px}
 .human-review-panel .notice{margin-top:9px}.human-evidence .button{margin:0 0 14px}
 .human-review-panel textarea{min-height:100px}.human-review-panel .review-checkbox{font-size:12px}
 .human-state{font-weight:600;color:var(--blue)}
+
+/* Original verification results only; other claim cards keep their layout. */
+#check-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:start}
+#check-list>.claim-card{min-width:0;margin-top:0}
+#check-list>.check-row{grid-column:1/-1}
+@media(max-width:800px){#check-list{grid-template-columns:minmax(0,1fr)}}
+
+
+/* Draft editing and reader-style preview only. */
+#rewrite-panel .draft-options{margin:18px 0;border-top:1px solid var(--line);padding-top:14px}
+#rewrite-panel .draft-options>summary{cursor:pointer;color:var(--blue);font-size:13px;font-weight:600}
+#rewrite-panel .draft-options>p{margin-top:10px}
+#draft-preview{line-height:1.85}
+#draft-preview h2{font-size:27px;line-height:1.45;overflow-wrap:anywhere}
+#draft-preview .draft-summary{background:transparent;border-left:0;border-bottom:1px solid var(--line);padding:0 0 20px;margin:18px 0 26px;color:var(--muted)}
+#draft-preview .draft-preview-section{margin-top:30px}
+#draft-preview .draft-preview-section h3{font-size:18px;margin:7px 0 12px}
+#draft-preview .draft-preview-section>p{font-size:14px;line-height:1.95}
+#draft-preview .draft-preview-section>.verdict-label{background:transparent;padding:0;color:var(--muted)}
+#draft-preview .draft-audience-grid{display:block;margin-top:14px}
+#draft-preview .draft-audience{background:transparent;padding:16px 0;border-top:1px solid var(--line)}
+#draft-preview .draft-audience h4{margin:4px 0}
+#draft-preview .draft-visualization{margin:28px 0;padding-top:22px;border-top:1px solid var(--line)}
+@media(max-width:600px){#draft-preview h2{font-size:23px}}
+
+/* Reader guide controls remain within the draft editor. */
+#reader-guide-editor{margin:24px 0;padding-top:10px;border-top:1px solid var(--line)}
+#reader-guide-editor .rg-section{padding:12px;border-left:3px solid var(--line);margin:12px 0}
+#reader-guide-editor .rg-item{margin:12px 0}
+#reader-guide-initial{white-space:pre-wrap;overflow-wrap:anywhere;font-size:12px}
+#draft-preview .reader-guide-preview{border-top:1px solid var(--line);margin-top:28px;padding-top:16px}
+#draft-preview .reader-guide-preview li{white-space:pre-wrap;margin:8px 0}

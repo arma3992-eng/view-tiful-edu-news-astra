@@ -11,6 +11,8 @@ from storage import RevisionConflict, Store
 from dotenv import load_dotenv
 from document_reader import DocumentError, MAX_FILE_BYTES, read_pdf, read_url
 from verification import VerificationError, ai_config, verify_original
+from reader_guide import generate_guide
+from copy import deepcopy
 from rewriting import DraftContent, Plan, generate_draft, prepare_items, validate_content
 from final_review import verify_draft
 from exporting import html_export, json_export
@@ -114,6 +116,7 @@ class DraftRequest(RevisionInput):
 
 class DraftInput(DraftRequest):
     content: DraftContent
+    reader_guide_note: str | None = Field(default=None, max_length=2000)
 
 
 class FinalRequest(DraftRequest):
@@ -323,13 +326,41 @@ def generate_article_draft(article_id: str, payload: DraftRequest):
         raise HTTPException(status_code=409, detail="AI 작성 중 기사·근거·편집 결정·초안이 바뀌었습니다. 이번 초안을 덮어쓰지 않았습니다. 저장한 기사를 다시 불러와 확인해주세요.")
 
 
+@app.post("/api/articles/{article_id}/reader-guide/generate")
+def generate_article_reader_guide(article_id: str, payload: DraftRequest):
+    article, plan, items, warnings = draft_inputs(article_id, payload)
+    if not article.get("draft"):
+        raise HTTPException(status_code=409, detail="기사 초안을 먼저 저장해주세요.")
+    guide, record = generate_guide(article, items, plan)
+    content = deepcopy(article["draft"]["content"])
+    content["reader_guide"] = guide.model_dump()
+    content = DraftContent.model_validate(content)
+    metadata = deepcopy(article["draft"]["metadata"])
+    metadata["items"] = items
+    metadata["warnings"] = list(dict.fromkeys(warnings + validate_content(content, items)))
+    metadata.setdefault("reader_guide_initial", record)
+    metadata["reader_guide_latest"] = record
+    try:
+        return must_exist(app.state.store.save_draft(article_id, content.model_dump(exclude_none=True), metadata,
+            payload.report_id, payload.expected_revision, payload.expected_source_revision,
+            payload.expected_plan_revision, payload.expected_draft_revision))
+    except RevisionConflict:
+        raise HTTPException(status_code=409, detail="생성 중 기사 또는 편집 결정이 변경되었습니다. 다시 불러와 확인해주세요.")
+
+
 @app.put("/api/articles/{article_id}/draft")
 def save_article_draft(article_id: str, payload: DraftInput):
     article, _, items, warnings = draft_inputs(article_id, payload)
     warnings += validate_content(payload.content, items)
     metadata = {"items": items, "warnings": list(dict.fromkeys(warnings)), "origin": "manual", "usage": {}, "read_sources": []}
+    previous_meta = (article.get("draft") or {}).get("metadata", {})
+    for key in ("reader_guide_initial", "reader_guide_latest", "reader_guide_note"):
+        if key in previous_meta:
+            metadata[key] = deepcopy(previous_meta[key])
+    if payload.reader_guide_note is not None:
+        metadata["reader_guide_note"] = payload.reader_guide_note
     try:
-        return must_exist(app.state.store.save_draft(article_id, payload.content.model_dump(), metadata, payload.report_id,
+        return must_exist(app.state.store.save_draft(article_id, payload.content.model_dump(exclude_none=True), metadata, payload.report_id,
             payload.expected_revision, payload.expected_source_revision, payload.expected_plan_revision, payload.expected_draft_revision))
     except RevisionConflict:
         raise HTTPException(status_code=409, detail="기사·근거·편집 결정·초안이 바뀌었습니다. 저장한 기사를 다시 불러와 확인해주세요.")

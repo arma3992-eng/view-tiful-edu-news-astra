@@ -3,6 +3,7 @@ import re
 from collections import Counter
 from typing import Literal
 from pydantic import BaseModel, ConfigDict, Field
+from reader_guide import guide_fields
 from rewriting import DraftContent
 from storage import draft_content_hash
 from citation_matching import resolve_citation
@@ -100,9 +101,10 @@ def draft_segments(content):
     for i, fact in enumerate(draft.key_facts, 1):
         fields.append((f"fact_{i}", f"핵심 정보 {i}", "fact", fact.label + ": " + fact.value))
     audiences = {"student": "학생", "parent": "학부모", "teacher": "교사"}
-    for item in draft.audience_guidance:
+    for item in (draft.audience_guidance if draft.reader_guide is None else []):
         fields += [(f"guidance_{item.audience}_heading", audiences[item.audience] + " 안내 · 제목", "guidance", item.heading),
                    (f"guidance_{item.audience}_body", audiences[item.audience] + " 안내 · 본문", "guidance", item.text)]
+    fields += guide_fields(draft.reader_guide)
     if sum(len(text) for _, _, _, text in fields) > MAX_DRAFT_CHARS:
         raise VerificationError("최종 검증은 기사 전체 3만 자까지입니다. 초안을 줄이거나 기사를 나누어주세요.")
     segments = []

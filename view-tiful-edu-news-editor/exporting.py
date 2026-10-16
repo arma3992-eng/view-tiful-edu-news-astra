@@ -4,6 +4,7 @@ import json
 from urllib.parse import urlsplit
 from human_review import human_evidence_details
 from evidence_catalog import evidence_catalog
+from reader_guide import guide_items, LABELS
 
 
 def export_payload(article):
@@ -14,6 +15,7 @@ def export_payload(article):
     content = article["draft"]["content"]
     used_items = {item_id for block in content["sections"] + content["key_facts"] + content["audience_guidance"]
                   for item_id in block["item_ids"]}
+    used_items.update(ref for item in guide_items(content.get("reader_guide")) for ref in item.item_ids)
     used.update(source_id for item in article["draft"]["metadata"].get("items", [])
                 if item["id"] in used_items for source_id in item["source_ids"])
     snapshots = {source["source_id"]: source for source in report["read_sources"]}
@@ -47,21 +49,28 @@ def html_export(article):
             return '<a href="' + esc(url) + '" target="_blank" rel="noopener noreferrer">' + esc(text) + '</a>'
         return esc(text)
     audiences = {"student": "학생", "parent": "학부모", "teacher": "교사"}
-    kinds = {"fact": "사실·배경", "analysis": "편집자 분석", "opinion": "기자 의견·주장", "guidance": "학습 제안", "interview": "인터뷰·취재"}
+    kinds = {"fact": "사실·과거 사례·트렌드", "analysis": "편집자 분석", "opinion": "기자 의견·주장", "guidance": "학습 제안", "interview": "인터뷰·취재"}
     body = ['<p class="category">' + esc(content["category"]) + '</p>', '<h1>' + esc(content["title"]) + '</h1>',
             '<div class="summary">' + ''.join('<p>' + esc(text) + '</p>' for text in content["summary"]) + '</div>']
-    if content["key_facts"]:
-        body.append('<div class="facts">' + ''.join('<div><strong>' + esc(item["label"]) + '</strong><p>' + esc(item["value"]) + '</p></div>'
-                    for item in content["key_facts"]) + '</div>')
     for section in content["sections"]:
         body.append('<section><span class="kind">' + esc(kinds[section["kind"]]) + '</span><h2>' + esc(section["heading"]) +
                     '</h2><p>' + esc(section["text"]) + '</p></section>')
-    if content["audience_guidance"]:
+    guide = content.get("reader_guide")
+    if guide is None and content["audience_guidance"]:
         body.append('<h2>이 기사를 읽은 뒤 · 편집자의 제안</h2><div class="audiences">' + ''.join(
             '<section><strong>' + esc(audiences[item["audience"]]) + '</strong><h3>' + esc(item["heading"]) +
             '</h3><p>' + esc(item["text"]) + '</p></section>' for item in content["audience_guidance"]) + '</div>')
+    if guide and guide["enabled"]:
+        body.append('<section><h2>이 기사를 읽은 뒤 · 독자 가이드</h2>')
+        for audience in guide["audiences"]:
+            body.append('<section><h3>' + esc(audience["label"]) + '</h3><h4>' + esc(audience["title"]) + '</h4>')
+            for section in audience["sections"]:
+                body.append('<h4>' + esc(LABELS[section["type"]]) + '</h4><ul>' +
+                            ''.join('<li>' + esc(item["text"]) + '</li>' for item in section["items"]) + '</ul>')
+            body.append('</section>')
+        body.append('</section>')
     original = data["original"]
-    body.append('<section class="sources"><h2>원문과 근거</h2><p>원문: ' + link(original["title"], original["url"]) +
+    body.append('<section class="sources"><h2>원문과 연결한 근거</h2><p>원문: ' + link(original["title"], original["url"]) +
                 ('' if original["url"] else ' · 주소 미등록') + '</p>')
     for source in data["sources"]:
         body.append('<p>' + link(source["name"], source["url"]) + (' · ' + esc(source["locator"]) if source["locator"] else '') +
@@ -76,4 +85,4 @@ def html_export(article):
                 ' · 기사 버전: ' + str(approval["draft_revision"]) +
                 (' · 사람의 항목별 확인: ' + str(len(approval["resolutions"])) + '개' if approval.get("resolutions") else '') + '</footer>')
     return '<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>' + esc(content["title"]) + '''</title>
-<style>body{margin:0;background:#f5f7fb;color:#172b4a;font:16px/1.8 "Malgun Gothic",system-ui,sans-serif}article{max-width:900px;margin:30px auto;padding:32px;background:white;border-radius:12px}h1{font-size:30px;line-height:1.5}h2{font-size:20px;margin:28px 0 10px}h3{font-size:16px}p{white-space:pre-wrap;margin:8px 0}.summary{border-left:4px solid #245ddd;padding:12px 18px;background:#edf3ff}.facts,.audiences{display:grid;gap:12px;margin:24px 0}.facts{grid-template-columns:repeat(2,1fr)}.audiences{grid-template-columns:repeat(3,1fr)}.facts>div,.audiences>section{background:#f5f7fb;border-radius:8px;padding:16px}.category,.kind,footer,.sources{font-size:13px;color:#61728b}a{color:#245ddd}.sources,footer{border-top:1px solid #dce4ef;padding-top:16px;margin-top:28px}@media(max-width:640px){article{margin:0;padding:20px;border-radius:0}.facts,.audiences{grid-template-columns:1fr}h1{font-size:26px}}</style></head><body><article>''' + ''.join(body) + '</article></body></html>'
+<style>body{margin:0;background:#f5f7fb;color:#172b4a;font:16px/1.8 "Malgun Gothic",system-ui,sans-serif}article{max-width:900px;margin:30px auto;padding:32px;background:white;border-radius:12px}h1{font-size:30px;line-height:1.5}h2{font-size:20px;margin:28px 0 10px}h3{font-size:16px}p{white-space:pre-wrap;margin:8px 0}.summary{border-left:4px solid #245ddd;padding:12px 18px;background:#edf3ff}.audiences{display:grid;gap:12px;margin:24px 0}.audiences{grid-template-columns:repeat(3,1fr)}.audiences>section{background:#f5f7fb;border-radius:8px;padding:16px}.category,.kind,footer,.sources{font-size:13px;color:#61728b}a{color:#245ddd}.sources,footer{border-top:1px solid #dce4ef;padding-top:16px;margin-top:28px}@media(max-width:640px){article{margin:0;padding:20px;border-radius:0}.audiences{grid-template-columns:1fr}h1{font-size:26px}}</style></head><body><article>''' + ''.join(body) + '</article></body></html>'

@@ -1,5 +1,6 @@
 """선택한 소재와 편집 결정을 이용한 재작성. 사실 재검증·승인은 후속 단계."""
 from typing import Literal
+from reader_guide import ReaderGuide, guide_items
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 from verification import VerificationError, ask_structured, collect_sources
 from evidence_catalog import evidence_catalog, linked_web_snapshots
@@ -57,7 +58,7 @@ class Guidance(StrictModel):
     item_ids: list[str] = Field(max_length=10)
 
 
-class DraftContent(StrictModel):
+class ArticleAIContent(StrictModel):
     category: Literal["입시·수능", "영재·특목", "AI·디지털교육", "학교·교육정책", "진로·대학", "기타"]
     title: str = Field(min_length=1, max_length=200)
     summary: list[str] = Field(min_length=2, max_length=2)
@@ -89,6 +90,10 @@ class DraftContent(StrictModel):
         if len(audiences) != len(set(audiences)):
             raise ValueError("독자별 안내는 학생·학부모·교사별 하나씩 작성해주세요.")
         return self
+
+
+class DraftContent(ArticleAIContent):
+    reader_guide: ReaderGuide | None = None
 
 
 def require_report(article, report_id):
@@ -153,7 +158,7 @@ def prepare_items(article, report_id, plan):
 def validate_content(content, items, generated=False):
     known = {item["id"] for item in items}
     warnings = []
-    for block in content.sections + content.key_facts + content.audience_guidance:
+    for block in content.sections + content.key_facts + content.audience_guidance + guide_items(getattr(content, "reader_guide", None)):
         if not set(block.item_ids) <= known or (generated and not block.item_ids):
             raise VerificationError("초안의 소재 연결을 확인하지 못했습니다. 선택한 소재로 다시 작성해주세요.", 502 if generated else 422)
         if not block.item_ids:
@@ -193,7 +198,7 @@ def generate_draft(article, store, report_id, plan):
     sources, _ = collect_sources(context, store, allow_empty=True) if linked_ids else ([], [])
     sources += linked_web_snapshots(article, linked_ids)
     content, usage = ask_structured(INSTRUCTIONS, {"selected_items": items, "registered_evidence": sources,
-                                                  "editor_note": plan.editor_note}, DraftContent, "education_news_draft")
+                                                  "editor_note": plan.editor_note}, ArticleAIContent, "education_news_draft")
     warnings += validate_content(content, items, generated=True)
     return content, {"items": items, "warnings": list(dict.fromkeys(warnings)), "usage": usage,
                      "read_sources": sources, "origin": "ai"}
