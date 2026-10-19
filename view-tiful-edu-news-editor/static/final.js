@@ -21,16 +21,28 @@ window.createFinalReview = function (host) {
   function readRows() {
     return [...reviewRows].map(([id,row])=>{
       const option=chunks[Number(row.querySelector(".human-chunk").value)];
+      const external=row.querySelector(".human-evidence-mode").value==="external";
+      const confirming=row.querySelector(".human-action").value==="confirm_evidence";
       return {check_id:id,action:row.querySelector(".human-action").value,reason:row.querySelector(".human-reason").value,
         confirmed:row.querySelector(".human-confirmed").checked,
-        evidence:row.querySelector(".human-action").value==="confirm_evidence" && row.querySelector(".human-chunk").value!=="" && option ?
+        external_evidence:confirming && external ? [{source_url:row.querySelector(".human-external-url").value,source_label:row.querySelector(".human-external-label").value,quote:row.querySelector(".human-quote").value}] : [],
+        evidence:confirming && !external && row.querySelector(".human-chunk").value!=="" && option ?
           [{source_id:option.source_id,chunk_id:option.chunk_id,quote:row.querySelector(".human-quote").value}] : []};
     });
   }
   function rowComplete(item) {
-    if(!item.confirmed || item.reason.trim().length<5)return false;
-    if(item.action==="editorial")return true;
-    if(item.action!=="confirm_evidence" || !item.evidence.length)return false;
+    if(!item.confirmed)return false;
+    if(item.action==="editorial")return item.reason.trim().length>=5;
+    if(item.action!=="confirm_evidence")return false;
+    if(item.external_evidence?.length) {
+      return !item.evidence.length && item.external_evidence.every(citation=>{
+        const url=citation.source_url.trim(), label=citation.source_label.trim();
+        if(normalize(citation.quote).length<5 || (!url && label.length<2))return false;
+        if(url) {try {const parsed=new URL(url);if(!["http:","https:"].includes(parsed.protocol) || !parsed.hostname || parsed.username || parsed.password || /\s/.test(url))return false;}catch{return false;}}
+        return true;
+      });
+    }
+    if(!item.evidence.length)return false;
     return item.evidence.every(citation=>{
       const source=chunks.find(chunk=>chunk.source_id===citation.source_id && chunk.chunk_id===citation.chunk_id);
       return source && normalize(citation.quote).length>=5 && normalize(source.text).includes(normalize(citation.quote));
@@ -41,7 +53,7 @@ window.createFinalReview = function (host) {
       checks:["approval-facts","approval-editorial","approval-rights"].map(id=>$(id).checked)});
   }
   function hasUnsaved() {return !!(article && article.final_verification_report && article.approval_status!=="approved" && baselineForm && baselineForm!==formSnapshot());}
-  function renderHumanReview(card, check, saved) {
+  function renderHumanReview(card, check, saved, restoredMessage = "") {
     const row=node("fieldset","","human-review-panel");row.dataset.checkId=check.id;reviewRows.set(check.id,row);
     row.append(node("h4","항목별 사람 검토"),node("p","검토 미완료","human-state secondary"));
     const action=field("검토 방법","select","human-action");
@@ -50,14 +62,25 @@ window.createFinalReview = function (host) {
     for(const [key,label]of Object.entries(options)){const option=node("option",label);option.value=key;action.input.append(option);}
     action.input.value=saved?saved.action:"";row.append(action.box);
     const body=node("fieldset","","human-decision-body");
-    const reason=field("직접 확인한 내용·판단 이유 · 5자 이상","textarea","human-reason",saved?saved.reason:"");reason.input.maxLength=2000;
+    const reason=field("의견·분석·제안으로 판단한 이유 · 5자 이상","textarea","human-reason",saved?saved.reason:"");reason.input.maxLength=2000;
     body.append(reason.box);
     const evidence=node("div","","human-evidence");
+    const mode=field("근거 확인 경로","select","human-evidence-mode");
+    for(const [key,label] of [["system","A. 이번 검증에서 읽은 근거 사용"],["external","B. 직접 확인한 외부 공식 근거 사용"]]) {
+      const option=node("option",label);option.value=key;mode.input.append(option);
+    }
+    const externalSaved=saved?.external_evidence?.[0];
+    mode.input.value=externalSaved?"external":"system";
+    const external=node("div","","human-external-evidence");
+    const externalUrl=field("근거 URL · 자료명과 둘 중 하나 필수","input","human-external-url",externalSaved?.source_url || "");externalUrl.input.maxLength=2000;
+    const externalLabel=field("자료명·발행기관·문서번호 등 식별 정보","input","human-external-label",externalSaved?.source_label || "");externalLabel.input.maxLength=500;
+    external.append(externalUrl.box,externalLabel.box,node("p","사람이 직접 확인한 자료입니다. 시스템이 읽거나 검증한 자료로 표시하지 않습니다.","secondary"));
+    const system=node("div","","human-system-evidence");
     const choice=field("이번 보고서에서 실제 읽은 근거 발췌","select","human-chunk");
     const placeholder=node("option","자료·쪽·발췌를 선택하세요");placeholder.value="";choice.input.append(placeholder);
     chunks.forEach((chunk,index)=>{const option=node("option",chunk.source_name+" · "+chunk.locator);option.value=String(index);choice.input.append(option);});
     const sourceText=field("읽은 자료 내용 · 필요한 문장을 드래그해 선택","textarea","human-chunk-text");sourceText.input.readOnly=true;
-    const quote=field("사람이 확인한 실제 근거 인용","textarea","human-quote",saved && saved.evidence[0]?saved.evidence[0].quote:"");quote.input.maxLength=1500;
+    const quote=field("사람이 확인한 실제 근거 인용","textarea","human-quote",externalSaved?.quote || (saved && saved.evidence[0]?saved.evidence[0].quote:""));quote.input.maxLength=1500;
     const copy=node("button","선택 문장 또는 이 발췌를 근거 인용에 넣기","button");copy.type="button";
     if(saved && saved.evidence[0]) {
       const citation=saved.evidence[0], index=chunks.findIndex(chunk=>chunk.source_id===citation.source_id && chunk.chunk_id===citation.chunk_id);
@@ -66,20 +89,44 @@ window.createFinalReview = function (host) {
     choice.input.addEventListener("change",()=>{sourceText.input.value=choice.input.value===""?"":chunks[Number(choice.input.value)].text;quote.input.value="";row.querySelector(".human-confirmed").checked=false;host.onChange();});
     copy.addEventListener("click",()=>{const input=sourceText.input;quote.input.value=(input.selectionEnd>input.selectionStart?input.value.slice(input.selectionStart,input.selectionEnd):input.value).trim();row.querySelector(".human-confirmed").checked=false;host.onChange();});
     quote.input.addEventListener("input",()=>{row.querySelector(".human-confirmed").checked=false;});
-    evidence.append(choice.box,sourceText.box,copy,quote.box);body.append(evidence);
+    const sourceDetails=node("details","");sourceDetails.append(node("summary","읽은 발췌 보기·인용에 넣기"),sourceText.box,copy);
+    system.append(choice.box,sourceDetails);
+    evidence.append(mode.box,system,external,quote.box);body.append(evidence);
     const confirm=node("label","","review-checkbox"), checkbox=document.createElement("input"), confirmText=node("span","");
     checkbox.type="checkbox";checkbox.className="human-confirmed";checkbox.checked=!!(saved && saved.confirmed);confirm.append(checkbox,confirmText);body.append(confirm);row.append(body);
     const instruction=node("p","","secondary");row.append(instruction);
     function actionState() {
       const value=action.input.value;body.disabled=!["confirm_evidence","editorial"].includes(value);body.hidden=value==="" || value==="edit";
       evidence.hidden=value!=="confirm_evidence";
+      reason.box.hidden=value!=="editorial";
+      system.hidden=mode.input.value!=="system";external.hidden=!system.hidden;
       confirmText.textContent=value==="editorial"?"이 문장은 사실 단정이 없는 안내·의견·분석임을 확인했습니다. 수치·규정·조건이 들어 있으면 근거로 확인하거나 수정해야 합니다.":
-        "선택한 발췌와 기사 전체 문맥을 읽고, 학년도·대상·조건까지 현재 기사 문장을 뒷받침함을 확인했습니다.";
+        "위 근거와 기사 전체 문맥을 읽고, 학년도·대상·조건까지 현재 기사 문장을 뒷받침함을 확인했습니다.";
       instruction.textContent=value==="edit"?"아래 '해당 기사 부분 수정'으로 이동해 내용을 고치고 초안 저장·최종 재검증을 진행하세요. 수정 선택만으로 현재 문장의 문제가 해결되지는 않습니다.":
         value==="editorial"?"분류 이름만 바꿔 사실 검증을 면제하지 않습니다. 사실이 없는 표현인지 판단 이유를 남깁니다.":
-        "근거로 직접 확인할 때는 이번 보고서가 실제 읽은 발췌를 선택합니다. 결정은 최종 승인할 때 함께 저장합니다.";
+        "근거 위치와 실제 인용을 입력한 뒤 확인해주세요. 별도의 판단 이유 입력은 필요하지 않습니다.";
     }
+    mode.input.addEventListener("change",()=>{checkbox.checked=false;quote.input.value="";actionState();host.onChange();});
+    [externalUrl.input,externalLabel.input,reason.input].forEach(input=>input.addEventListener("input",()=>{checkbox.checked=false;}));
     action.input.addEventListener("change",()=>{checkbox.checked=false;actionState();host.onChange();});actionState();
+    const draftStatus=node("p",restoredMessage,"secondary human-draft-status");
+    const saveInput=node("button","검토 내용 저장","button");saveInput.type="button";
+    saveInput.addEventListener("click",async()=>{
+      if(!allowed() || row.disabled)return;
+      const articleId=article.id, reportId=article.final_verification_report.id;
+      const {confirmed,...review}=readRows().find(item=>item.check_id===check.id);
+      host.setBusy(true);
+      try {
+        const result=await host.api("/api/articles/"+articleId+"/human-review-draft",{
+          method:"POST",body:JSON.stringify({...payload(),review})});
+        if(!article || article.id!==articleId || article.final_verification_report?.id!==reportId)return;
+        article.human_review_drafts=(article.human_review_drafts || []).filter(item=>item.check_id!==check.id);
+        article.human_review_drafts.push(result.draft);
+        draftStatus.textContent="검토 내용 임시 저장됨 · 최종 승인과는 별개입니다.";
+      }catch(error){draftStatus.textContent="임시 저장 실패: "+error.message;}
+      finally{host.setBusy(false);}
+    });
+    row.append(saveInput,draftStatus);
     const actions=node("div","","rewrite-actions"), edit=node("button","해당 기사 부분 수정","text-button"), sources=node("button","근거 등록으로 이동","text-button");
     edit.type="button";sources.type="button";
     edit.addEventListener("click",()=>{
@@ -93,7 +140,7 @@ window.createFinalReview = function (host) {
     const nextStamp = JSON.stringify([next.id,next.revision,next.source_revision,next.plan_revision,next.draft_revision,
       next.verification_report && next.verification_report.id,next.final_verification_report && next.final_verification_report.id]);
     const reset=fresh || nextStamp!==stamp, previous=reset?null:readRows();
-    if (reset) {$("approval-form").reset();tell("");}
+    if (reset) {$("approval-form").reset();tell("");$("notion-message").replaceChildren();}
     article = next; stamp = nextStamp; renderReport(previous);
     if(article.approval_status==="approved") {
       $("approval-reviewer").value=article.approval.reviewer;
@@ -101,7 +148,7 @@ window.createFinalReview = function (host) {
     }
     if(reset || article.approval_status==="approved")baselineForm=formSnapshot();
   }
-  function clear() {article=null;stamp="";baselineForm="";$("approval-form").reset();tell("");renderReport();}
+  function clear() {$("notion-message").replaceChildren();article=null;stamp="";baselineForm="";$("approval-form").reset();tell("");renderReport();}
   function renderReport(previous = null) {
     const report = article && article.final_verification_report;
     const meta=$("final-meta"), coverage=$("coverage-list"), checks=$("final-check-list"), blockers=$("final-blockers");
@@ -164,7 +211,10 @@ window.createFinalReview = function (host) {
           }
         }
       }
-      if(check.verdict!=="match")renderHumanReview(card,check,saved.get(check.id));
+      if(check.verdict!=="match") {
+        const hint=(article.human_review_drafts || []).find(item=>item.check_id===check.id);
+        renderHumanReview(card,check,saved.get(check.id) || hint?.input,hint?.message || "");
+      }
       checks.append(card);
     }
     for(const check of report.unanchored_checks || []) {
@@ -178,6 +228,9 @@ window.createFinalReview = function (host) {
     const report=article && article.final_verification_report;
     const approved=article && article.approval_status==="approved";
     const clean=!state.unsaved, available=current && clean && !state.busy;
+    // Item input is separate from the complete-coverage approval gate.
+    const itemReviewAvailable=available && !approved && report &&
+      ["completed","partial"].includes(article.final_verification_status);
     const decisions=readRows(), complete=decisions.filter(rowComplete).length;
     const reviewComplete=decisions.length===complete;
     $("nav-final").disabled=!draft || state.busy;
@@ -200,7 +253,7 @@ window.createFinalReview = function (host) {
       !["approval-facts","approval-editorial","approval-rights"].every(id=>$(id).checked);
     $("approval-help").textContent=approved?"현재 버전의 승인 기록을 저장했습니다. 기사 변경 후에는 다시 검토·승인합니다.":
       !report?"이름은 입력할 수 있습니다. 승인은 최종 검증 결과와 항목별 검토를 마친 뒤 가능합니다.":
-      !article.can_review?"기사 검사 범위가 누락되었거나 이전 버전의 결과입니다. 이름·체크만으로는 승인할 수 없으며 현재 초안을 다시 검증해야 합니다.":
+      !article.can_review?(itemReviewAvailable?"유효한 항목의 사람 검토는 입력할 수 있습니다. 다만 검사 누락·인용 오류가 남아 있어 최종 승인은 불가합니다. 재검증 전에 각 항목의 검토 내용 저장을 눌러주세요. 복원된 입력은 다시 확인해야 합니다.":"기사 검사 범위가 누락되었거나 이전 버전의 결과입니다. 이름·체크만으로는 승인할 수 없으며 현재 초안을 다시 검증해야 합니다."):
       "AI 추가 검토 대상 "+decisions.length+"개 · 항목별 검토 입력 완료 "+complete+"개 · 남은 "+(decisions.length-complete)+"개. 검토 기록은 최종 승인과 함께 저장합니다.";
     const blockers=$("final-blockers");blockers.replaceChildren();
     if(report && article.final_verification_status!=="stale") {
@@ -209,11 +262,21 @@ window.createFinalReview = function (host) {
     }
     blockers.hidden=!blockers.childElementCount;
     decisions.forEach(item=>{
-      const row=reviewRows.get(item.check_id);row.disabled=!available || approved || !article.can_review;
+      const row=reviewRows.get(item.check_id);
+      const checks=(report?.checks || []).filter(check=>check.id===item.check_id);
+      const check=checks.length===1?checks[0]:null;
+      const parts=(report?.coverage || []).filter(part=>part.id===check?.segment_id);
+      const quote=normalize(check?.original_quote || "");
+      const anchored=!!(check && parts.length===1 && quote && normalize(parts[0].text).includes(quote) &&
+        ["mismatch","needs_context","unverifiable"].includes(check.verdict) &&
+        !(report.unanchored_checks || []).some(part=>part.id===check.id));
+      row.disabled=!itemReviewAvailable || !anchored;
       row.querySelector(".human-state").textContent=approved?"사람 검토 · 승인 기록에 저장됨":rowComplete(item)?"검토 입력 완료 · 승인할 때 저장":"검토 미완료";
     });
     $("export-html").disabled=!available || !article.can_export;
     $("export-json").disabled=!available || !article.can_export;
+    $("export-docx").disabled=!available || !article.can_export;
+    $("save-notion").disabled=!available || !article.can_export;
     const record=$("approval-record");record.replaceChildren();
     if(article && article.approval) {
       const approval=article.approval;
@@ -237,7 +300,7 @@ window.createFinalReview = function (host) {
   $("approval-form").addEventListener("change",host.onChange);
   $("verify-draft").addEventListener("click",async()=>{
     if(!allowed())return;
-    if(hasUnsaved() && !window.confirm("승인에 저장하지 않은 검토 입력이 있습니다. 새 검증 결과를 저장하면 입력이 초기화됩니다. 다시 검증할까요?"))return;
+    if(hasUnsaved() && !window.confirm("검토 입력이 있습니다. 항목별 검토 내용 저장을 누르지 않은 입력은 사라집니다. 저장한 입력은 동일 주장에 한해 불러오며 다시 확인해야 합니다. 재검증할까요?"))return;
     verifying=true;host.setBusy(true);tell("저장한 기사 전체를 근거와 대조하고 있습니다.");
     try {
       const data=await host.api("/api/articles/"+article.id+"/draft/verify",{method:"POST",body:JSON.stringify({...payload(),web_search:$("web-search-enabled").checked})});
@@ -267,7 +330,30 @@ window.createFinalReview = function (host) {
       tell("승인된 기사 파일을 내려받았습니다. 실제 웹사이트 게시와 첨부 PDF 연결은 별도로 진행합니다.");
     }catch(error){tell(error.message,true);}finally{host.setBusy(false);}
   }
+  $("save-notion").addEventListener("click", async () => {
+    if (!allowed() || !article.can_export) return;
+    const articleId = article.id, approvalId = article.approval.id;
+    const message = $("notion-message");
+    message.classList.remove("error"); message.textContent = "Notion에 저장 중…";
+    host.setBusy(true);
+    try {
+      const result = await host.api("/api/articles/" + articleId + "/notion", {
+        method:"POST", body:JSON.stringify({approval_id:approvalId})
+      });
+      if (!article || article.id !== articleId || article.approval?.id !== approvalId) return;
+      const url = new URL(result.url);
+      if (!result.ok || url.protocol !== "https:") throw new Error("Notion 페이지 URL을 확인해주세요.");
+      const link = node("a", "페이지 열기");
+      link.href = url.href; link.target = "_blank"; link.rel = "noopener noreferrer";
+      message.replaceChildren(document.createTextNode("Notion 저장 완료 · "), link);
+    } catch (error) {
+      if (article && article.id === articleId) {
+        message.textContent = error.message; message.classList.add("error");
+      }
+    } finally {host.setBusy(false);}
+  });
   $("export-html").addEventListener("click",()=>download("html"));
   $("export-json").addEventListener("click",()=>download("json"));
+  $("export-docx").addEventListener("click",()=>download("docx"));
   return {loadArticle,clear,updateState,hasUnsaved};
 };

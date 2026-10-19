@@ -8,6 +8,7 @@ import json
 import hashlib
 from human_review import approval_ready, report_reviewable, validate_resolutions
 from evidence_catalog import evidence_catalog
+from review_drafts import prepare_review_draft, review_draft_hints
 
 
 def now_iso():
@@ -66,6 +67,12 @@ class Store:
                     article_id TEXT NOT NULL REFERENCES articles(id),
                     report_json TEXT NOT NULL, created_at TEXT NOT NULL
                 );
+                CREATE TABLE IF NOT EXISTS human_review_drafts (
+                    article_id TEXT NOT NULL REFERENCES articles(id),
+                    claim_fingerprint TEXT NOT NULL, draft_json TEXT NOT NULL,
+                    updated_at TEXT NOT NULL,
+                    PRIMARY KEY (article_id, claim_fingerprint)
+                );
                 CREATE TABLE IF NOT EXISTS article_approvals (
                     id TEXT PRIMARY KEY,
                     article_id TEXT NOT NULL REFERENCES articles(id),
@@ -116,6 +123,15 @@ class Store:
             work = db.execute("SELECT * FROM editor_work WHERE article_id=?", (article_id,)).fetchone()
             final_row = db.execute("SELECT report_json FROM final_verification_reports WHERE article_id=? ORDER BY rowid DESC LIMIT 1", (article_id,)).fetchone()
             approval_row = db.execute("SELECT approval_json FROM article_approvals WHERE article_id=? ORDER BY rowid DESC LIMIT 1", (article_id,)).fetchone()
+            review_drafts = [json.loads(row["draft_json"]) for row in db.execute(
+                "SELECT draft_json FROM human_review_drafts WHERE article_id=?", (article_id,))]
+            for item in review_drafts:
+                if "verdict" not in item:
+                    previous = db.execute("SELECT report_json FROM final_verification_reports WHERE article_id=? AND id=?",
+                                          (article_id, item.get("report_id"))).fetchone()
+                    if previous:
+                        old_checks = json.loads(previous["report_json"]).get("checks", [])
+                        item["verdict"] = next((c["verdict"] for c in old_checks if c["id"] == item["input"]["check_id"]), None)
         for source in record["sources"]:
             source["interview"] = json.loads(source.pop("interview_json")) if source.get("interview_json") else None
             source.pop("interview_json", None)
@@ -167,6 +183,7 @@ class Store:
                       can_approve=bool(ready and not approved), can_review=bool(final_current and report_reviewable(final_report)),
                       review_required_count=sum(check["verdict"] != "match" for check in final_report["checks"]) if final_report else 0,
                       can_export=approved, can_publish=False)
+        record["human_review_drafts"] = review_draft_hints(final_report, review_drafts)
         record["evidence_sources"] = evidence_catalog(record)
         return record
 
@@ -354,6 +371,28 @@ class Store:
                        (report["id"], article_id, json.dumps(report, ensure_ascii=False), report["checked_at"]))
             db.execute("UPDATE articles SET updated_at=? WHERE id=?", (report["checked_at"], article_id))
         return self.get(article_id)
+
+    def save_review_draft(self, article_id, item, report_id, expected_revision, expected_source_revision,
+                          expected_plan_revision, expected_draft_revision, expected_final_report_id):
+        with self.connect() as db:
+            db.execute("BEGIN IMMEDIATE")
+            draft = self.final_base(db, article_id, report_id, expected_revision, expected_source_revision,
+                                    expected_plan_revision, expected_draft_revision, expected_final_report_id)
+            if draft is None:
+                return None
+            last = db.execute("SELECT report_json FROM final_verification_reports WHERE article_id=? ORDER BY rowid DESC LIMIT 1", (article_id,)).fetchone()
+            report = json.loads(last["report_json"]) if last else None
+            binding = {"original_revision": expected_revision, "source_revision": expected_source_revision,
+                       "plan_revision": expected_plan_revision, "draft_revision": expected_draft_revision,
+                       "original_report_id": report_id, "draft_hash": draft_content_hash(draft["content"])}
+            if not report or any(report.get(key) != value for key, value in binding.items()):
+                raise RevisionConflict()
+            record = dict(prepare_review_draft(report, item), saved_at=now_iso())
+            db.execute("INSERT INTO human_review_drafts (article_id, claim_fingerprint, draft_json, updated_at) "
+                       "VALUES (?, ?, ?, ?) ON CONFLICT(article_id, claim_fingerprint) DO UPDATE SET "
+                       "draft_json=excluded.draft_json, updated_at=excluded.updated_at",
+                       (article_id, record["claim_fingerprint"], json.dumps(record, ensure_ascii=False), record["saved_at"]))
+        return {"ok": True, "draft": next(hint for hint in review_draft_hints(report, [record]) if hint["check_id"] == item.check_id)}
 
     def save_approval(self, article_id, reviewer, acknowledgements, report_id, expected_revision, expected_source_revision,
                       expected_plan_revision, expected_draft_revision, expected_final_report_id, resolutions=()):

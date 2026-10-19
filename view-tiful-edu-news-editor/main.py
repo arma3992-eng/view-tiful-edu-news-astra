@@ -15,8 +15,10 @@ from reader_guide import generate_guide
 from copy import deepcopy
 from rewriting import DraftContent, Plan, generate_draft, prepare_items, validate_content
 from final_review import verify_draft
-from exporting import html_export, json_export
+from exporting import html_export, json_export, docx_export
+from notion_export import save_to_notion, NotionExportError
 from human_review import HumanResolution, HumanReviewError, validate_resolutions
+from review_drafts import ReviewDraftInput
 from datetime import date
 from web_research import web_enabled
 
@@ -126,6 +128,11 @@ class FinalRequest(DraftRequest):
 
 class FinalVerificationInput(FinalRequest):
     web_search: bool | None = None
+
+
+class ReviewDraftSaveInput(FinalRequest):
+    expected_final_report_id: str = Field(min_length=1, max_length=36)
+    review: ReviewDraftInput
 
 
 class ApprovalInput(FinalRequest):
@@ -394,6 +401,17 @@ def verify_article_draft(article_id: str, payload: FinalVerificationInput):
         raise HTTPException(status_code=409, detail="최종 검증 중 기사 또는 검증 결과가 바뀌었습니다. 이번 결과를 저장하지 않았습니다. 최신 초안으로 다시 검증해주세요.")
 
 
+@app.post("/api/articles/{article_id}/human-review-draft")
+def save_human_review_draft(article_id: str, payload: ReviewDraftSaveInput):
+    article = final_inputs(article_id, payload)
+    if article["final_verification_status"] not in ("completed", "partial") or article["approval_status"] == "approved":
+        raise HTTPException(status_code=409, detail="현재 버전의 승인 전 검토 항목만 임시 저장할 수 있습니다.")
+    try:
+        return must_exist(app.state.store.save_review_draft(article_id, payload.review, *final_versions(payload)))
+    except RevisionConflict:
+        raise HTTPException(status_code=409, detail="기사 또는 검증 결과가 바뀌었습니다. 최신 결과를 불러와주세요.")
+
+
 @app.post("/api/articles/{article_id}/approve")
 def approve_article(article_id: str, payload: ApprovalInput):
     article = final_inputs(article_id, payload)
@@ -409,11 +427,35 @@ def approve_article(article_id: str, payload: ApprovalInput):
 
 
 @app.get("/api/articles/{article_id}/export/{format}")
-def export_article(article_id: str, format: Literal["html", "json"], approval_id: str = Query(min_length=1, max_length=36)):
+def export_article(article_id: str, format: Literal["html", "json", "docx"], approval_id: str = Query(min_length=1, max_length=36)):
+    article = approved_export_article(article_id, approval_id)
+    if format == "docx":
+        content = docx_export(article)
+        media_type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    else:
+        content = html_export(article) if format == "html" else json_export(article)
+        media_type = "text/html" if format == "html" else "application/json"
+    return Response(content, media_type=media_type,
+                    headers={"Content-Disposition": f'attachment; filename="article-{article_id}-v{article["draft_revision"]}.{format}"',
+                             "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff"})
+
+
+def approved_export_article(article_id: str, approval_id: str):
     article = must_exist(app.state.store.get(article_id))
     if not article["can_export"] or article["approval"]["id"] != approval_id:
         raise HTTPException(status_code=409, detail="현재 기사 버전의 승인이 필요합니다. 최신 기사를 불러와 재검증·승인을 확인해주세요.")
-    content = html_export(article) if format == "html" else json_export(article)
-    return Response(content, media_type="text/html" if format == "html" else "application/json",
-                    headers={"Content-Disposition": f'attachment; filename="article-{article_id}-v{article["draft_revision"]}.{format}"',
-                             "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff"})
+    return article
+
+
+class NotionExportInput(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    approval_id: str = Field(min_length=1, max_length=36)
+
+
+@app.post("/api/articles/{article_id}/notion")
+def export_article_to_notion(article_id: str, payload: NotionExportInput):
+    article = approved_export_article(article_id, payload.approval_id)
+    try:
+        return save_to_notion(article, lambda: approved_export_article(article_id, payload.approval_id))
+    except NotionExportError as error:
+        raise HTTPException(status_code=502, detail=str(error)) from None

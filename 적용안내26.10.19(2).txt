@@ -1,0 +1,25 @@
+Notion 저장 추가 적용 안내
+
+1. ZIP의 view-tiful-edu-news-editor 내부 파일을 기존 편집실 폴더의 같은 위치에 덮어쓰세요. 기존 폴더를 삭제하지 마세요.
+2. notion.env.example의 세 항목을 기존 .env에 추가하세요. 기존 OPENAI 설정은 그대로 유지하세요.
+NOTION_API_KEY=본인의_Notion_API_키
+NOTION_DATABASE_ID=Edu_news_DB의_ID
+NOTION_DATA_SOURCE_ID=해당_데이터_소스_ID
+키는 브라우저 파일이나 GitHub에 넣지 마세요.
+3. Notion Edu_news DB의 연결 메뉴에서 해당 API 연결에 접근 권한을 부여하세요.
+4. 기존 서버를 재시작하고 브라우저 Ctrl+F5를 누르세요.
+5. 승인된 기사에서 Notion에 저장 → 페이지 열기를 눌러 속성과 본문을 확인하세요.
+
+DB 속성 이름: 이름 / 자료 유형 / 구분 / 기록일 / 기사 분류 / 상태 / 설명 / 원문 URL
+이름은 title, 기록일은 date, 원문 URL은 url이어야 합니다.
+나머지는 기존 select/multi_select/status/rich_text 유형에 맞춥니다.
+선택형 속성의 기사, 대표 기사·기획기사, 현재 기사 분류, 보관 옵션은 미리 존재해야 합니다. 없으면 안내 메시지를 표시하며 DB 구조를 임의 변경하지 않습니다.
+DATABASE_ID와 DATA_SOURCE_ID를 함께 설정하면 소속 관계를 확인합니다. 데이터 소스가 하나면 DATABASE_ID만으로도 찾습니다. DATA_SOURCE_ID만 설정해도 사용 가능합니다.
+
+본문: 기사 목록·출처 → 근거자료(Fact Sheet) → 최종 기사 → 수정 내용·이유 → 실행 시각·수집 건수·실패 항목 → 활성 독자 가이드 → 최종 승인 정보
+수집 건수는 현재 저장 데이터에 없으므로 기록 없음으로 표시합니다. 핵심 정보 카드는 출력하지 않습니다.
+페이지 본문이 길면 나눠 저장합니다. 중간 실패 시 일부 저장 가능성과 페이지 URL을 안내합니다. 통신 실패 시 중복 생성을 피하려면 재시도 전에 DB를 확인하세요. 중복 저장 자동 차단은 없습니다.
+
+검증: 기존 포함 148개 테스트 통과, 실제 final.js DOM 테스트 통과. 속성·본문·URL·승인 검사·긴 본문·실패 처리는 모의 Notion HTTP로 검증했습니다. 실제 API 키/DB ID가 제공되지 않아 Edu_news DB 실제 저장은 미검증입니다.
+HTML/JSON/DOCX 생성 코드, storage.py, 검증 로직, 기사 JSON 구조는 변경하지 않았습니다.
+기존 httpx를 사용하므로 추가 패키지는 필요 없습니다.

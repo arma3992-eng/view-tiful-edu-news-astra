@@ -1,0 +1,53 @@
+사람 검토 UX 업데이트 (세 가지 개선 누적본)
+
+적용
+기존 편집실 폴더와 data/editor.sqlite3를 백업하고 ZIP 안 파일을 같은 경로에 덮어쓰세요.
+서버 재시작 → 브라우저 Ctrl+F5. 새로운 Python 의존성은 없습니다.
+이전 임시 저장 업데이트를 아직 적용하지 않았어도 적용할 수 있도록 main.py, storage.py, final_review.py를 함께 포함합니다.
+서버 시작 시 기존 데이터는 유지하고 임시 저장 테이블이 없을 때만 자동 생성합니다.
+
+이번 변경
+human_review.py: ExternalCitation 추가, HumanResolution의 이유 요구를 경로별로 구분.
+validate_resolutions(): 기존 시스템 evidence 구조는 그대로, 외부 근거는 external_evidence 선택 필드로 저장.
+human_evidence_details(): 외부 근거를 human_external로 명시하여 JSON 내보내기와 호환.
+review_drafts.py: 외부 근거의 URL/자료명/인용도 임시 저장·복원 지원.
+static/final.js: readRows(), rowComplete(), renderHumanReview()에서 A/B 경로 선택, 공통 근거 인용 입력, 의견 경로의 이유 입력.
+static/index.html: 캐시 버전 변경.
+테스트: test_review_evidence.py 추가, test_human_review.py의 기존 필수 이유 검사는 변경된 요구에 맞게 조정, UI 회귀 테스트 확장.
+
+완료 조건
+A: 이번 보고서가 읽은 발췌 선택 + 해당 발췌에 실제 포함된 5자 이상 인용 + 확인 체크.
+B: http/https URL 또는 식별 가능한 자료명 + 실제 인용 5자 이상 + 확인 체크.
+A/B에서는 별도 이유 입력을 요구하지 않고 비어 있으면 서버가 일반적인 확인 기록 문구를 넣습니다. 새로운 사실은 생성하지 않습니다.
+의견/분석/제안: 5자 이상 이유 + 확인 체크. mismatch는 이 경로로 해제 불가.
+외부 자료는 사람이 직접 확인한 자료이며 시스템이 읽거나 자동 검증한 자료가 아닙니다. URL은 서버에서 접근하지 않습니다.
+
+기록 구조
+기존 resolutions의 check_id/action/reason/confirmed/evidence 유지.
+시스템 근거의 evidence=[{source_id,chunk_id,quote}] 유지.
+외부 근거 사용 시 evidence=[]이며 external_evidence=[{source_url,source_label,quote}]만 추가됩니다.
+confirmed=true는 해당 resolution에 기록됩니다. 기존 승인 기록에는 필드를 강제 추가하거나 다시 저장하지 않습니다.
+HTML/JSON/DOCX/Notion 구현 파일은 변경하지 않았습니다.
+
+안전장치 및 임시 저장
+partial 보고서의 유효한 미해결 항목 입력 허용. 전체 coverage/인용/버전 검사가 통과해야 최종 승인 가능.
+확인 체크만으로 승인 불가. AI 원래 판정은 유지합니다.
+각 항목 검토 내용 저장을 누르면 별도 임시 기록에 저장합니다.
+segment 위치 + 정규화된 original_quote + claim이 같을 때 입력 복원, confirmed는 항상 false.
+문장/claim 변경 시 자동 복원하지 않음. 근거 변경 시 재확인 안내. 삭제된 주장은 현재 목록에서 제외.
+
+검증
+Python 전체 162개 통과. 실제 index.html/final.js를 로드한 jsdom UI 검사 통과.
+HTML/JSON/DOCX 생성 및 승인 버전 검사를 테스트했습니다.
+Notion은 모의 API 테스트이며 실제 DB 저장 및 사용자 브라우저 수동 검사는 별도 확인이 필요합니다.
+
+VS Code 편집실 폴더 터미널
+.\.venv\Scripts\python.exe -m unittest discover -s tests
+UI 회귀 검사는 jsdom이 설치된 환경에서 node tests/test_review_drafts_ui.cjs 실행.
+
+브라우저 확인
+1. partial 보고서의 정상 항목은 입력 가능, 승인 버튼은 비활성.
+2. A 경로: 발췌 선택 → 인용 입력(읽은 발췌 보기에서 복사 가능) → 확인 체크. 이유 입력 없이 완료 표시.
+3. B 경로: URL 또는 자료명 → 인용 → 확인 체크. 출처/인용을 비우면 완료 불가.
+4. 검토 내용 저장 → 다른 문장 수정/저장/재검증 → 동일 항목 입력 복원, 확인 체크는 해제.
+5. 전체 검사 정상 및 항목별 확인 후 최종 승인 → 기존 다운로드/Notion 저장 확인.

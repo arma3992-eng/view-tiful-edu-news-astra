@@ -4,7 +4,8 @@
   <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
   <title>교육뉴스 편집실</title>
   <link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
-  <link rel="stylesheet" href="/static/style.css?v=reader-guide-1"><script src="/static/research.js?v=newsroom-20261005" defer></script><script src="/static/reader-guide-editor.js?v=reader-guide-1" defer></script><script src="/static/rewrite.js?v=reader-guide-1" defer></script><script src="/static/final.js?v=newsroom-20261005" defer></script><script src="/static/app.js?v=newsroom-20261005" defer></script>
+  <link rel="stylesheet" href="/static/style.css?v=collapse-1"><script src="/static/research.js?v=newsroom-20261005" defer></script><script src="/static/reader-guide-editor.js?v=reader-guide-1" defer></script><script src="/static/rewrite.js?v=collapse-1" defer></script><script src="/static/final.js?v=review-evidence-2" defer></script><script src="/static/app.js?v=newsroom-20261005" defer></script>
+  <script src="/static/section-collapse.js?v=collapse-1" defer></script>
 </head>
 <body>
 <header class="app-header"><div class="brand"><span class="brand-mark">E</span><span>교육뉴스 편집실</span></div><span class="header-caption">원문·근거 비교형</span><span class="stage-badge">최종 검증·승인</span></header>
@@ -57,7 +58,8 @@
     </section>
   </div>
   <section class="saved-section" id="verification-results" aria-labelledby="verification-results-heading">
-    <div class="panel-header"><h2 id="verification-results-heading">원문 검증 결과</h2></div>
+    <div class="panel-header collapse-header"><h2 id="verification-results-heading"><button type="button" class="section-toggle" aria-expanded="true" aria-controls="verification-results-body"><span class="collapse-arrow" aria-hidden="true">▼</span> 원문 검증 결과</button></h2><span id="verification-results-summary" class="collapse-summary secondary"></span></div>
+    <div id="verification-results-body" class="collapsible-body">
       <div id="verification-meta" class="verification-meta" hidden></div>
       <div class="verification-placeholder" id="check-list">
         <div class="check-row"><span>날짜·숫자</span><span>확인 대기</span></div>
@@ -66,9 +68,11 @@
         <div class="check-row"><span>주장의 공식 근거</span><span>확인 대기</span></div>
       </div>
       <div class="notice">판정은 실제로 읽은 근거의 발췌를 대조한 AI 검토 결과입니다. 적용 학년도·조건과 누락된 주장은 사람이 확인해야 합니다.</div>
+    </div>
   </section>
   <section class="saved-section" id="rewrite-panel" aria-labelledby="rewrite-heading">
-    <div class="panel-header"><h2 id="rewrite-heading">기사 초안 작성</h2><span id="draft-status" class="status-badge">초안 작성 전</span></div>
+    <div class="panel-header collapse-header"><h2 id="rewrite-heading"><button type="button" class="section-toggle" aria-expanded="true" aria-controls="rewrite-panel-body"><span class="collapse-arrow" aria-hidden="true">▼</span> 기사 초안 작성</button></h2><span id="draft-status" class="status-badge">초안 작성 전</span><span id="rewrite-panel-summary" class="collapse-summary secondary"></span></div>
+    <div id="rewrite-panel-body" class="collapsible-body">
     <p id="rewrite-help" class="panel-intro">원문 검증 결과를 저장하면 편집 결정을 선택할 수 있습니다.</p>
     <fieldset id="rewrite-fields" disabled>
       <details class="rewrite-decisions"><summary>검증 항목별 포함·수정·보류·제외</summary><div id="decision-list"></div></details>
@@ -117,9 +121,11 @@
       <p id="draft-message" class="message" role="status" aria-live="polite"></p>
       <div id="draft-warnings" class="notice"></div>
     </div>
+    </div>
   </section>
   <section class="saved-section" id="final-panel" aria-labelledby="final-heading">
-    <div class="panel-header"><h2 id="final-heading">최종 재검증·승인</h2><span id="final-status" class="status-badge">초안 저장 대기</span></div>
+    <div class="panel-header collapse-header"><h2 id="final-heading"><button type="button" class="section-toggle" aria-expanded="true" aria-controls="final-panel-body"><span class="collapse-arrow" aria-hidden="true">▼</span> 최종 재검증·승인</button></h2><span id="final-status" class="status-badge">초안 저장 대기</span><span id="final-panel-summary" class="collapse-summary secondary"></span></div>
+    <div id="final-panel-body" class="collapsible-body">
     <p id="final-help" class="panel-intro">초안을 저장한 뒤 제목·요약·본문·핵심 정보·독자별 안내 전체를 다시 검증합니다.</p>
     <div class="rewrite-actions"><button type="button" id="verify-draft" class="button primary" disabled>최종 재검증 실행</button><button type="button" id="edit-draft" class="button" disabled>초안 수정하러 가기</button></div>
     <p class="secondary">웹 검색을 사용하면 검색 요청과 사실 대조 요청을 실행합니다. 의견·분석·제안·인터뷰에 포함된 사실도 확인합니다. 최종 승인은 사람이 하며 승인 버튼은 API를 호출하지 않습니다.</p>
@@ -139,9 +145,11 @@
         <button type="submit" id="approve-draft" class="button primary" disabled>현재 기사 버전 승인</button>
       </fieldset></form>
       <div><h3 class="source-heading">승인 기록·기사 내보내기</h3><div id="approval-record" class="verification-meta"><p>아직 승인한 기사가 없습니다.</p></div>
-        <div class="rewrite-actions"><button type="button" id="export-html" class="button" disabled>기사 HTML 다운로드</button><button type="button" id="export-json" class="button" disabled>기사 JSON 다운로드</button></div>
+        <div class="rewrite-actions"><button type="button" id="export-html" class="button" disabled>기사 HTML 다운로드</button><button type="button" id="export-json" class="button" disabled>기사 JSON 다운로드</button><button type="button" id="export-docx" class="button" disabled>기사 DOCX 다운로드</button><button type="button" id="save-notion" class="button" disabled>Notion에 저장</button></div>
+        <p id="notion-message" class="message" role="status" aria-live="polite"></p>
         <p class="secondary">HTML은 브라우저에서 열어 확인할 수 있고, JSON은 웹사이트 연결용입니다. 현재 승인한 버전만 내려받습니다. 실제 웹사이트에 자동 게시되지는 않습니다. 첨부 PDF는 별도로 연결하세요.</p>
       </div>
+    </div>
     </div>
   </section>
   <section class="saved-section" aria-labelledby="saved-heading"><div class="panel-header"><h2 id="saved-heading">저장한 기사</h2><button type="button" id="refresh-articles" class="text-button">목록 새로고침</button></div><div id="article-list" class="article-list"><p class="secondary">저장한 기사를 불러옵니다.</p></div></section>

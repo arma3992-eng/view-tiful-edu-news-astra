@@ -1,6 +1,7 @@
 """AI 판정을 보존하면서 현재 보고서의 항목별 사람 검토를 검증한다."""
 import re
 import unicodedata
+from urllib.parse import urlsplit
 from typing import Literal
 from pydantic import BaseModel, ConfigDict, Field, ValidationError, field_validator, model_validator
 
@@ -22,27 +23,51 @@ class HumanCitation(BaseModel):
     quote: str = Field(min_length=5, max_length=1500)
 
 
+class ExternalCitation(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    source_url: str = Field(default="", max_length=2000)
+    source_label: str = Field(default="", max_length=500)
+    quote: str = Field(min_length=5, max_length=1500)
+
+    @model_validator(mode="after")
+    def require_locator(self):
+        self.source_url = self.source_url.strip()
+        self.source_label = self.source_label.strip()
+        if self.source_url:
+            parsed = urlsplit(self.source_url)
+            if (parsed.scheme not in ("http", "https") or not parsed.hostname or
+                    parsed.username or parsed.password or any(c.isspace() for c in self.source_url)):
+                raise ValueError("근거 URL은 http/https 주소로 입력해주세요.")
+        if not self.source_url and len(self.source_label) < 2:
+            raise ValueError("확인한 공식 자료의 URL 또는 식별 가능한 자료명을 입력해주세요.")
+        if len(normalized_quote(self.quote)) < 5:
+            raise ValueError("실제 근거 인용을 5자 이상 입력해주세요.")
+        return self
+
+
 class HumanResolution(BaseModel):
     model_config = ConfigDict(extra="forbid")
     check_id: str = Field(min_length=1, max_length=80)
     action: Literal["confirm_evidence", "editorial"]
-    reason: str = Field(min_length=5, max_length=2000)
+    reason: str = Field(default="", max_length=2000)
     confirmed: Literal[True]
     evidence: list[HumanCitation] = Field(max_length=8)
 
-    @field_validator("reason")
-    @classmethod
-    def reason_required(cls, value):
-        if len(value.strip()) < 5:
-            raise ValueError("확인한 내용과 판단 이유를 5자 이상 입력해주세요.")
-        return value.strip()
+    external_evidence: list[ExternalCitation] = Field(default_factory=list, max_length=1)
 
     @model_validator(mode="after")
     def evidence_required(self):
-        if self.action == "confirm_evidence" and not self.evidence:
-            raise ValueError("사실을 직접 확인하려면 자료의 실제 발췌가 필요합니다.")
-        if self.action == "editorial" and self.evidence:
-            raise ValueError("의견·분석·제안 검토에는 사실 확인 근거를 함께 저장하지 않습니다.")
+        self.reason = self.reason.strip()
+        if self.action == "confirm_evidence":
+            if bool(self.evidence) == bool(self.external_evidence):
+                raise ValueError("시스템 발췌 또는 외부 근거 중 한 경로의 실제 인용이 필요합니다.")
+            if not self.reason:
+                self.reason = "등록 발췌와 현재 기사 문장을 직접 대조하여 확인함." if self.evidence else "외부 자료의 인용과 현재 기사 문장을 직접 대조하여 확인함."
+        if self.action == "editorial":
+            if self.evidence or self.external_evidence:
+                raise ValueError("의견·분석·제안 검토에는 사실 확인 근거를 함께 저장하지 않습니다.")
+            if len(self.reason) < 5:
+                raise ValueError("사실 단정 없는 표현으로 판단한 이유를 5자 이상 입력해주세요.")
         return self
 
 
@@ -72,7 +97,10 @@ def validate_resolutions(report, resolutions):
             quote = normalized_quote(citation.quote)
             if not chunk or len(quote) < 5 or quote not in normalized_quote(chunk["text"]):
                 raise HumanReviewError("사람 검토의 근거 인용을 이번 보고서의 실제 자료 발췌에서 찾지 못했습니다. 발췌를 선택해 그대로 넣어주세요.")
-        saved.append(item.model_dump())
+        record = item.model_dump()
+        if not record["external_evidence"]:
+            record.pop("external_evidence")
+        saved.append(record)
     if set(pending) != seen:
         raise HumanReviewError(f"아직 항목별 사람 검토가 필요한 사실이 {len(set(pending) - seen)}개 있습니다. 수정·재검증 또는 근거·판단 기록을 마쳐주세요.", 409)
     return sorted(saved, key=lambda item: item["check_id"])
@@ -97,4 +125,9 @@ def human_evidence_details(report, resolutions):
             chunk = pool[(citation["source_id"], citation["chunk_id"])]
             details.append(dict(citation, check_id=item["check_id"], source_name=source["name"],
                                 locator=chunk["locator"], url=source["resolved_url"] or source["url"], origin=source["origin"]))
+        for citation in item.get("external_evidence", []):
+            details.append(dict(citation, check_id=item["check_id"],
+                                source_name=citation.get("source_label") or citation["source_url"],
+                                locator="사람이 직접 확인한 외부 자료", url=citation.get("source_url", ""),
+                                origin="human_external"))
     return details

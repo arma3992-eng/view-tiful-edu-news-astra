@@ -1,5 +1,6 @@
 """저장된 기사 전체의 검증 범위·실제 인용을 확인하는 최종 검토."""
 import re
+import logging
 from collections import Counter
 from typing import Literal
 from pydantic import BaseModel, ConfigDict, Field
@@ -118,7 +119,86 @@ def draft_segments(content):
     return segments
 
 
+def collapse_identical_segments(parsed):
+    """Only byte-for-byte equivalent parsed results may be safely coalesced."""
+    seen, unique = set(), []
+    for item in parsed.segments:
+        key = item.model_dump_json()
+        if key not in seen:
+            seen.add(key)
+            unique.append(item)
+    return parsed.model_copy(update={"segments": unique})
+
+
+def incomplete_segments(parsed, segments):
+    grouped = {}
+    for item in parsed.segments:
+        grouped.setdefault(item.segment_id, []).append(item)
+    reasons = {}
+    for segment in segments:
+        items = grouped.get(segment["id"], [])
+        if not items:
+            reason = "missing"
+        elif len(items) != 1:
+            reason = "duplicate_conflict"
+        elif normalized(items[0].reviewed_text) != normalized(segment["text"]):
+            reason = "reviewed_text_mismatch"
+        elif not items[0].all_claims_checked:
+            reason = "claims_unchecked"
+        elif items[0].classification != "editorial" and not items[0].checks:
+            reason = "factual_without_checks"
+        elif items[0].classification == "editorial" and items[0].checks:
+            reason = "editorial_with_checks"
+        else:
+            continue
+        reasons[segment["id"]] = reason
+    return reasons
+
+
+def supplement_coverage(parsed, segments, content, sources, usage):
+    initial_response_count = len(parsed.segments)
+    parsed = collapse_identical_segments(parsed)
+    initial = incomplete_segments(parsed, segments)
+    diagnostic = {"input_segment_count": len(segments), "initial_response_count": initial_response_count,
+                  "identical_duplicates_removed": initial_response_count - len(parsed.segments), "initial_incomplete": initial,
+                  "retry_segment_ids": [], "status": "not_needed"}
+    if not initial:
+        return parsed, usage, diagnostic
+    targets = [part for part in segments if part["id"] in initial]
+    diagnostic.update(retry_segment_ids=[p["id"] for p in targets], status="attempted")
+    logging.getLogger(__name__).warning("Final coverage supplement: %s", initial)
+    try:
+        retry, retry_usage = ask_structured(
+            INSTRUCTIONS + "\n이번 요청은 보충 검증이다. draft는 전체 문맥이며, 반환 대상은 이번 segments 목록뿐이다. 이 목록의 모든 ID를 정확히 한 번 반환하라.",
+            {"draft": content, "segments": targets, "registered_evidence": sources},
+            FinalAIReport, "education_news_final_review")
+    except VerificationError:
+        diagnostic["status"] = "failed"
+        logging.getLogger(__name__).warning("Final coverage supplement failed; initial gaps preserved")
+        return parsed, usage, diagnostic
+    diagnostic["retry_response_count"] = len(retry.segments)
+    retry = collapse_identical_segments(retry)
+    remaining = incomplete_segments(retry, targets)
+    replacements = {item.segment_id: item for item in retry.segments
+                    if item.segment_id in initial and item.segment_id not in remaining}
+    merged = [item for item in parsed.segments if item.segment_id not in replacements]
+    merged.extend(replacements.values())
+    # Preserve explicit AI coverage warnings. Unrequested retry IDs cannot establish coverage.
+    notes = list(dict.fromkeys(parsed.coverage_notes + retry.coverage_notes))
+    if any(item.segment_id not in initial for item in retry.segments):
+        notes.append("보충 검증에서 요청하지 않은 segment가 반환되어 범위 확인이 필요합니다.")
+    parsed = parsed.model_copy(update={"segments": merged, "coverage_notes": notes})
+    diagnostic.update(status="completed", recovered_segment_ids=list(replacements),
+                      remaining_incomplete=incomplete_segments(parsed, segments), usage=retry_usage)
+    combined_usage = dict(usage)
+    for key in ("input_tokens", "output_tokens", "total_tokens"):
+        if key in usage or key in retry_usage:
+            combined_usage[key] = (usage.get(key) or 0) + (retry_usage.get(key) or 0)
+    return parsed, combined_usage, diagnostic
+
+
 def validate_final_report(parsed, segments, chunks, sources, content, model, usage):
+    parsed = collapse_identical_segments(parsed)
     expected = {part["id"]: part for part in segments}
     counts = Counter(item.segment_id for item in parsed.segments)
     pool = {(item["source_id"], item["chunk_id"]): item for item in chunks}
@@ -140,7 +220,21 @@ def validate_final_report(parsed, segments, chunks, sources, content, model, usa
         coverage.append({**segment, "classification": result.classification if valid else "unknown",
                          "status": "reviewed" if complete else "unreviewed"})
         if not complete:
-            issues.append(segment["location"] + ": 누락·중복·검토 본문 차이 또는 사실 검사 누락으로 범위 확인이 필요합니다.")
+            reasons = []
+            if counts[segment["id"]] == 0:
+                reasons.append("AI 응답에서 해당 segment 누락")
+            elif counts[segment["id"]] > 1:
+                reasons.append("동일 segment 중복 반환")
+            elif not valid:
+                reasons.append("reviewed_text 불일치")
+            else:
+                if not result.all_claims_checked:
+                    reasons.append("모든 사실 검사 완료 확인 없음 (all_claims_checked=false)")
+                if result.classification != "editorial" and not result.checks:
+                    reasons.append("factual/mixed인데 사실 check 없음")
+                if result.classification == "editorial" and result.checks:
+                    reasons.append("editorial 분류에 사실 check가 있어 분류 확인 필요")
+            issues.append(segment["location"] + ": " + " / ".join(reasons))
         if not valid:
             continue
         for claim in result.checks:
@@ -199,6 +293,8 @@ def verify_draft(article, store, web_search=None):
     sources, chunks, research = verification_evidence(context, store, web_search)
     parsed, usage = ask_structured(INSTRUCTIONS, {"draft": content, "segments": segments, "registered_evidence": sources},
                                   FinalAIReport, "education_news_final_review")
+    parsed, usage, diagnostic = supplement_coverage(parsed, segments, content, sources, usage)
     report = validate_final_report(parsed, segments, chunks, sources, content, ai_config()["model"], usage)
+    report["coverage_retry"] = diagnostic
     from web_research import attach_research
     return attach_research(report, research)

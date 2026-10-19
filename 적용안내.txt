@@ -1,0 +1,19 @@
+DOCX 다운로드 최소 추가
+
+ZIP의 view-tiful-edu-news-editor 안 파일들을 기존 편집실 폴더의 같은 위치에 덮어쓰세요.
+기존 폴더 자체를 삭제하지 마세요.
+
+편집실 폴더의 PowerShell에서 실행:
+.\.venv\Scripts\python.exe -m pip install python-docx==1.2.0
+
+서버 종료 후 기존 방식으로 재시작하고 브라우저 Ctrl+F5.
+승인된 기사에서 기사 DOCX 다운로드를 눌러 Word에서 열고 편집해 보세요.
+
+검증: 테스트 145개 통과. HTML/JSON 생성 함수 불변 확인. DOCX 재읽기 및 LibreOffice 한글 렌더링 확인.
+Microsoft Word 직접 실행 검사는 수행하지 못했습니다.
+테스트 환경 FastAPI 0.146.0, pypdf 6.21.1, python-docx 1.2.0. 기존 requirements 버전은 변경하지 않았습니다.
+
+기존 test_final_review.py의 HTML 근거 제목 기대 문구 한 곳을 지난 HTML 수정 결과에 맞췄습니다.
+DOCX 가이드는 reader_guide.enabled=true일 때만 표시합니다.
+원문/근거 링크, 승인 정보 포함. 핵심 정보 카드 제외.
+storage.py, 검증/승인 조건, JSON 구조 변경 없음.

@@ -47,6 +47,28 @@ class HumanReviewTests(unittest.TestCase):
         response = self.approve(resolutions=self.decisions())
         self.assertEqual(response.status_code, 200, response.text)
 
+    def test_partial_report_preserves_valid_checks_but_blocks_approval(self):
+        mutations = [
+            ("AI 응답에서 해당 segment 누락", lambda data: data["segments"].pop(0)),
+            ("동일 segment 중복 반환", lambda data: data["segments"].append(dict(copy.deepcopy(data["segments"][0]), reviewed_text="상충하는 본문"))),
+            ("reviewed_text 불일치", lambda data: data["segments"][0].update(reviewed_text="다른 본문")),
+            ("factual/mixed인데 사실 check 없음", lambda data: data["segments"][0].update(classification="factual", checks=[])),
+        ]
+        for expected, mutate in mutations:
+            with self.subTest(reason=expected):
+                def change(data):
+                    self.unknown(data)
+                    mutate(data)
+                self.assertEqual(self.review(change).status_code, 200)
+                report = self.article["final_verification_report"]
+                self.assertEqual(report["report_status"], "partial")
+                self.assertTrue(any(expected in note for note in report["coverage_notes"]))
+                self.assertTrue(report["checks"])
+                self.assertTrue(all(check["verdict"] == "unverifiable" for check in report["checks"]))
+                self.assertFalse(self.article["can_review"])
+                self.assertEqual(self.approve(resolutions=self.decisions()).status_code, 409)
+                self.assertIsNone(self.client.get(self.route).json()["approval"])
+
     def test_pending_report_allows_human_review_but_not_automatic_approval(self):
         self.assertTrue(self.article["can_review"])
         self.assertFalse(self.article["can_approve"])
@@ -79,8 +101,8 @@ class HumanReviewTests(unittest.TestCase):
             items = self.decisions(); items[0]["evidence"][0].update(fields)
             self.assertEqual(self.approve(resolutions=items).status_code, 422)
 
-    def test_missing_evidence_reason_or_attestation_rejected(self):
-        for fields in ({"evidence":[]}, {"reason":" "}, {"confirmed":False}, {"reason":"짧음"}):
+    def test_missing_evidence_or_attestation_rejected(self):
+        for fields in ({"evidence":[]}, {"confirmed":False}):
             items = self.decisions(); items[0].update(fields)
             self.assertEqual(self.approve(resolutions=items).status_code, 422)
 

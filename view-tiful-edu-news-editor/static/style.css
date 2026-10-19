@@ -125,3 +125,13 @@ footer{padding:0 28px 28px;text-align:center;color:var(--muted);font-size:12px}
 #reader-guide-initial{white-space:pre-wrap;overflow-wrap:anywhere;font-size:12px}
 #draft-preview .reader-guide-preview{border-top:1px solid var(--line);margin-top:28px;padding-top:16px}
 #draft-preview .reader-guide-preview li{white-space:pre-wrap;margin:8px 0}
+
+/* Section visibility only; existing controls and inputs stay mounted. */
+.collapse-header{cursor:pointer}
+.collapse-header h2{min-width:0;flex:1 1 220px}
+.section-toggle{display:flex;align-items:center;gap:8px;border:0;padding:0;background:transparent;color:inherit;font:inherit;font-weight:inherit;text-align:left;width:100%}
+.collapse-arrow{flex:0 0 auto;font-size:12px}
+.collapse-header .status-badge{white-space:normal;overflow-wrap:anywhere;max-width:100%}
+.collapse-summary{flex:1 0 100%;min-width:0;overflow-wrap:anywhere}
+.collapse-summary:empty{display:none}
+@media(max-width:640px){.collapse-header{gap:8px}.collapse-header h2{flex-basis:100%}}

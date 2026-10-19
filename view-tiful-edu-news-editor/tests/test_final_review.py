@@ -67,7 +67,7 @@ class FinalReviewTests(unittest.TestCase):
                 "usage": {"input_tokens": 100, "output_tokens": 100}})
         with patch.dict(os.environ, {"OPENAI_API_KEY": "unit-test-key"}), patch("verification.httpx.Client", side_effect=lambda *a, **kw: real_client(transport=httpx.MockTransport(handler))):
             response = self.client.post(self.route + "/draft/verify", json=self.final_payload())
-        self.assertEqual(len(calls), 1, "최종 검증 한 번에 API 요청은 한 번")
+        self.assertIn(len(calls), (1, 2), "전체 검증 1회 + 불완전 범위 보충 최대 1회")
         if response.status_code == 200: self.article = response.json()
         return response
 
@@ -143,7 +143,7 @@ class FinalReviewTests(unittest.TestCase):
 
     def test_missing_duplicate_unknown_or_changed_segment_cannot_pass(self):
         mutations = [lambda data: data["segments"].pop(),
-                     lambda data: data["segments"].append(copy.deepcopy(data["segments"][0])),
+                     lambda data: data["segments"].append(dict(copy.deepcopy(data["segments"][0]), reviewed_text="상충하는 본문")),
                      lambda data: data["segments"][0].update(segment_id="unknown"),
                      lambda data: data["segments"][0].update(reviewed_text="없는 기사 문장")]
         for mutate in mutations:
@@ -200,7 +200,7 @@ class FinalReviewTests(unittest.TestCase):
         self.assertEqual(result.headers["cache-control"], "no-store")
         html = self.export("html")
         self.assertEqual(html.status_code, 200)
-        self.assertIn("학생", html.text); self.assertIn("원문과 근거", html.text)
+        self.assertIn("학생", html.text); self.assertIn("원문과 연결한 근거", html.text)
         self.assertIn("attachment", html.headers["content-disposition"])
 
     def test_wrong_approval_id_cannot_export(self):

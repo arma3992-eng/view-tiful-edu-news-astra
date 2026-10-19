@@ -1,0 +1,57 @@
+재검증 안정화 최소 패치
+기준: 직전 human-review-ux-update.zip을 적용한 편집실.
+적용: 기존 폴더/DB 백업 후 같은 경로 파일만 덮어쓰고 서버를 재시작하세요.
+이번에는 UI/JavaScript 수정이 없습니다. 의존성 추가도 없습니다.
+
+실제 확인한 원인
+1. claim_fingerprint에 AI claim 문구가 포함되어 표현 변화만으로 매칭 실패.
+2. 최종 검증은 모든 segment를 한 번 요청하고 끝나며, 누락/상충 중복/reviewed_text 차이/사실 check 없음/검사 미완료가 있으면 해당 부분을 unreviewed로 처리. 보충 요청이 없었음.
+사용자 실제 기사 DB/원래 AI 응답 로그는 제공되지 않아 32/32 → 24/32 사례의 특정 원인은 미확정.
+32개 중 8개 factual segment에 check가 없는 응답으로 24/32가 되는 경로를 테스트로 재현했습니다.
+
+수정 파일
+review_drafts.py: claim_fingerprint(), prepare_review_draft(), review_draft_hints().
+현재 기사별 DB 조회/복합키 article_id + segment_id + 정규화 original_quote로 식별. AI claim/check_id는 키에서 제외.
+이전 claim 포함 해시 기록도 저장된 인용에서 새 키를 계산하여 복원. 여러 기록은 저장 시각이 최신인 입력 우선.
+verdict를 새 임시 기록에 보존. AI 판정 변경 시 안내하며 입력은 복원, confirmed는 항상 false.
+불일치로 바뀐 경우 editorial 방법은 현재 선택으로 사용할 수 없어 재선택 안내. 기존 저장 기록과 메모는 삭제하지 않음.
+실제 인용이 바뀌면 자동 복원하지 않고 기사 문장이 변경되어 재확인 필요 안내.
+근거 변경 시 입력은 보존하고 재확인 안내.
+
+storage.py: get()에서 구형 임시 기록에 verdict가 없으면 그 기록이 참조한 과거 보고서의 판정을 읽음.
+DB 테이블/기존 승인 구조 변경 없음.
+
+final_review.py: collapse_identical_segments(), incomplete_segments(), supplement_coverage() 추가; verify_draft()에 연결.
+1차 전체 검증 → 불완전 segment만 최대 한 번 보충 → 검증 가능한 반환 결과만 병합 → 기존 validate_final_report 적용.
+보충 요청은 같은 기사 전체 문맥과 같은 근거 스냅샷을 사용하며 segments 목록만 대상 부분으로 제한.
+정상 segment는 재생성/교체하지 않습니다. 완전히 동일한 중복 응답만 하나로 합칩니다.
+상충하는 중복은 임의 선택하지 않고 보충 대상으로 둡니다.
+보충 실패/실제 누락/본문 불일치/check 없음은 임의로 reviewed 처리하지 않습니다.
+AI가 명시한 coverage_notes는 자동 삭제하지 않습니다. 따라서 검사 수가 모두 채워져도 별도 한계/인용 오류가 남으면 partial일 수 있습니다.
+불완전 응답에 대해서만 추가 AI 호출이 최대 1회 발생합니다.
+
+원인 확인 정보
+새 final_verification_report.coverage_retry에 입력 수, 최초 응답 수, 동일 중복 제거 수,
+initial_incomplete(segment ID별 원인), retry_segment_ids, 복구된 ID, 남은 누락 및 보충 usage가 저장됩니다.
+서버 터미널에도 Final coverage supplement와 원인 코드가 출력됩니다. 기사 내용이나 API 키는 로그에 출력하지 않습니다.
+코드: missing / duplicate_conflict / reviewed_text_mismatch / factual_without_checks / claims_unchecked / editorial_with_checks.
+기존 저장 보고서는 변경하지 않으므로 새 진단 정보는 다음 최종 재검증부터 생성됩니다.
+
+검증
+기존 테스트 및 추가 11개를 포함해 Python 전체 173개 통과.
+새 테스트는 tests/test_review_stability.py.
+검토 입력의 구형 키 호환, 다른 문장만 수정, claim/판정 변경, 최신 기록 선택,
+32/32 정상, 3개 누락→3개만 보충, 보충 실패→실제 누락 유지,
+24/32 재현·보충, 동일/상충 중복, 본문 차이, unanchored와 명시적 한계 유지 검사.
+이전 테스트의 claim 필수 매칭/단일 호출/완전 동일 중복 실패 기대는 새 요구사항에 맞게 조정.
+HTML/JSON/DOCX 및 Notion 모의 테스트 포함. 실제 외부 AI와 Notion 호출은 수행하지 않았습니다.
+
+확인 방법
+VS Code 편집실 터미널: .\.venv\Scripts\python.exe -m unittest discover -s tests
+브라우저: A항목 검토 내용 저장 → B문장만 수정 → 편집 결정/초안 저장 → 최종 재검증 → A입력 복원 및 확인 체크 해제 확인.
+누락 발생 시 서버 터미널 또는 기사 API 응답의 coverage_retry에서 보충 대상·잔여 원인 확인.
+실제 원문 문장을 바꾼 항목은 재확인, coverage/인용/stale 문제가 남으면 승인 불가.
+
+범위
+전체 재검증은 그대로이며 변경 segment만 처리하는 delta revalidation은 구현하지 않았습니다.
+현재 segment ID는 항목 위치와 분할 순서 기반입니다. 항목 삽입/재정렬 또는 긴 본문의 분할 경계 변경까지 추적하는 영구 ID는 별도 구조 개선 사항입니다.

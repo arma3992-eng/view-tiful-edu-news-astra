@@ -359,6 +359,7 @@ window.createRewriteEditor = function (host) {
     return match?[match.index,match.index+match[0].length]:null;
   }
   function openLocation(id, quote = "", reviewedText = "") {
+    window.expandEditorSection?.("rewrite-panel");
     if(id.startsWith("reader-") && readerGuide.openLocation(id))return;
     let input = null, match, factRow = null;
     if (/^title_/.test(id)) input = $("draft-title");
