@@ -202,7 +202,7 @@ window.createRewriteEditor = function (host) {
     $("save-plan").disabled = !ready;
     $("manual-draft").disabled = !ready;
     $("generate-draft").disabled = !ready || !state.configured;
-    $("generate-reader-guide").disabled = !ready || !state.configured || !article?.draft || articleBodyChanged() || planChanged() || article.rewrite_plan_status !== "current";
+    $("generate-reader-guide").disabled = !ready || !state.configured || !article?.draft || articleBodyChanged() || planChanged() || article.rewrite_plan_status !== "current" || article.draft_status === "stale";
     $("generate-draft").textContent = generating ? "AI 초안 작성 중…" : "AI로 초안 작성";
     $("draft-fields").disabled = !article || state.busy;
     $("save-draft").disabled = !ready || !article.rewrite_plan || article.rewrite_plan_status !== "current" || planChanged();
@@ -308,13 +308,16 @@ window.createRewriteEditor = function (host) {
   const addKeyFact=node("button","+ 데이터 항목 추가","text-button");addKeyFact.type="button";addKeyFact.id="add-draft-fact";
   addKeyFact.addEventListener("click",()=>{addFact();host.onChange();});$("draft-facts").after(addKeyFact);
   $("save-plan").addEventListener("click",async()=>{
-    if(!workAllowed())return;host.setBusy(true);
+    if(!workAllowed())return;
+    if(planChanged() && !(await host.protectReviews("편집 결정을 저장하면")))return;
+    host.setBusy(true);
     try{await savePlan();tell("rewrite-message","편집 결정을 저장했습니다. AI 또는 직접 작성으로 초안을 만드세요.");await host.refreshArticles();}
     catch(error){tell("rewrite-message",error.message,true);}finally{host.setBusy(false);}
   });
   $("generate-draft").addEventListener("click",async()=>{
     if(!workAllowed())return;
     if(hasDraft && !window.confirm("현재 초안 대신 선택한 소재로 새 초안을 작성할까요? 저장하지 않은 초안 수정은 사라집니다."))return;
+    if(!(await host.protectReviews("새 초안을 작성하면")))return;
     const draftRevision = article.draft_revision || 0;
     generating=true;host.setBusy(true);tell("rewrite-message","편집 결정을 저장하고 선택한 소재로 AI 초안을 작성합니다.");
     try{
@@ -326,6 +329,7 @@ window.createRewriteEditor = function (host) {
   $("manual-draft").addEventListener("click",async()=>{
     if(!workAllowed())return;
     if(hasDraft && !window.confirm("편집란을 비우고 새 초안을 직접 작성할까요? 기존 저장 초안은 새로 저장하기 전까지 보관됩니다."))return;
+    if(planChanged() && !(await host.protectReviews("편집 결정을 저장하면")))return;
     host.setBusy(true);
     try{await savePlan();renderDraft({category:"입시·수능",title:"",summary:["",""],sections:[{heading:"",kind:"fact",text:"",item_ids:[]}],key_facts:[],audience_guidance:[]});
       baselineDraft="";tell("rewrite-message","직접 작성하는 초안입니다. 제목·요약 두 문장·본문을 채운 뒤 초안 저장을 누르세요.");}
@@ -334,6 +338,7 @@ window.createRewriteEditor = function (host) {
   $("generate-reader-guide").addEventListener("click",async()=>{
     if(!workAllowed() || !article.draft || articleBodyChanged() || planChanged())return;
     if(!window.confirm("저장된 기사 본문을 기준으로 AI 제안을 받을까요? 현재 가이드 편집안과 저장하지 않은 가이드 메모는 교체됩니다. 생성 후 최종 재검증·승인이 다시 필요합니다."))return;
+    if(!(await host.protectReviews("가이드를 생성하면")))return;
     host.setBusy(true);
     try{
       const data=await host.api("/api/articles/"+article.id+"/reader-guide/generate",{method:"POST",body:JSON.stringify({...basePayload(),expected_draft_revision:article.draft_revision})});
@@ -344,6 +349,8 @@ window.createRewriteEditor = function (host) {
   $("draft-form").addEventListener("submit",async event=>{
     event.preventDefault();if(!workAllowed())return;
     if(planChanged()){tell("draft-message","편집 결정을 먼저 저장해주세요.",true);return;}
+    if(!(await host.protectReviews("초안을 저장하면")))return;
+    if(!workAllowed())return;
     host.setBusy(true);
     try{const data=await host.api("/api/articles/"+article.id+"/draft",{method:"PUT",body:JSON.stringify({...basePayload(),expected_draft_revision:article.draft_revision || 0,content:readDraft(),reader_guide_note:readerGuide.note()})});
       host.applyArticle(data);tell("draft-message","초안을 저장했습니다. 최종 재검증과 승인 전 상태입니다.");await host.refreshArticles();}

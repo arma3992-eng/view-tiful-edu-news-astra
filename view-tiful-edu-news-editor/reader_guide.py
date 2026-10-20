@@ -1,6 +1,6 @@
 """Optional reader guides. No change to original verification or citation matching."""
 from typing import Literal
-from pydantic import BaseModel, ConfigDict, Field, model_validator
+from pydantic import BaseModel, ConfigDict, Field, ValidationError, model_validator
 
 LABELS = {"impact": "영향", "check": "확인사항", "prepare": "준비사항", "action": "행동", "think": "생각거리"}
 
@@ -90,7 +90,10 @@ id는 영문·숫자·하이픈으로 만들고 대상과 각 대상 안의 항�
         "editor_background": [i for i in basis if i.get("origin") == "addition"],
         "approved_article": approved, "basis": basis,
     }, GuideProposal, "education_reader_guide")
-    guide = ReaderGuide(enabled=False, audiences=proposal.audiences)
+    try:
+        guide = ReaderGuide(enabled=False, audiences=proposal.audiences)
+    except ValidationError:
+        raise VerificationError("AI 독자 가이드 형식(대상·항목 ID)을 확인하지 못했습니다. 다시 실행해주세요.", 502) from None
     known = {i["id"] for i in basis}
     if any(not i.item_ids or not set(i.item_ids) <= known for i in guide_items(guide)):
         raise VerificationError("AI 독자 가이드의 소재 연결을 확인하지 못했습니다.", 502)

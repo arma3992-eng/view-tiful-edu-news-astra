@@ -4,6 +4,8 @@ window.createFinalReview = function (host) {
   const $ = id => document.getElementById(id);
   let article = null, stamp = "", verifying = false, baselineForm = "";
   const reviewRows = new Map(); let chunks = [];
+  // Last input the server holds for each row; rows that differ are saved before the draft changes.
+  const savedReviews = new Map();
   const labels = {match:"일치",mismatch:"불일치",needs_context:"조건 보완 필요",unverifiable:"확인 불가"};
   const classes = {factual:"사실 포함",mixed:"사실·의견 함께 포함",editorial:"AI 분류: 사실 단정 없는 표현",unknown:"범위 확인 필요"};
   const time = value => new Intl.DateTimeFormat("ko-KR", {timeZone:"Asia/Seoul",dateStyle:"short",timeStyle:"short"}).format(new Date(value));
@@ -51,6 +53,49 @@ window.createFinalReview = function (host) {
   function formSnapshot() {
     return JSON.stringify({reviewer:$("approval-reviewer").value,rows:readRows(),
       checks:["approval-facts","approval-editorial","approval-rights"].map(id=>$(id).checked)});
+  }
+  function reviewKey(item) {
+    return JSON.stringify([item.action,item.reason,item.evidence,item.external_evidence]);
+  }
+  // Final result is older than the saved draft, but these items' sentences are unchanged.
+  function pendingChecks() {
+    return new Set(article && article.final_verification_status==="stale" ? (article.pending_review_checks || []) : []);
+  }
+  function dirtyRows() {
+    if(!article || !article.draft || article.draft_status==="stale" || article.rewrite_plan_status!=="current" ||
+      article.approval_status==="approved" || !article.final_verification_report)return [];
+    const current=["completed","partial"].includes(article.final_verification_status), pending=pendingChecks();
+    if(!current && !pending.size)return [];
+    return readRows().filter(item=>(current || pending.has(item.check_id)) &&
+      savedReviews.has(item.check_id) && reviewKey(item)!==savedReviews.get(item.check_id));
+  }
+  async function saveDirtyReviews() {
+    const dirty=dirtyRows(), articleId=article?.id, reportId=article?.final_verification_report?.id;
+    let failed=0;
+    for(const item of dirty) {
+      const {confirmed,...review}=item, status=reviewRows.get(item.check_id)?.querySelector(".human-draft-status");
+      try {
+        const result=await host.api("/api/articles/"+articleId+"/human-review-draft",{method:"POST",body:JSON.stringify({...payload(),review})});
+        if(!article || article.id!==articleId || article.final_verification_report?.id!==reportId)break;
+        savedReviews.set(item.check_id,reviewKey(item));
+        article.human_review_drafts=(article.human_review_drafts || []).filter(hint=>hint.check_id!==item.check_id);
+        article.human_review_drafts.push(result.draft);
+        if(status)status.textContent="검토 내용 자동 임시 저장됨 · 최종 승인과는 별개입니다.";
+      }catch(error){failed++;if(status)status.textContent="자동 임시 저장 실패: "+error.message;}
+    }
+    return {saved:dirty.length-failed,failed};
+  }
+  // Call before anything that changes the draft or plan version (which discards on-screen review input).
+  async function protectReviews(action = "계속하면") {
+    if(!dirtyRows().length)return true;
+    let result;
+    host.setBusy(true);
+    try{result=await saveDirtyReviews();}finally{host.setBusy(false);}
+    if(!result.failed){
+      if(result.saved)tell("입력 중이던 항목별 검토 "+result.saved+"개를 임시 저장했습니다. 재검증 후 같은 문장에 한해 다시 불러옵니다.");
+      return true;
+    }
+    return window.confirm("항목별 검토 입력 "+result.failed+"개를 임시 저장하지 못했습니다. "+action+" 저장되지 않은 검토 입력은 사라집니다. 계속할까요?");
   }
   function hasUnsaved() {return !!(article && article.final_verification_report && article.approval_status!=="approved" && baselineForm && baselineForm!==formSnapshot());}
   function renderHumanReview(card, check, saved, restoredMessage = "") {
@@ -113,7 +158,7 @@ window.createFinalReview = function (host) {
     const saveInput=node("button","검토 내용 저장","button");saveInput.type="button";
     saveInput.addEventListener("click",async()=>{
       if(!allowed() || row.disabled)return;
-      const articleId=article.id, reportId=article.final_verification_report.id;
+      const articleId=article.id, reportId=article.final_verification_report.id, pending=pendingChecks().has(check.id);
       const {confirmed,...review}=readRows().find(item=>item.check_id===check.id);
       host.setBusy(true);
       try {
@@ -122,18 +167,25 @@ window.createFinalReview = function (host) {
         if(!article || article.id!==articleId || article.final_verification_report?.id!==reportId)return;
         article.human_review_drafts=(article.human_review_drafts || []).filter(item=>item.check_id!==check.id);
         article.human_review_drafts.push(result.draft);
-        draftStatus.textContent="검토 내용 임시 저장됨 · 최종 승인과는 별개입니다.";
+        savedReviews.set(check.id,reviewKey(review));
+        draftStatus.textContent=pending?"검토 내용 임시 저장됨 · 재검증 후 다시 불러오며 확인 체크는 그때 합니다.":
+          "검토 내용 임시 저장됨 · 최종 승인과는 별개입니다.";
       }catch(error){draftStatus.textContent="임시 저장 실패: "+error.message;}
       finally{host.setBusy(false);}
     });
     row.append(saveInput,draftStatus);
     const actions=node("div","","rewrite-actions"), edit=node("button","해당 기사 부분 수정","text-button"), sources=node("button","근거 등록으로 이동","text-button");
     edit.type="button";sources.type="button";
-    edit.addEventListener("click",()=>{
+    edit.addEventListener("click",async()=>{
+      if(dirtyRows().length && !host.getState().busy){
+        host.setBusy(true);try{await saveDirtyReviews();}finally{host.setBusy(false);}
+      }
+      if(!article)return;
       const part=(article.final_verification_report.coverage || []).find(part=>part.id===check.segment_id);
       host.openDraftLocation(check.segment_id,check.original_quote,part?part.text:"");
     });sources.addEventListener("click",host.openSources);
     actions.append(edit,sources);card.append(row,actions);
+    if(!savedReviews.has(check.id))savedReviews.set(check.id,reviewKey(readRows().find(item=>item.check_id===check.id)));
     row.addEventListener("input",host.onChange);row.addEventListener("change",host.onChange);
   }
   function loadArticle(next, fresh = false) {
@@ -153,7 +205,7 @@ window.createFinalReview = function (host) {
     const report = article && article.final_verification_report;
     const meta=$("final-meta"), coverage=$("coverage-list"), checks=$("final-check-list"), blockers=$("final-blockers");
     meta.replaceChildren();coverage.replaceChildren();checks.replaceChildren();blockers.replaceChildren();
-    reviewRows.clear();chunks=[];
+    reviewRows.clear();chunks=[];if(!previous)savedReviews.clear();
     meta.hidden=!report;$("final-coverage").hidden=!report;blockers.hidden=true;
     if (!report) return;
     chunks=(report.read_sources || []).flatMap(source=>(source.chunks || []).map(chunk=>({...chunk,source_name:source.name})));
@@ -231,6 +283,7 @@ window.createFinalReview = function (host) {
     // Item input is separate from the complete-coverage approval gate.
     const itemReviewAvailable=available && !approved && report &&
       ["completed","partial"].includes(article.final_verification_status);
+    const pending=available && !approved && report ? pendingChecks() : new Set();
     const decisions=readRows(), complete=decisions.filter(rowComplete).length;
     const reviewComplete=decisions.length===complete;
     $("nav-final").disabled=!draft || state.busy;
@@ -244,7 +297,9 @@ window.createFinalReview = function (host) {
       !clean?"저장하지 않은 원문·근거·편집 결정·초안이 있습니다. 저장하거나 입력 중인 근거를 정리한 뒤 진행하세요.":
       !current?"원문·근거·편집 결정이 바뀌었습니다. 원문 검증과 편집 결정을 확인하고 초안을 다시 저장해주세요.":
       approved?"현재 버전을 승인했습니다. 기사나 근거를 변경·저장하거나 새 검증 결과를 저장하면 다시 승인해야 합니다.":
-      article.final_verification_status==="stale"?"표시된 결과는 이전 버전입니다. 현재 초안을 다시 검증해주세요.":
+      article.final_verification_status==="stale"?(pending.size?
+        "표시된 결과는 이전 버전입니다. 문장을 고치지 않은 항목 "+pending.size+"개는 재검증 전에도 검토를 입력·임시 저장할 수 있습니다. 확인 체크와 승인은 재검증 후에 합니다.":
+        "표시된 결과는 이전 버전입니다. 현재 초안을 다시 검증해주세요."):
       !state.configured?"AI 키를 설정한 뒤 저장된 기사 전체를 재검증해주세요.":
       article.can_review && reviewComplete?"항목별 확인이 준비되었습니다. 기사 전체를 직접 검토하고 이름·세 가지 확인을 입력해 승인하세요. 검토 기록은 승인할 때 함께 저장합니다.":
       report?"아래에서 미해결 항목을 하나씩 검토하세요. 실제 조건 누락은 수정·재검증하고, AI 판정 오류는 근거·판단 이유를 기록해 보완합니다.":"저장된 초안 전체를 등록 자료와 대조합니다.";
@@ -270,8 +325,14 @@ window.createFinalReview = function (host) {
       const anchored=!!(check && parts.length===1 && quote && normalize(parts[0].text).includes(quote) &&
         ["mismatch","needs_context","unverifiable"].includes(check.verdict) &&
         !(report.unanchored_checks || []).some(part=>part.id===check.id));
-      row.disabled=!itemReviewAvailable || !anchored;
-      row.querySelector(".human-state").textContent=approved?"사람 검토 · 승인 기록에 저장됨":rowComplete(item)?"검토 입력 완료 · 승인할 때 저장":"검토 미완료";
+      const waiting=pending.has(item.check_id), confirm=row.querySelector(".human-confirmed");
+      row.disabled=!(itemReviewAvailable && anchored) && !waiting;
+      // Confirmation belongs to the re-verified result, so it is held until then.
+      confirm.disabled=waiting;if(waiting)confirm.checked=false;
+      row.querySelector(".human-state").textContent=approved?"사람 검토 · 승인 기록에 저장됨":
+        waiting?"재검증 대기 · 검토 입력·임시 저장 가능 (확인 체크는 재검증 후)":
+        pending.size && anchored?"문장 수정됨 · 재검증 후 검토":
+        rowComplete(item)?"검토 입력 완료 · 승인할 때 저장":"검토 미완료";
     });
     $("export-html").disabled=!available || !article.can_export;
     $("export-json").disabled=!available || !article.can_export;
@@ -300,7 +361,8 @@ window.createFinalReview = function (host) {
   $("approval-form").addEventListener("change",host.onChange);
   $("verify-draft").addEventListener("click",async()=>{
     if(!allowed())return;
-    if(hasUnsaved() && !window.confirm("검토 입력이 있습니다. 항목별 검토 내용 저장을 누르지 않은 입력은 사라집니다. 저장한 입력은 동일 주장에 한해 불러오며 다시 확인해야 합니다. 재검증할까요?"))return;
+    if(!(await protectReviews("재검증하면")))return;
+    if(!allowed())return;
     verifying=true;host.setBusy(true);tell("저장한 기사 전체를 근거와 대조하고 있습니다.");
     try {
       const data=await host.api("/api/articles/"+article.id+"/draft/verify",{method:"POST",body:JSON.stringify({...payload(),web_search:$("web-search-enabled").checked})});
@@ -355,5 +417,5 @@ window.createFinalReview = function (host) {
   $("export-html").addEventListener("click",()=>download("html"));
   $("export-json").addEventListener("click",()=>download("json"));
   $("export-docx").addEventListener("click",()=>download("docx"));
-  return {loadArticle,clear,updateState,hasUnsaved};
+  return {loadArticle,clear,updateState,hasUnsaved,protectReviews};
 };

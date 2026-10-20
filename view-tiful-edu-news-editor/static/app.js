@@ -12,7 +12,8 @@
   const rewriteEditor = window.createRewriteEditor({api, refreshArticles,
     applyArticle: data => applyArticle(data, false), onChange: updateState,
     setBusy: value => {busy = value; updateState();},
-    getState: () => ({busy, configured: aiConfigured, originalChanged: originalHasChanges(), sourceChanged: sourceHasChanges()})});
+    getState: () => ({busy, configured: aiConfigured, originalChanged: originalHasChanges(), sourceChanged: sourceHasChanges()}),
+    protectReviews: action => finalReview.protectReviews(action)});
   const finalReview = window.createFinalReview({api, refreshArticles,
     applyArticle: data => applyArticle(data, false), onChange: updateState,
     setBusy: value => {busy = value; updateState();},

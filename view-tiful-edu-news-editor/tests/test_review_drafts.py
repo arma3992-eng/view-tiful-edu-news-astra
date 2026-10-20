@@ -72,7 +72,9 @@ class ReviewDraftTests(unittest.TestCase):
         item=copy.deepcopy(f.decisions()[0]);item['evidence'][0]['chunk_id']='foreign'
         self.assertEqual(self.save(item).status_code,422)
         stale=dict(f.final_payload(),review={k:v for k,v in f.decisions()[0].items() if k!='confirmed'})
-        f.save_manual();self.assertEqual(self.save(payload=stale).status_code,409);self.assertEqual(self.save().status_code,409)
+        f.save_manual();self.assertEqual(self.save(payload=stale).status_code,409)
+        # Draft saved but the sentence is unchanged: input may be kept until re-verification (3rd patch).
+        self.assertEqual(self.save().status_code,200)
         f.review(f.unknown);real=Store.save_review_draft
         def race(store,*args,**kwargs):
             f.save_manual();return real(store,*args,**kwargs)

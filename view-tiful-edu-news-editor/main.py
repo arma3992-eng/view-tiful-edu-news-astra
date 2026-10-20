@@ -338,6 +338,8 @@ def generate_article_reader_guide(article_id: str, payload: DraftRequest):
     article, plan, items, warnings = draft_inputs(article_id, payload)
     if not article.get("draft"):
         raise HTTPException(status_code=409, detail="기사 초안을 먼저 저장해주세요.")
+    if article["draft_status"] == "stale":
+        raise HTTPException(status_code=409, detail="초안 작성 기준이 바뀌었습니다. 초안 내용을 확인해 저장하거나 새로 작성한 뒤 가이드를 요청해주세요.")
     guide, record = generate_guide(article, items, plan)
     content = deepcopy(article["draft"]["content"])
     content["reader_guide"] = guide.model_dump()
@@ -404,8 +406,9 @@ def verify_article_draft(article_id: str, payload: FinalVerificationInput):
 @app.post("/api/articles/{article_id}/human-review-draft")
 def save_human_review_draft(article_id: str, payload: ReviewDraftSaveInput):
     article = final_inputs(article_id, payload)
-    if article["final_verification_status"] not in ("completed", "partial") or article["approval_status"] == "approved":
-        raise HTTPException(status_code=409, detail="현재 버전의 승인 전 검토 항목만 임시 저장할 수 있습니다.")
+    pending = article["final_verification_status"] == "stale" and payload.review.check_id in article["pending_review_checks"]
+    if (article["final_verification_status"] not in ("completed", "partial") and not pending) or article["approval_status"] == "approved":
+        raise HTTPException(status_code=409, detail="현재 버전의 승인 전 검토 항목만 임시 저장할 수 있습니다. 문장을 수정한 항목은 재검증 후 검토해주세요.")
     try:
         return must_exist(app.state.store.save_review_draft(article_id, payload.review, *final_versions(payload)))
     except RevisionConflict:

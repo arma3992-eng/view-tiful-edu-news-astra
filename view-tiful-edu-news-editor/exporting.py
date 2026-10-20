@@ -1,6 +1,7 @@
 """승인된 버전의 기사·출처·승인 메타데이터를 휴대 가능한 파일로 만든다."""
 import html
 import json
+import re
 from urllib.parse import urlsplit
 from human_review import human_evidence_details
 from evidence_catalog import evidence_catalog
@@ -88,6 +89,20 @@ def html_export(article):
 <style>body{margin:0;background:#f5f7fb;color:#172b4a;font:16px/1.8 "Malgun Gothic",system-ui,sans-serif}article{max-width:900px;margin:30px auto;padding:32px;background:white;border-radius:12px}h1{font-size:30px;line-height:1.5}h2{font-size:20px;margin:28px 0 10px}h3{font-size:16px}p{white-space:pre-wrap;margin:8px 0}.summary{border-left:4px solid #245ddd;padding:12px 18px;background:#edf3ff}.audiences{display:grid;gap:12px;margin:24px 0}.audiences{grid-template-columns:repeat(3,1fr)}.audiences>section{background:#f5f7fb;border-radius:8px;padding:16px}.category,.kind,footer,.sources{font-size:13px;color:#61728b}a{color:#245ddd}.sources,footer{border-top:1px solid #dce4ef;padding-top:16px;margin-top:28px}@media(max-width:640px){article{margin:0;padding:20px;border-radius:0}.audiences{grid-template-columns:1fr}h1{font-size:26px}}</style></head><body><article>''' + ''.join(body) + '</article></body></html>'
 
 
+XML_UNSAFE = re.compile(r"[\x00-\x08\x0b\x0c\x0e-\x1f]")
+
+
+def xml_safe(value):
+    """Word cannot store control characters (e.g. vertical tabs) copied from PDFs."""
+    if isinstance(value, str):
+        return XML_UNSAFE.sub("", value)
+    if isinstance(value, dict):
+        return {key: xml_safe(item) for key, item in value.items()}
+    if isinstance(value, list):
+        return [xml_safe(item) for item in value]
+    return value
+
+
 def docx_export(article):
     """Build an editable document from the same approved payload as HTML/JSON."""
     from io import BytesIO
@@ -97,7 +112,7 @@ def docx_export(article):
     from docx.opc.constants import RELATIONSHIP_TYPE as RT
     from docx.shared import Cm, Pt, RGBColor
 
-    data = export_payload(article)
+    data = xml_safe(export_payload(article))
     content = data["article"]
     document = Document()
     page = document.sections[0]

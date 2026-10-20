@@ -76,7 +76,7 @@ class ReaderGuideTests(unittest.TestCase):
         self.assertTrue(approval["approved"]);self.assertEqual(approval["final"],content["reader_guide"])
         payload=self.export().json()
         self.assertIn("학교 관리자",self.export("html").text)
-        spec=importlib.util.spec_from_file_location("import_guide",Path(__file__).resolve().parents[2]/"design/tools/import_reader_guide.py")
+        spec=importlib.util.spec_from_file_location("import_guide",next(p for p in (Path(__file__).resolve().parents[2]/n/"tools/import_reader_guide.py" for n in ("view-tiful-edu-news-design","design")) if p.exists()))
         module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
         with tempfile.TemporaryDirectory() as tmp:
             root=Path(tmp)

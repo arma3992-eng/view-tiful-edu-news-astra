@@ -8,7 +8,7 @@ import json
 import hashlib
 from human_review import approval_ready, report_reviewable, validate_resolutions
 from evidence_catalog import evidence_catalog
-from review_drafts import prepare_review_draft, review_draft_hints
+from review_drafts import PENDING_BASE_KEYS, prepare_review_draft, review_draft_hints, unchanged_checks
 
 
 def now_iso():
@@ -132,6 +132,12 @@ class Store:
                     if previous:
                         old_checks = json.loads(previous["report_json"]).get("checks", [])
                         item["verdict"] = next((c["verdict"] for c in old_checks if c["id"] == item["input"]["check_id"]), None)
+                if "segment_text" not in item:
+                    previous = db.execute("SELECT report_json FROM final_verification_reports WHERE article_id=? AND id=?",
+                                          (article_id, item.get("report_id"))).fetchone()
+                    if previous:
+                        item["segment_text"] = next((p["text"] for p in json.loads(previous["report_json"]).get("coverage", [])
+                                                     if p["id"] == item.get("segment_id")), "")
         for source in record["sources"]:
             source["interview"] = json.loads(source.pop("interview_json")) if source.get("interview_json") else None
             source.pop("interview_json", None)
@@ -183,7 +189,12 @@ class Store:
                       can_approve=bool(ready and not approved), can_review=bool(final_current and report_reviewable(final_report)),
                       review_required_count=sum(check["verdict"] != "match" for check in final_report["checks"]) if final_report else 0,
                       can_export=approved, can_publish=False)
-        record["human_review_drafts"] = review_draft_hints(final_report, review_drafts)
+        # Draft saved after the last final check: unchanged sentences stay reviewable until re-verification.
+        pending = bool(final_report and not final_current and draft_status == "needs_verification" and
+                       all(final_report.get(key) == binding[key] for key in ("original_revision", "source_revision")) and
+                       final_report.get("original_report_id") == binding["original_report_id"])
+        record["pending_review_checks"] = unchanged_checks(final_report, draft["content"]) if pending else []
+        record["human_review_drafts"] = review_draft_hints(final_report, review_drafts, pending=pending)
         record["evidence_sources"] = evidence_catalog(record)
         return record
 
@@ -385,14 +396,19 @@ class Store:
             binding = {"original_revision": expected_revision, "source_revision": expected_source_revision,
                        "plan_revision": expected_plan_revision, "draft_revision": expected_draft_revision,
                        "original_report_id": report_id, "draft_hash": draft_content_hash(draft["content"])}
-            if not report or any(report.get(key) != value for key, value in binding.items()):
+            if not report or any(report.get(key) != binding[key] for key in PENDING_BASE_KEYS):
+                raise RevisionConflict()
+            pending = any(report.get(key) != value for key, value in binding.items())
+            # Before re-verification only items whose quoted sentence is unchanged may hold input.
+            if pending and item.check_id not in unchanged_checks(report, draft["content"]):
                 raise RevisionConflict()
             record = dict(prepare_review_draft(report, item), saved_at=now_iso())
             db.execute("INSERT INTO human_review_drafts (article_id, claim_fingerprint, draft_json, updated_at) "
                        "VALUES (?, ?, ?, ?) ON CONFLICT(article_id, claim_fingerprint) DO UPDATE SET "
                        "draft_json=excluded.draft_json, updated_at=excluded.updated_at",
                        (article_id, record["claim_fingerprint"], json.dumps(record, ensure_ascii=False), record["saved_at"]))
-        return {"ok": True, "draft": next(hint for hint in review_draft_hints(report, [record]) if hint["check_id"] == item.check_id)}
+        return {"ok": True, "draft": next(hint for hint in review_draft_hints(report, [record], pending=pending)
+                                          if hint["check_id"] == item.check_id)}
 
     def save_approval(self, article_id, reviewer, acknowledgements, report_id, expected_revision, expected_source_revision,
                       expected_plan_revision, expected_draft_revision, expected_final_report_id, resolutions=()):
