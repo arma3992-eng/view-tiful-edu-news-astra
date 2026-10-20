@@ -5,6 +5,7 @@ const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_OLmPjZk8BuKinxCpWIbRUQ_oMmVavpX
   const form = document.getElementById('login-form') || document.getElementById('signup-form');
   const accountUser = document.getElementById('account-user');
   const accountAction = document.getElementById('account-action');
+  const accountRole = document.getElementById('account-role');
   if (!form && (!accountUser || !accountAction)) return;
 
   const notice = document.getElementById('auth-notice');
@@ -38,6 +39,7 @@ const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_OLmPjZk8BuKinxCpWIbRUQ_oMmVavpX
   let supabaseClient;
   try {
     supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+    window.viewtifulSupabaseClient = supabaseClient;
   } catch {
     if (!form) return;
     submitButton.disabled = true;
@@ -51,10 +53,45 @@ const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_OLmPjZk8BuKinxCpWIbRUQ_oMmVavpX
     let signedIn = false;
     let signingOut = false;
     let sessionRevision = 0;
+    let roleRevision = 0;
+
+    function clearRole() {
+      if (!accountRole) return;
+      accountRole.hidden = true;
+      accountRole.textContent = '';
+      accountRole.removeAttribute('href');
+      accountRole.removeAttribute('title');
+    }
+
+    async function loadRole(userId, revision) {
+      try {
+        const { data, error } = await supabaseClient.from('profiles')
+          .select('role, reporter_status').eq('id', userId).single();
+        if (revision !== roleRevision || error || !data || !accountRole) return;
+        if (data.role === 'admin') {
+          accountRole.textContent = '관리자';
+          accountRole.setAttribute('href', 'admin.html');
+          accountRole.hidden = false;
+        } else if (data.role === 'reporter') {
+          accountRole.textContent = '기자';
+          accountRole.hidden = false;
+        }
+      } catch {
+        // A failed profile lookup must not affect existing authentication.
+      }
+    }
 
     function renderAccount(session) {
       const user = session && session.user;
       signedIn = Boolean(user);
+      const revision = ++roleRevision;
+      clearRole();
+      if (user && accountRole) {
+        // Run after the auth callback releases the session lock.
+        window.setTimeout(() => {
+          if (revision === roleRevision) loadRole(user.id, revision);
+        }, 0);
+      }
       if (user) {
         const name = user.user_metadata && user.user_metadata.name;
         accountUser.textContent = (typeof name === 'string' && name.trim()) || user.email || '로그인됨';

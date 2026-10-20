@@ -149,3 +149,20 @@
 @media(min-width:901px) and (max-width:1100px){.masthead-account{gap:16px}.masthead-account .search{flex:1;min-width:160px;max-width:274px}}
 @media(max-width:900px){.masthead-account{height:auto;min-height:101px;flex-wrap:wrap;column-gap:18px;row-gap:14px;padding:20px 0}.masthead-account .search{width:calc(100% - 132px);margin-left:0;flex-shrink:0}.masthead-account .account-actions{margin-left:auto}}
 @media(max-width:520px){.masthead-account{min-height:82px;gap:14px}.masthead-account .search{width:100%}.auth-header{padding:24px 0}.auth-main{margin-top:28px;margin-bottom:40px}.auth-card{padding:24px 20px}.auth-card h1{font-size:25px}}
+
+/* 관리자 페이지: 기존 색상과 계정 메뉴 스타일을 재사용합니다. */
+.admin-header{display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap}
+.admin-main{padding-top:32px;padding-bottom:64px}
+.admin-status{margin:20px 0;color:var(--muted);font-size:14px}
+.admin-status[data-state="error"]{color:var(--ink);font-weight:600}
+.admin-panel{padding:24px;border:1px solid var(--line);border-radius:7px}
+.admin-panel[hidden]{display:none}
+.admin-panel h2{font-size:23px;margin-bottom:20px}
+.admin-request{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:20px 0;border-top:1px solid var(--line)}
+.admin-request h3{font-size:17px;overflow-wrap:anywhere}
+.admin-request p,.admin-empty{font-size:13px;color:var(--muted);margin-top:6px}
+.admin-request-actions{display:flex;gap:10px;flex-shrink:0}
+.admin-decision{border:1px solid var(--line);border-radius:5px;padding:7px 13px;font-size:13px;color:var(--ink)}
+.admin-decision[data-action="approve"]{border-color:var(--blue);background:var(--blue);color:#fff}
+.admin-decision:disabled{opacity:.55;cursor:wait}
+@media(max-width:600px){.admin-main{padding-top:24px;padding-bottom:42px}.admin-panel{padding:18px}.admin-request{align-items:flex-start;flex-direction:column}.admin-header .account-actions{margin-left:auto}}
