@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>로그인 | 뷰티풀 에듀</title>
+  <link rel="stylesheet" href="style.css?v=reader-guide-1">
+</head>
+<body class="auth-page">
+  <header class="auth-header">
+    <div class="wrap">
+      <a class="brand masthead-brand" href="index.html" aria-label="뷰티풀 에듀 홈으로 이동"><strong>뷰티풀 에듀</strong><span class="brand-english">(View-tiful Edu)</span></a>
+    </div>
+  </header>
+  <main class="auth-main">
+    <section class="auth-card" aria-labelledby="login-title">
+      <h1 id="login-title">로그인</h1>
+      <form class="auth-form" aria-labelledby="login-title">
+        <label class="auth-field" for="email">이메일
+          <input id="email" name="email" type="email" autocomplete="username" required>
+        </label>
+        <label class="auth-field" for="password">비밀번호
+          <input id="password" name="password" type="password" autocomplete="current-password" required>
+        </label>
+        <button class="auth-submit" type="submit" disabled aria-describedby="auth-notice">로그인</button>
+        <p class="auth-note" id="auth-notice">로그인 기능은 준비 중입니다.</p>
+      </form>
+      <p class="auth-switch">아직 회원이 아니신가요?<a href="signup.html">회원가입</a></p>
+    </section>
+  </main>
+</body>
+</html>
