@@ -60,7 +60,7 @@ window.ReaderGuide = (() => {
     function select(index,focus=false){
       const story=available[index],record=registry[story.id];
       document.getElementById("guide-title").textContent=record.article_title || story.title.replace(/<br\s*\/?\s*>/gi," ");
-      document.getElementById("guide-read").href="article.html?id="+encodeURIComponent(story.id)+"#article-reader-guide";
+      document.getElementById("guide-read").href="article.html?id="+encodeURIComponent(story.id);
       render(document.getElementById("role-grid"),record.reader_guide);
       sources(document.getElementById("guide-sources"),record);
       buttons.forEach((b,i)=>{b.setAttribute("aria-selected",String(i===index));b.tabIndex=i===index?0:-1;});
