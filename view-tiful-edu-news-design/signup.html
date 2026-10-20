@@ -15,7 +15,7 @@
   <main class="auth-main">
     <section class="auth-card" aria-labelledby="signup-title">
       <h1 id="signup-title">회원가입</h1>
-      <form class="auth-form" aria-labelledby="signup-title">
+      <form id="signup-form" class="auth-form" aria-labelledby="signup-title">
         <label class="auth-field" for="name">이름
           <input id="name" name="name" type="text" autocomplete="name" required>
         </label>
@@ -34,11 +34,13 @@
           <label class="auth-role-option"><input name="role" type="radio" value="reporter" required>기자</label>
           <p class="auth-note" id="reporter-notice">기자 계정은 관리자 승인 후 기자 기능을 사용할 수 있습니다.</p>
         </fieldset>
-        <button class="auth-submit" type="submit" disabled aria-describedby="auth-notice">회원가입</button>
-        <p class="auth-note" id="auth-notice">회원가입 기능은 준비 중입니다.</p>
+        <button class="auth-submit" type="submit" aria-describedby="auth-notice">회원가입</button>
+        <p class="auth-note" id="auth-notice" role="status" aria-live="polite">회원 정보를 입력해 주세요.</p>
       </form>
       <p class="auth-switch">이미 회원이신가요?<a href="login.html">로그인</a></p>
     </section>
   </main>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="auth.js"></script>
 </body>
 </html>
