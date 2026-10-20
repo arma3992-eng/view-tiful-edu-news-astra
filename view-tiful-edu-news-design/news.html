@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="View-tiful Edu 전체 교육뉴스 아카이브">
+  <title>전체 교육뉴스 | 뷰티풀 에듀</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="news-page.css?v=20261021-1">
+  <script src="lead-news.js" defer></script>
+  <script src="news-data.js" defer></script>
+  <script src="news-page.js?v=20261021-1" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+  <script src="auth.js" defer></script>
+</head>
+<body class="subpage">
+<header>
+  <div class="masthead wrap masthead-account">
+    <a class="brand masthead-brand" href="index.html" aria-label="뷰티풀 에듀 홈으로 이동"><strong>뷰티풀 에듀</strong><span class="brand-english">(View-tiful Edu)</span></a>
+    <p class="tagline">교육을 읽다,<br>내일을 준비하다</p>
+    <form class="search" id="header-search" role="search"><input aria-label="교육 소식 검색" placeholder="관심 있는 교육 소식을 찾아보세요"><button aria-label="검색" type="submit"><svg viewBox="0 0 24 24"><circle cx="10" cy="10" r="6.5"/><path d="m15 15 5 5"/></svg></button></form>
+    <nav class="account-actions" aria-label="계정 메뉴"><a id="account-user" class="login-link" href="login.html">로그인</a><a id="account-role" class="login-link" hidden></a><a id="account-editor" class="login-link" href="http://127.0.0.1:8002/" hidden>편집실</a><a id="account-action" class="signup-link" href="signup.html">회원가입</a></nav>
+  </div>
+  <div class="nav-line"><nav class="wrap navigation" aria-label="주 메뉴"><div class="nav-links">
+    <a href="category.html?type=admissions">입시•수능</a>
+    <a href="category.html?type=gifted">영재•특목</a>
+    <a href="category.html?type=digital">AI•디지털교육</a>
+    <a href="category.html?type=school-policy">학교•교육정책</a>
+    <a href="about.html">ABOUT</a>
+  </div></nav></div>
+</header>
+
+<main class="news-archive wrap">
+  <a class="archive-home" href="index.html">← 홈으로</a>
+  <header class="archive-heading">
+    <p class="category">전체 교육뉴스</p>
+    <h1>관심 분야의 뉴스를 한곳에서 찾아보세요</h1>
+    <p>최신 기사부터 분야별 기사까지 검색하고 골라볼 수 있습니다.</p>
+  </header>
+
+  <section class="archive-tools" aria-label="기사 검색 및 필터">
+    <form id="archive-search" class="archive-search" role="search">
+      <input id="archive-query" type="search" autocomplete="off" placeholder="기사 제목이나 키워드를 검색하세요" aria-label="전체 기사 검색">
+      <button type="submit">검색</button>
+    </form>
+    <div class="archive-filters" role="tablist" aria-label="뉴스 분야">
+      <button type="button" role="tab" aria-selected="true" data-filter="all">전체</button>
+      <button type="button" role="tab" aria-selected="false" data-filter="admissions">입시·수능</button>
+      <button type="button" role="tab" aria-selected="false" data-filter="gifted">영재·특목</button>
+      <button type="button" role="tab" aria-selected="false" data-filter="digital">AI·디지털교육</button>
+      <button type="button" role="tab" aria-selected="false" data-filter="school-policy">학교·교육정책</button>
+    </div>
+  </section>
+
+  <div class="archive-summary"><strong id="archive-count">0</strong><span>개의 기사</span><button id="archive-clear" type="button" hidden>검색 초기화</button></div>
+  <section id="archive-grid" class="archive-grid" aria-live="polite"></section>
+  <p id="archive-empty" class="archive-empty" hidden>조건에 맞는 기사가 없습니다.</p>
+</main>
+
+<footer><div class="wrap footer-content"><div><a class="brand" href="index.html"><strong>뷰티풀 에듀</strong></a><p>교육을 읽고, 변화의 맥락을 함께 살펴봅니다.</p></div><div class="footer-right"><p>© View-tiful Edu.</p></div></div></footer>
+</body>
+</html>
