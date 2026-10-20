@@ -17,6 +17,13 @@ let hoverPaused = false;
 let focusPaused = false;
 let userPaused = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches || false;
 
+function currentArticleUrl() {
+  return `article.html?id=${encodeURIComponent(slides[current].id)}`;
+}
+function goToCurrentArticle() {
+  location.href = currentArticleUrl();
+}
+
 function resetAutoAdvance() {
   window.clearTimeout(autoTimer);
   autoTimer = null;
@@ -45,7 +52,7 @@ function renderMedia(story) {
   const poster = `assets/${story.image}.jpg`;
   $('#hero-image').src = poster;
   $('#hero-image').alt = story.alt;
-  $('#image-open').setAttribute('aria-label', story.title.replace('<br>', ' ') + ' 이미지 크게 보기');
+  $('#image-open').setAttribute('aria-label', story.title.replace(/<br\s*\/?\s*>/gi, ' ') + ' 기사 읽기');
   showImageMedia();
   if (!story.video) return;
   previewVideo.poster = poster;
@@ -53,7 +60,7 @@ function renderMedia(story) {
   previewVideo.hidden = false;
   $('#image-open').hidden = true;
   $('#video-open').hidden = false;
-  $('#video-open').setAttribute('aria-label', story.title.replace('<br>', ' ') + ' 전체 영상 보기');
+  $('#video-open').setAttribute('aria-label', story.title.replace(/<br\s*\/?\s*>/gi, ' ') + ' 전체 영상 보기');
   previewVideo.play()?.catch(() => {});
 }
 previewVideo.addEventListener('error', () => { previewVideo.pause(); showImageMedia(); });
@@ -64,22 +71,22 @@ function showSlide(index, announce = false) {
   renderMedia(story);
   $('#hero-category').textContent = story.category;
   $('#hero-title').innerHTML = story.title;
+  $('#hero-title').setAttribute('aria-label', story.title.replace(/<br\s*\/?\s*>/gi, ' ') + ' 기사 읽기');
   $('#hero-description').innerHTML = story.description;
   $('#slide-number').textContent = `${String(current + 1).padStart(2, '0')} / ${String(slides.length).padStart(2, '0')}`;
   $('#hero-summary-link').textContent = story.readingLabel;
-  $('#hero-summary-link').href = `article.html?id=${encodeURIComponent(story.id)}#summary`;
+  $('#hero-summary-link').href = `${currentArticleUrl()}#summary`;
   slideTabGroup.dataset.activeSlide = String(current);
   slideTabs.forEach((button, i) => {
     button.setAttribute('aria-selected', String(i === current));
     button.tabIndex = i === current ? 0 : -1;
     button.setAttribute('aria-controls', 'hero-story');
-    // 하단 기사 제목도 같은 데이터에서 가져옵니다.
     button.querySelector('small').textContent = `${String(i + 1).padStart(2, '0')}　${slides[i].tabCategory}`;
     button.querySelector('strong').innerHTML = slides[i].title;
     button.querySelector('span').textContent = slides[i].teaser;
   });
   $('#hero-story').setAttribute('aria-labelledby', slideTabs[current].id);
-  if (announce) $('#status').textContent = `${current + 1}번째 대표뉴스: ${story.title.replace('<br>', ' ')}`;
+  if (announce) $('#status').textContent = `${current + 1}번째 대표뉴스: ${story.title.replace(/<br\s*\/?\s*>/gi, ' ')}`;
 }
 function selectSlide(index) { showSlide(index, true); resetAutoAdvance(); }
 $('#previous').addEventListener('click', () => selectSlide(current - 1));
@@ -96,7 +103,7 @@ function stopDialogMedia() { dialog.querySelector('video')?.pause(); }
 function openMedia() {
   const story = slides[current];
   const isVideo = !previewVideo.hidden && Boolean(story.video);
-  openDialog(story.title.replace('<br>', ' '), '');
+  openDialog(story.title.replace(/<br\s*\/?\s*>/gi, ' '), '');
   if (isVideo) {
     previewVideo.pause();
     const video = document.createElement('video');
@@ -114,7 +121,63 @@ function openMedia() {
     $('#dialog-content').append(image);
   }
 }
-$('#image-open').addEventListener('click', openMedia);
+
+// 실제 발행된 대표기사 3건을 메인 우측 목록과 '주목할 만한 기사'에도 연결합니다.
+function refreshPublishedHomeSections() {
+  if (typeof syncPublishedArticles === 'function') syncPublishedArticles();
+
+  const categoryOrder = ['admissions', 'gifted', 'digital', 'school-policy'];
+  document.querySelectorAll('.sidebar .side-item').forEach((container, index) => {
+    const group = window.CATEGORY_NEWS?.[categoryOrder[index]];
+    if (!group) return;
+    container.querySelectorAll('.side-story, .side-empty').forEach(node => node.remove());
+    const articles = group.articles.slice(0, 4);
+    if (!articles.length) {
+      const empty = document.createElement('p');
+      empty.className = 'side-empty';
+      empty.textContent = '등록된 기사가 없습니다.';
+      container.append(empty);
+      return;
+    }
+    articles.forEach(([title, , , id]) => {
+      const link = document.createElement('a');
+      link.className = 'side-story';
+      link.href = `article.html?id=${encodeURIComponent(id)}`;
+      link.textContent = title;
+      container.append(link);
+    });
+  });
+
+  const notableCards = [...document.querySelectorAll('.notable-grid article')];
+  slides.slice(0, notableCards.length).forEach((story, index) => {
+    const card = notableCards[index];
+    const image = card.querySelector('img');
+    image.src = `assets/${story.image}.jpg`;
+    image.alt = story.alt;
+    card.querySelector('.category').textContent = story.category;
+    const titleButton = card.querySelector('h3 button');
+    titleButton.innerHTML = story.title;
+    const description = card.querySelector('.card-description');
+    description.textContent = story.description.replace(/<br\s*\/?\s*>/gi, ' ');
+    card.querySelector('small').textContent = story.readingLabel;
+    card.querySelectorAll('[data-article]').forEach(button => button.removeAttribute('data-article'));
+    const openArticle = () => { location.href = `article.html?id=${encodeURIComponent(story.id)}`; };
+    card.querySelector('.article-cover').addEventListener('click', openArticle);
+    titleButton.addEventListener('click', openArticle);
+  });
+}
+
+// 이미지와 제목을 누르면 현재 대표기사 상세페이지로 이동합니다.
+$('#image-open').addEventListener('click', goToCurrentArticle);
+$('#hero-title').tabIndex = 0;
+$('#hero-title').setAttribute('role', 'link');
+$('#hero-title').style.cursor = 'pointer';
+$('#hero-title').addEventListener('click', goToCurrentArticle);
+$('#hero-title').addEventListener('keydown', event => {
+  if (event.key !== 'Enter' && event.key !== ' ') return;
+  event.preventDefault();
+  goToCurrentArticle();
+});
 $('#video-open').addEventListener('click', openMedia);
 dialog.addEventListener('close', () => {
   stopDialogMedia();
@@ -123,6 +186,7 @@ dialog.addEventListener('close', () => {
 });
 showSlide(0);
 updateAutoButton();
+refreshPublishedHomeSections();
 resetAutoAdvance();
 
 window.ReaderGuide.home();
@@ -131,6 +195,6 @@ document.querySelectorAll('[data-article]').forEach(b=>b.addEventListener('click
 const info={about:['매체 소개','학생·학부모·교사가 중요한 교육 이슈를 빠르게 이해하도록 돕는 교육뉴스 큐레이션·해설 서비스의 디자인 시안입니다.'],editorial:['편집 원칙','공식 자료와 신뢰할 수 있는 출처를 확인하고, 무슨 일인가 → 왜 중요한가 → 무엇을 알아야 하는가의 흐름으로 설명합니다.'],contact:['제보 · 문의','문의 채널은 서비스 운영 준비 후 연결할 예정입니다.'],privacy:['개인정보처리방침','현재는 디자인 확인용 정적 페이지입니다. 검색어는 서버로 전송하거나 저장하지 않습니다. 정식 서비스의 처리방침은 운영 범위 확정 후 작성합니다.'],guide:['독자를 위한 뉴스 가이드','기사를 선택하면 편집자가 승인한 독자별 영향·확인사항·준비사항·행동·생각거리를 볼 수 있습니다. 기사마다 대상과 항목이 다르며 실제 기준은 연결한 공식 근거를 확인하세요.']};
 document.querySelectorAll('[data-info]').forEach(b=>b.addEventListener('click',()=>openDialog(...info[b.dataset.info])));
 $('.close-dialog').addEventListener('click',()=>dialog.close());dialog.addEventListener('click',e=>{if(e.target===dialog){const r=dialog.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)dialog.close();}});
-$('.search').addEventListener('submit',e=>{e.preventDefault();const query=$('.search input').value.trim();if(!query){$('.search input').focus();return;}const titles=[...new Set([...document.querySelectorAll('[data-article],.side-story')].map(b=>b.dataset.article||b.textContent).concat(slides.map(s=>s.title.replace('<br>',' '))))];const results=titles.filter(t=>t.toLocaleLowerCase().includes(query.toLocaleLowerCase()));openDialog('검색 결과',results.length?`“${query}” 관련 예시 기사 ${results.length}건`:`“${query}”에 해당하는 예시 기사가 없습니다.`);const ul=document.createElement('ul');results.forEach(t=>{const li=document.createElement('li'),b=document.createElement('button');b.textContent=t;b.addEventListener('click',()=>article(t));li.append(b);ul.append(li);});$('#dialog-content').append(ul);});
+$('.search').addEventListener('submit',e=>{e.preventDefault();const query=$('.search input').value.trim();if(!query){$('.search input').focus();return;}const titles=[...new Set([...document.querySelectorAll('[data-article],.side-story')].map(b=>b.dataset.article||b.textContent).concat(slides.map(s=>s.title.replace(/<br\s*\/?\s*>/gi,' '))))];const results=titles.filter(t=>t.toLocaleLowerCase().includes(query.toLocaleLowerCase()));openDialog('검색 결과',results.length?`“${query}” 관련 기사 ${results.length}건`:`“${query}”에 해당하는 기사가 없습니다.`);const ul=document.createElement('ul');results.forEach(t=>{const li=document.createElement('li'),b=document.createElement('button');b.textContent=t;b.addEventListener('click',()=>article(t));li.append(b);ul.append(li);});$('#dialog-content').append(ul);});
 // 키보드 좌우 화살표로 탭 전환
 for(const [selector,show,attribute] of [['[data-slide]',selectSlide,'slide']]){const tabs=[...document.querySelectorAll(selector)];tabs.forEach((b,i)=>b.addEventListener('keydown',e=>{if(!['ArrowLeft','ArrowRight'].includes(e.key))return;e.preventDefault();const next=(i+(e.key==='ArrowRight'?1:-1)+tabs.length)%tabs.length;tabs[next].focus();show(Number(tabs[next].dataset[attribute]));}));}
