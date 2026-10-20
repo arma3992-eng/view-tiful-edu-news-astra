@@ -1,4 +1,117 @@
 {
   "version": 1,
-  "articles": {}
+  "articles": {
+    "admissions-career-credit-20261016": {
+      "approval_id": "human-reviewed-20261021",
+      "article_title": "직장 경력이 대학 학점이 된다, 전문대 제도 얼마나 달라지나",
+      "reader_guide": {
+        "enabled": true,
+        "audiences": [
+          {
+            "label": "학생",
+            "title": "취업과 대학을 한 번의 선택으로만 보지 않기",
+            "sections": [
+              {"type": "check", "items": [{"text": "취업 후 현장 경험을 쌓고 필요한 시점에 전문대학으로 다시 진입하는 경로도 살펴보세요."}]},
+              {"type": "prepare", "items": [{"text": "실제 지원 때에는 해당 대학의 경력 인정 대상, 인정 학점, 학칙을 따로 확인해야 합니다."}]}
+            ]
+          },
+          {
+            "label": "학부모",
+            "title": "진학 시기를 고교 졸업 직후로만 한정하지 않기",
+            "sections": [
+              {"type": "impact", "items": [{"text": "자녀가 먼저 취업하더라도 이후 경력을 학습과 연결할 수 있는 제도적 선택지가 넓어질 수 있습니다."}]},
+              {"type": "check", "items": [{"text": "현재는 입법예고 단계이므로 실제 시행 시점과 대학별 적용 기준을 확인해야 합니다."}]}
+            ]
+          },
+          {
+            "label": "교사",
+            "title": "진학과 취업을 연결된 경로로 안내하기",
+            "sections": [
+              {"type": "action", "items": [{"text": "진로상담에서 취업 후 대학 재진입, 재교육, 경력 기반 학점인정 경로까지 함께 설명할 수 있습니다."}]},
+              {"type": "check", "items": [{"text": "개정안이 아직 확정·시행된 제도가 아니라는 점을 학생에게 명확히 구분해 안내하세요."}]}
+            ]
+          }
+        ]
+      },
+      "sources": [
+        {"name": "법제처 입법예고 원문", "url": "https://www.moleg.go.kr/lawinfo/makingInfo.mo?lawSeq=89032&lawType=TYPE5"},
+        {"name": "교육부", "url": "https://www.moe.go.kr/"}
+      ]
+    },
+    "digital-ai-innovation-university-20261015": {
+      "approval_id": "human-reviewed-20261021",
+      "article_title": "AI학과 학생만 AI를 배우는 시대 끝날까, 경북 ‘AI 인재 혁신대학’ 구상",
+      "reader_guide": {
+        "enabled": true,
+        "audiences": [
+          {
+            "label": "학생",
+            "title": "학과 이름보다 전공 속 AI 활용 기회를 보기",
+            "sections": [
+              {"type": "check", "items": [{"text": "진학하려는 전공에서 AI를 어떤 교과목·프로젝트·캡스톤디자인으로 배우는지 확인해보세요."}]},
+              {"type": "think", "items": [{"text": "AI 개발자가 되는 것과 자신의 전공에서 AI를 활용하는 것은 다른 진로입니다."}]}
+            ]
+          },
+          {
+            "label": "학부모",
+            "title": "AI라는 이름보다 실제 교육내용을 확인하기",
+            "sections": [
+              {"type": "check", "items": [{"text": "AI 인재 양성이라는 표현만으로 취업 전망을 판단하지 말고 실제 교과목과 기업 연계 프로그램을 확인하세요."}]},
+              {"type": "impact", "items": [{"text": "현재 ‘AI 인재 혁신대학’은 확정 사업이 아니라 정책 연구 단계입니다."}]}
+            ]
+          },
+          {
+            "label": "교사",
+            "title": "AI 전공과 AI 활용 역량을 구분해 상담하기",
+            "sections": [
+              {"type": "action", "items": [{"text": "학생에게 AI학과 진학 여부뿐 아니라 자신의 관심 전공에서 AI를 활용할 기회를 살펴보도록 안내할 수 있습니다."}]},
+              {"type": "check", "items": [{"text": "참여대학·예산·교육과정은 12월 최종보고 이후 후속 계획을 다시 확인해야 합니다."}]}
+            ]
+          }
+        ]
+      },
+      "sources": [
+        {"name": "경상북도 공식 발표", "url": "https://www.gb.go.kr/page/10107/10004.do?boardNo=1370668"},
+        {"name": "영남대학교 공식 자료", "url": "https://www.youngnam.ac.kr/main/intro/yu-news.do?articleNo=231569163&mode=view"}
+      ]
+    },
+    "gifted-dropout-20261015": {
+      "approval_id": "human-reviewed-20261021",
+      "article_title": "특목고 고1 이탈 5년 최저, 그런데 지역자사고는 반대로 움직였다",
+      "reader_guide": {
+        "enabled": true,
+        "audiences": [
+          {
+            "label": "학생",
+            "title": "학교 유형보다 나와 맞는 교육환경 보기",
+            "sections": [
+              {"type": "check", "items": [{"text": "교육과정, 과목 선택, 내신 경쟁 환경, 수능 준비 여건을 함께 확인하세요."}]},
+              {"type": "think", "items": [{"text": "학업중단자가 줄었다는 사실만으로 특정 학교 유형이 대입에 더 유리하다고 판단할 수는 없습니다."}]}
+            ]
+          },
+          {
+            "label": "학부모",
+            "title": "절대 인원과 학업중단률을 구분하기",
+            "sections": [
+              {"type": "check", "items": [{"text": "학교별 학업중단자 수는 학교 규모 영향을 받으므로 재학생 수, 전출 현황, 교육과정 등을 함께 살펴보세요."}]},
+              {"type": "prepare", "items": [{"text": "내신 5등급제 첫 세대의 실제 대입 결과는 2028학년도 이후 확인해야 합니다."}]}
+            ]
+          },
+          {
+            "label": "교사",
+            "title": "제도 변화와 결과의 인과관계를 단정하지 않기",
+            "sections": [
+              {"type": "check", "items": [{"text": "현재 데이터는 내신 5등급제와 학업중단 변화가 같은 시기에 나타났음을 보여줄 뿐 직접적인 원인을 입증하지 않습니다."}]},
+              {"type": "action", "items": [{"text": "학생 상담에서는 학교 유형보다 개인의 교육과정 적합성과 진학 전략을 함께 검토하세요."}]}
+            ]
+          }
+        ]
+      },
+      "sources": [
+        {"name": "학교알리미", "url": "https://www.schoolinfo.go.kr/"},
+        {"name": "교육부", "url": "https://www.moe.go.kr/"},
+        {"name": "연합뉴스 학교알리미 기반 집계", "url": "https://www.yna.co.kr/view/AKR20261015047800530"}
+      ]
+    }
+  }
 }
