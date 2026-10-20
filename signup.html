@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>회원가입 | 뷰티풀 에듀</title>
+  <link rel="stylesheet" href="style.css?v=reader-guide-1">
+</head>
+<body class="auth-page">
+  <header class="auth-header">
+    <div class="wrap">
+      <a class="brand masthead-brand" href="index.html" aria-label="뷰티풀 에듀 홈으로 이동"><strong>뷰티풀 에듀</strong><span class="brand-english">(View-tiful Edu)</span></a>
+    </div>
+  </header>
+  <main class="auth-main">
+    <section class="auth-card" aria-labelledby="signup-title">
+      <h1 id="signup-title">회원가입</h1>
+      <form id="signup-form" class="auth-form" aria-labelledby="signup-title">
+        <label class="auth-field" for="name">이름
+          <input id="name" name="name" type="text" autocomplete="name" required>
+        </label>
+        <label class="auth-field" for="email">이메일
+          <input id="email" name="email" type="email" autocomplete="email" required>
+        </label>
+        <label class="auth-field" for="password">비밀번호
+          <input id="password" name="password" type="password" autocomplete="new-password" required>
+        </label>
+        <label class="auth-field" for="password-confirmation">비밀번호 확인
+          <input id="password-confirmation" name="password_confirmation" type="password" autocomplete="new-password" required>
+        </label>
+        <fieldset class="auth-role" aria-describedby="reporter-notice">
+          <legend>회원 유형</legend>
+          <label class="auth-role-option"><input name="role" type="radio" value="user" checked required>일반 사용자</label>
+          <label class="auth-role-option"><input name="role" type="radio" value="reporter" required>기자</label>
+          <p class="auth-note" id="reporter-notice">기자 계정은 관리자 승인 후 기자 기능을 사용할 수 있습니다.</p>
+        </fieldset>
+        <button class="auth-submit" type="submit" aria-describedby="auth-notice">회원가입</button>
+        <p class="auth-note" id="auth-notice" role="status" aria-live="polite">회원 정보를 입력해 주세요.</p>
+      </form>
+      <p class="auth-switch">이미 회원이신가요?<a href="login.html">로그인</a></p>
+    </section>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="auth.js"></script>
+</body>
+</html>
