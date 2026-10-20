@@ -2,6 +2,13 @@
 // 대표뉴스는 lead-news.js에서 관리합니다.
 const slides = window.LEAD_NEWS;
 const $ = s => document.querySelector(s);
+
+// 메인화면에만 필요한 작은 스타일 보정을 별도 파일로 불러옵니다.
+const homeStyle = document.createElement('link');
+homeStyle.rel = 'stylesheet';
+homeStyle.href = 'home-adjustments.css?v=20261021-1';
+document.head.append(homeStyle);
+
 const dialog = $('#detail-dialog');
 function openDialog(title, text){stopDialogMedia();const content=$('#dialog-content');content.replaceChildren();const h=document.createElement('h2');h.textContent=title;const p=document.createElement('p');p.textContent=text;content.append(h);if(text)content.append(p);if(!dialog.open)dialog.showModal();resetAutoAdvance();}
 function article(title){openDialog(title,'메인페이지 디자인 확인용 예시 기사입니다. 실제 기사 본문과 출처는 콘텐츠 확정 후 연결할 예정입니다.');}
@@ -92,6 +99,18 @@ function selectSlide(index) { showSlide(index, true); resetAutoAdvance(); }
 $('#previous').addEventListener('click', () => selectSlide(current - 1));
 $('#next').addEventListener('click', () => selectSlide(current + 1));
 slideTabs.forEach(button => button.addEventListener('click', () => selectSlide(Number(button.dataset.slide))));
+
+// 캐러셀 하단은 탭 전환 기능을 유지하고, 기사 제목을 누르면 해당 기사로 이동합니다.
+slideTabs.forEach((button, index) => {
+  const title = button.querySelector('strong');
+  title.classList.add('article-link-title');
+  title.title = '기사 읽기';
+  title.addEventListener('click', event => {
+    event.stopPropagation();
+    location.href = `article.html?id=${encodeURIComponent(slides[index].id)}`;
+  });
+});
+
 autoButton.addEventListener('click', () => { userPaused = !userPaused; updateAutoButton(); resetAutoAdvance(); });
 hero.addEventListener('mouseenter', () => { hoverPaused = true; resetAutoAdvance(); });
 hero.addEventListener('mouseleave', () => { hoverPaused = false; resetAutoAdvance(); });
@@ -122,7 +141,7 @@ function openMedia() {
   }
 }
 
-// 실제 발행된 대표기사 3건을 메인 우측 목록과 '주목할 만한 기사'에도 연결합니다.
+// 실제 발행 기사로 우측 최신목록을 갱신하고, 대표기사와 겹치지 않는 깊이읽기 입구를 구성합니다.
 function refreshPublishedHomeSections() {
   if (typeof syncPublishedArticles === 'function') syncPublishedArticles();
 
@@ -148,22 +167,60 @@ function refreshPublishedHomeSections() {
     });
   });
 
-  const notableCards = [...document.querySelectorAll('.notable-grid article')];
-  slides.slice(0, notableCards.length).forEach((story, index) => {
-    const card = notableCards[index];
+  const notable = document.querySelector('#notable');
+  if (!notable) return;
+  notable.classList.add('deep-read');
+  notable.querySelector('.heading-group h2').textContent = '한 단계 깊게 읽기';
+  notable.querySelector('.heading-group p').textContent = '새 소식에서 한 걸음 더, 해설·데이터·정책으로';
+  const allLink = notable.querySelector('.section-heading > a');
+  allLink.href = '#interests';
+  allLink.textContent = '분야별 뉴스 보기 →';
+
+  const deepReads = [
+    {
+      label: '기획·해설',
+      title: '제도 변화, 무엇이 달라지고 왜 중요한지까지',
+      description: '입법예고·대입제도·교육과정처럼 복잡한 변화를 학생과 학부모의 선택과 연결해 풀어봅니다.',
+      image: 'feedback',
+      alt: '기획 해설 교육기사 이미지',
+      meta: '기획·해설 모아보기',
+      href: 'category.html?type=admissions'
+    },
+    {
+      label: '데이터로 읽기',
+      title: '학교알리미·교육통계로 직접 확인하는 변화',
+      description: '지역·학교급·연도별 숫자를 비교해 교육 현장의 변화를 데이터로 직접 확인합니다.',
+      image: 'school',
+      alt: '교육 데이터 분석을 상징하는 학교 이미지',
+      meta: 'AI 중점학교 데이터 보기',
+      href: 'category.html?type=digital#ai-school-stats'
+    },
+    {
+      label: '교육정책 깊이보기',
+      title: '발표·입법예고·시행을 구분해 읽는 교육정책',
+      description: '정책 발표가 곧 시행을 뜻하지는 않습니다. 공식자료와 적용 대상, 일정까지 함께 확인합니다.',
+      image: 'policy',
+      alt: '교육정책을 상징하는 이미지',
+      meta: '교육정책 모아보기',
+      href: 'category.html?type=school-policy'
+    }
+  ];
+
+  [...notable.querySelectorAll('.notable-grid article')].forEach((card, index) => {
+    const pick = deepReads[index];
+    if (!pick) return;
     const image = card.querySelector('img');
-    image.src = `assets/${story.image}.jpg`;
-    image.alt = story.alt;
-    card.querySelector('.category').textContent = story.category;
+    image.src = `assets/${pick.image}.jpg`;
+    image.alt = pick.alt;
+    card.querySelector('.category').textContent = pick.label;
     const titleButton = card.querySelector('h3 button');
-    titleButton.innerHTML = story.title;
-    const description = card.querySelector('.card-description');
-    description.textContent = story.description.replace(/<br\s*\/?\s*>/gi, ' ');
-    card.querySelector('small').textContent = story.readingLabel;
+    titleButton.textContent = pick.title;
+    card.querySelector('.card-description').textContent = pick.description;
+    card.querySelector('small').textContent = pick.meta;
     card.querySelectorAll('[data-article]').forEach(button => button.removeAttribute('data-article'));
-    const openArticle = () => { location.href = `article.html?id=${encodeURIComponent(story.id)}`; };
-    card.querySelector('.article-cover').addEventListener('click', openArticle);
-    titleButton.addEventListener('click', openArticle);
+    const openPick = () => { location.href = pick.href; };
+    card.querySelector('.article-cover').addEventListener('click', openPick);
+    titleButton.addEventListener('click', openPick);
   });
 }
 
