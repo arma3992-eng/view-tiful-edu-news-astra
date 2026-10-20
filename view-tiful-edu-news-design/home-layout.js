@@ -20,6 +20,17 @@
     return map;
   };
 
+  function ensureFeatureNav() {
+    const navLinks = document.querySelector('.nav-links');
+    if (!navLinks || navLinks.querySelector('[data-nav="features"]')) return;
+    const about = navLinks.querySelector('[data-nav="about"]');
+    if (!about) return;
+    const featureLink = node('a', '기획·분석');
+    featureLink.href = '#features';
+    featureLink.dataset.nav = 'features';
+    about.before(featureLink);
+  }
+
   function buildFeatureIndex() {
     const notable = document.getElementById('notable');
     if (!notable) return false;
@@ -133,6 +144,7 @@
       window.setTimeout(() => init(attempt + 1), 100);
       return;
     }
+    ensureFeatureNav();
     buildFeatureIndex();
     remodelInterests();
   }
