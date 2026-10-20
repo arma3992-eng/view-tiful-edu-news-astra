@@ -1,12 +1,15 @@
 """외부 API에 비용을 발생시키지 않는 저장·추출·검증 연결 검사."""
 import io
+from contextlib import closing
 import json
 import os
 from pathlib import Path
 import sqlite3
 import tempfile
 import unittest
-from unittest.mock import patch
+from unittest.mock import patch, AsyncMock
+import time
+import editor_auth
 import httpx
 from fastapi.testclient import TestClient
 from pypdf import PdfWriter
@@ -102,7 +105,15 @@ class WorkflowTests(unittest.TestCase):
         self.database_patch = patch.object(main, "DATABASE", self.db); self.database_patch.start()
         self.environment_patch = patch.dict(os.environ, {"OPENAI_API_KEY": "", "OPENAI_MODEL": "gpt-5.4-mini", "WEB_RESEARCH_ENABLED": "false"})
         self.environment_patch.start()
-        self.client = TestClient(main.app); self.client.__enter__()
+        # Business regression tests use an authenticated reporter fixture.
+        # Real middleware/token/RLS checks are covered in test_editor_auth.py.
+        self.auth_patch = patch.object(editor_auth, "verify_token", new=AsyncMock(
+            return_value=({"id": "11111111-1111-4111-8111-111111111111", "role": "reporter"}, int(time.time()) + 3600)))
+        self.auth_patch.start()
+        self.addCleanup(self.auth_patch.stop)
+        self.client = TestClient(main.app, headers={
+            "Origin": main.app.state.editor_auth_settings.editor_origin, "X-Viewtiful-Editor": "1"})
+        self.client.__enter__()
         response = self.client.post("/api/articles", json={"original_text":
             "가상 기사\n시험 시간은 120분이다.\n적용 대상은 고등학생 전체다.\n실시일은 10월 3일이다.\n응시 인원은 200명이다."})
         self.article = response.json(); self.route = "/api/articles/" + self.article["id"]
@@ -313,7 +324,7 @@ class WorkflowTests(unittest.TestCase):
         self.assertEqual(self.run_mocked_ai().status_code, 200)
         saved_report = self.client.get(self.route).json()["verification_report"]
         saved_report.pop("report_status"); saved_report.pop("unanchored_checks")
-        with sqlite3.connect(self.db) as db:
+        with closing(sqlite3.connect(self.db)) as db, db:
             db.execute("UPDATE verification_reports SET report_json=? WHERE article_id=?",
                        (json.dumps(saved_report, ensure_ascii=False), self.article["id"]))
         saved = Store(self.db).get(self.article["id"])
@@ -361,7 +372,7 @@ class MigrationTests(unittest.TestCase):
     def test_step1_data_survives_schema_upgrade(self):
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "editor.sqlite3"
-            with sqlite3.connect(path) as db:
+            with closing(sqlite3.connect(path)) as db, db:
                 db.executescript("""
                     CREATE TABLE articles (id TEXT PRIMARY KEY, original_text TEXT NOT NULL, original_url TEXT,
                         revision INTEGER NOT NULL DEFAULT 1, source_revision INTEGER NOT NULL DEFAULT 0,

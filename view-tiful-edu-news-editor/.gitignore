@@ -5,3 +5,6 @@ __pycache__/
 data/*.sqlite3
 data/*.sqlite3-*
 data/uploads/
+
+# Track public configuration examples only.
+!.env.example

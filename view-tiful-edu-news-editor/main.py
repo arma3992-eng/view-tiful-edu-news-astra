@@ -4,8 +4,12 @@ import os
 from pathlib import Path
 from typing import Literal
 from fastapi import FastAPI, HTTPException, UploadFile, File, Query
-from fastapi.responses import FileResponse, JSONResponse, Response
+from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, Response
+from html import escape
 from fastapi.staticfiles import StaticFiles
+from fastapi.middleware.cors import CORSMiddleware
+from editor_auth import AuthSettings, EditorAuthMiddleware, create_session, remove_session
+import httpx
 from pydantic import BaseModel, ConfigDict, Field, HttpUrl, field_validator, model_validator
 from storage import RevisionConflict, Store
 from dotenv import load_dotenv
@@ -154,10 +158,29 @@ class ApprovalInput(FinalRequest):
 @asynccontextmanager
 async def lifespan(app):
     app.state.store = Store(DATABASE)
-    yield
+    async with httpx.AsyncClient(timeout=10.0, follow_redirects=False) as auth_http:
+        app.state.editor_auth_http = auth_http
+        yield
 
 
-app = FastAPI(title="교육뉴스 편집실 — 최종 검증·승인", lifespan=lifespan)
+app = FastAPI(title="교육뉴스 편집실 — 최종 검증·승인", lifespan=lifespan,
+              docs_url=None, redoc_url=None, openapi_url=None)
+app.state.editor_auth_settings = AuthSettings.from_env()
+app.add_middleware(EditorAuthMiddleware)
+# Added last so preflight and authentication errors receive CORS headers too.
+app.add_middleware(CORSMiddleware,
+    allow_origins=[app.state.editor_auth_settings.main_origin],
+    allow_credentials=True, allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allow_headers=["Authorization", "Content-Type", "X-Viewtiful-Editor"])
+app.add_api_route("/api/auth/session", create_session, methods=["POST"])
+app.add_api_route("/api/auth/session", remove_session, methods=["DELETE"])
+
+
+@app.get("/healthz", include_in_schema=False)
+def healthz():
+    return {"status": "ok"}
+
+
 app.mount("/static", StaticFiles(directory=ROOT / "static"), name="static")
 
 
@@ -169,7 +192,10 @@ def must_exist(record):
 
 @app.get("/", include_in_schema=False)
 def home():
-    return FileResponse(ROOT / "static" / "index.html")
+    html = (ROOT / "static" / "index.html").read_text(encoding="utf-8")
+    html = html.replace("http://127.0.0.1:5500/view-tiful-edu-news-design/",
+                        escape(app.state.editor_auth_settings.main_site_url, quote=True))
+    return HTMLResponse(html)
 
 
 @app.exception_handler(DocumentError)

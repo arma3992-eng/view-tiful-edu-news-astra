@@ -6,6 +6,8 @@ const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_OLmPjZk8BuKinxCpWIbRUQ_oMmVavpX
   const accountUser = document.getElementById('account-user');
   const accountAction = document.getElementById('account-action');
   const accountRole = document.getElementById('account-role');
+  const accountEditor = document.getElementById('account-editor');
+  const editorOrigin = accountEditor ? new URL(accountEditor.href).origin : 'http://127.0.0.1:8002';
   if (!form && (!accountUser || !accountAction)) return;
 
   const notice = document.getElementById('auth-notice');
@@ -56,6 +58,7 @@ const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_OLmPjZk8BuKinxCpWIbRUQ_oMmVavpX
     let roleRevision = 0;
 
     function clearRole() {
+      if (accountEditor) accountEditor.hidden = true;
       if (!accountRole) return;
       accountRole.hidden = true;
       accountRole.textContent = '';
@@ -68,6 +71,7 @@ const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_OLmPjZk8BuKinxCpWIbRUQ_oMmVavpX
         const { data, error } = await supabaseClient.from('profiles')
           .select('role, reporter_status').eq('id', userId).single();
         if (revision !== roleRevision || error || !data || !accountRole) return;
+        if (accountEditor && ['reporter', 'admin'].includes(data.role)) accountEditor.hidden = false;
         if (data.role === 'admin') {
           accountRole.textContent = '관리자';
           accountRole.setAttribute('href', 'admin.html');
@@ -119,6 +123,35 @@ const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_OLmPjZk8BuKinxCpWIbRUQ_oMmVavpX
       // Keep the existing account links available when session lookup fails.
     });
 
+    if (accountEditor) {
+      let connecting = false;
+      accountEditor.addEventListener('click', async (event) => {
+        event.preventDefault();
+        if (connecting) return;
+        connecting = true;
+        accountEditor.setAttribute('aria-disabled', 'true');
+        try {
+          const { data, error } = await supabaseClient.auth.getSession();
+          if (error || !data.session) throw new Error('로그인 후 다시 시도해 주세요.');
+          const response = await fetch(editorOrigin + '/api/auth/session', {
+            method: 'POST', credentials: 'include',
+            headers: { Authorization: 'Bearer ' + data.session.access_token, 'X-Viewtiful-Editor': '1' },
+          });
+          if (!response.ok) {
+            if (response.status === 401) throw new Error('인증이 만료되었습니다. 로그인 상태를 확인해 주세요.');
+            if (response.status === 403) throw new Error('기자 또는 관리자만 편집실을 사용할 수 있습니다.');
+            throw new Error('편집실 인증을 확인하지 못했습니다. 잠시 후 다시 시도해 주세요.');
+          }
+          window.location.assign(accountEditor.href);
+        } catch (error) {
+          window.alert(error instanceof TypeError ? '편집실 서버 연결을 확인해 주세요.' : error.message);
+        } finally {
+          connecting = false;
+          accountEditor.removeAttribute('aria-disabled');
+        }
+      });
+    }
+
     accountAction.addEventListener('click', async (event) => {
       if (!signedIn && !signingOut) return;
       event.preventDefault();
@@ -126,9 +159,20 @@ const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_OLmPjZk8BuKinxCpWIbRUQ_oMmVavpX
       signingOut = true;
       accountAction.setAttribute('aria-disabled', 'true');
       try {
-        const { error } = await supabaseClient.auth.signOut();
-        if (error) throw error;
-        renderAccount(null);
+        // Attempt both cleanup operations even if either one fails.
+        const [editorResult, authResult] = await Promise.allSettled([
+          fetch(editorOrigin + '/api/auth/session', {
+            method: 'DELETE', credentials: 'include', headers: { 'X-Viewtiful-Editor': '1' },
+          }),
+          supabaseClient.auth.signOut(),
+        ]);
+        const authFailed = authResult.status === 'rejected' || authResult.value.error;
+        const editorFailed = editorResult.status === 'rejected' || !editorResult.value.ok;
+        if (!authFailed) renderAccount(null);
+        if (authFailed) throw new Error('로그아웃하지 못했습니다. 잠시 후 다시 시도해 주세요.');
+        if (editorFailed) {
+          window.alert('메인에서는 로그아웃했지만 편집실 쿠키를 삭제하지 못했습니다. 편집실 서버를 켜고 다시 로그인한 뒤 로그아웃하거나 브라우저에서 편집실 쿠키를 삭제해 주세요.');
+        }
       } catch {
         window.alert('로그아웃하지 못했습니다. 잠시 후 다시 시도해 주세요.');
       } finally {

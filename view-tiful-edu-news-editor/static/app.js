@@ -69,10 +69,19 @@
     rewriteEditor.updateState();
     finalReview.updateState();
   }
+  window.viewtifulEditorAuthError = (status) => {
+    if (status !== 401 && status !== 403) return;
+    const notice = $("editor-auth-message");
+    notice.querySelector('span').textContent = status === 401
+      ? '인증이 만료되었습니다. 메인에서 편집실을 다시 연결해 주세요.'
+      : '편집실 접근 권한이 없습니다.';
+    notice.hidden = false;
+  };
   async function api(url, options = {}) {
     const response = await fetch(url, {
-      ...options, headers: {...(options.body instanceof FormData ? {} : {"Content-Type": "application/json"}), ...(options.headers || {})}
+      ...options, headers: {...(options.body instanceof FormData ? {} : {"Content-Type": "application/json"}), ...(options.headers || {}), "X-Viewtiful-Editor": "1"}
     });
+    window.viewtifulEditorAuthError(response.status);
     const data = await response.json();
     if (!response.ok) {
       const detail = typeof data.detail === "string" ? data.detail :

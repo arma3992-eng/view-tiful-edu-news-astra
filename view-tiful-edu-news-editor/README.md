@@ -168,3 +168,47 @@ py 명령을 찾을 수 없지만 python 명령이 동작한다면 첫 줄을 py
 외부 AI 응답은 모의 응답으로 연결 흐름을 검사했습니다. 실제 API를 이용한 판정 품질은 본인의 키를 연결한 뒤 실제 기사로 확인해야 합니다.
 Python·JavaScript 문법과 화면 요소 연결도 확인했습니다.
 PC·모바일 브라우저에서의 실제 화면은 docs/step2-guide.md의 확인 순서로 점검하세요.
+
+
+## 편집실 Supabase 인증 (로컬)
+
+메인은 `http://127.0.0.1:5500/view-tiful-edu-news-design/`, 편집실은
+`http://127.0.0.1:8002/`를 사용합니다. `localhost`와 섞지 마세요.
+기존 `.env`를 복사로 덮어쓰지 말고 `.env.example`의 인증 항목 중 빠진 항목만 추가합니다.
+Supabase Project URL과 Publishable key만 사용하며 관리자 비밀 키는 필요하지 않습니다.
+
+```powershell
+# 프로젝트 루트: 메인 정적 서버 (이미 실행 중이면 재실행 불필요)
+python -m http.server 5500 --bind 127.0.0.1
+# 별도 터미널: 편집실 폴더
+.\.venv\Scripts\python.exe -m uvicorn main:app --host 127.0.0.1 --port 8002
+```
+
+메인에 로그인한 reporter/admin은 헤더의 편집실을 눌러 연결합니다. 브라우저는
+access token을 최초 POST의 Authorization 헤더로만 전달합니다. 서버는 Supabase Auth와
+본인 public.profiles.role을 확인한 뒤 editor_access_token HttpOnly 쿠키를 설정합니다.
+서버 메모리 세션은 없으며 보호 요청마다 Supabase 인증과 역할을 다시 확인합니다.
+만료 시 401, 일반 사용자/권한 회수 시 403, 인증 서버 장애 시 503을 반환합니다.
+메인 Supabase 세션이 유효하면 편집실 링크를 다시 눌러 연결할 수 있습니다.
+
+`/`와 기존 `/api` 전체는 보호됩니다. POST/DELETE `/api/auth/session`만 기존 쿠키 검증에서
+제외되며 Origin 및 X-Viewtiful-Editor: 1 검사는 필요합니다. DELETE는 쿠키가 없거나
+만료됐어도 삭제 응답을 반환합니다. `/healthz`, OPTIONS와 CSS/JS 등 정적 자산은 공개입니다.
+`/static/index.html` 등 정적 HTML과 docs/redoc/openapi는 사용할 수 없습니다.
+
+로컬 CORS는 MAIN_SITE_ORIGIN 하나만 허용합니다. 상태 변경은 MAIN_SITE_ORIGIN 및
+EDITOR_ORIGIN만 허용하고 커스텀 헤더도 요구합니다. 쿠키는 포트로 격리되지 않으므로
+동일 호스트의 로컬 개발 서버는 신뢰 가능한 환경이어야 합니다. 로그아웃은 Supabase와
+편집실 쿠키 삭제를 모두 시도하며, 쿠키 삭제 실패 시 브라우저에 안내합니다.
+stateless 방식에서는 탈취된 토큰의 별도 사본까지 쿠키 삭제로 무효화하지 못합니다.
+
+환경변수: SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, MAIN_SITE_ORIGIN, EDITOR_ORIGIN,
+MAIN_SITE_URL, EDITOR_COOKIE_SECURE, EDITOR_COOKIE_SAMESITE. 로컬은 Secure=false,
+SameSite=lax입니다. 운영 도메인은 아직 설정하지 않았으며 HTTPS 배포 URL 확정 후
+설정합니다. 메인 정적 HTML의 account-editor 주소도 실제 편집실 주소로 맞춰야 합니다.
+
+인증/기사 회귀 테스트 (외부 API는 모의 응답, 임시 기사 DB 사용):
+
+```powershell
+.\.venv\Scripts\python.exe -X utf8 -m unittest discover -s tests -p "test_*.py"
+```

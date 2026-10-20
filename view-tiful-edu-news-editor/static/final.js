@@ -385,6 +385,7 @@ window.createFinalReview = function (host) {
     host.setBusy(true);
     try {
       const response=await fetch("/api/articles/"+article.id+"/export/"+format+"?approval_id="+encodeURIComponent(article.approval.id));
+      if(window.viewtifulEditorAuthError)window.viewtifulEditorAuthError(response.status);
       if(!response.ok){const data=await response.json();throw new Error(typeof data.detail==="string"?data.detail:"다운로드 결과를 확인해주세요.");}
       const url=URL.createObjectURL(await response.blob()), anchor=document.createElement("a");
       anchor.href=url;anchor.download="article-"+article.id+"-v"+article.draft_revision+"."+format;
