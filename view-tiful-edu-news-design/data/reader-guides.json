@@ -112,6 +112,40 @@
         {"name": "교육부", "url": "https://www.moe.go.kr/"},
         {"name": "연합뉴스 학교알리미 기반 집계", "url": "https://www.yna.co.kr/view/AKR20261015047800530"}
       ]
+    },
+    "digital-ai-focus-schools-2026": {
+      "approval_id": "editor-export-70a220e9-aa14-4469-a2c5-b67e832c4114",
+      "article_title": "교육부, AI 중점학교 1,141개교 본격 운영",
+      "reader_guide": {
+        "enabled": true,
+        "audiences": [
+          {
+            "label": "학생",
+            "title": "수업과 체험 활동에서 변화가 있는지 살펴보세요",
+            "sections": [
+              {"type": "check", "items": [{"text": "학교가 AI 중점학교로 운영되는지, 교과 수업과 체험 활동이 어떻게 편성되는지 학교 안내를 확인해보세요."}]}
+            ]
+          },
+          {
+            "label": "학부모",
+            "title": "자녀 학교의 운영 방향을 확인해보세요",
+            "sections": [
+              {"type": "check", "items": [{"text": "학교가 어떤 교과와 활동을 중심으로 AI 교육을 구성하는지 살펴보면 자녀의 학습 경험을 이해하는 데 도움이 됩니다."}]}
+            ]
+          },
+          {
+            "label": "교사",
+            "title": "교과 연계와 윤리 교육 설계를 함께 준비하기",
+            "sections": [
+              {"type": "prepare", "items": [{"text": "교과 수업 확대, 융합 교육과정, 윤리 교육을 함께 고려해 수업 설계와 학교 운영 계획을 점검해볼 수 있습니다."}]}
+            ]
+          }
+        ]
+      },
+      "sources": [
+        {"name": "교육부 보도자료", "url": "https://www.moe.go.kr/boardCnts/viewRenew.do?boardID=294&boardSeq=105557&lev=0&m=020402&opType=N&page=1&s=moe&statusYN=W"},
+        {"name": "대한민국 정책브리핑", "url": "https://www.korea.kr/news/policyNewsView.do?newsId=148960798"}
+      ]
     }
   }
 }
