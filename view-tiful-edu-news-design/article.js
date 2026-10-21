@@ -72,6 +72,10 @@
         wrapper.append(buildTable(section.table));
       }
 
+      if (section.chart) {
+        wrapper.append(buildBarChart(section.chart));
+      }
+
       body.append(wrapper);
     }
 
@@ -82,7 +86,7 @@
     links.replaceChildren();
     for (const source of content.sources || []) {
       try {
-        const url = new URL(source.url);
+        const url = new URL(source.url, location.href);
         if (!['http:', 'https:'].includes(url.protocol)) continue;
         const anchor = document.createElement('a');
         anchor.href = url.href;
@@ -93,6 +97,58 @@
       } catch {}
     }
     sources.hidden = !links.children.length;
+  }
+
+  function buildBarChart(spec) {
+    const rows = Array.isArray(spec.rows) ? spec.rows.filter(row => Number.isFinite(Number(row.value))) : [];
+    const figure = document.createElement('figure');
+    figure.className = 'article-chart';
+
+    if (spec.caption) {
+      const caption = document.createElement('figcaption');
+      caption.textContent = spec.caption;
+      figure.append(caption);
+    }
+
+    if (!rows.length) return figure;
+
+    const max = Math.max(...rows.map(row => Number(row.value)), 1);
+    const grid = document.createElement('div');
+    grid.className = 'article-chart-rows';
+
+    for (const row of rows) {
+      const line = document.createElement('div');
+      line.className = 'article-chart-row';
+
+      const label = document.createElement('span');
+      label.className = 'article-chart-label';
+      label.textContent = row.label;
+
+      const track = document.createElement('span');
+      track.className = 'article-chart-track';
+      const bar = document.createElement('span');
+      bar.className = 'article-chart-bar';
+      bar.style.width = `${Math.max(2, Number(row.value) / max * 100)}%`;
+      track.append(bar);
+
+      const value = document.createElement('strong');
+      value.className = 'article-chart-value';
+      value.textContent = `${Number(row.value).toLocaleString('ko-KR')}${spec.unit || ''}`;
+
+      line.append(label, track, value);
+      grid.append(line);
+    }
+
+    figure.append(grid);
+
+    if (spec.note) {
+      const note = document.createElement('p');
+      note.className = 'article-chart-note';
+      note.textContent = spec.note;
+      figure.append(note);
+    }
+
+    return figure;
   }
 
   function buildTable(spec) {
