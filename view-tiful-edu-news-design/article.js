@@ -58,9 +58,11 @@
       const wrapper = document.createElement('section');
       wrapper.className = 'article-section';
 
-      const heading = document.createElement('h2');
-      heading.textContent = section.heading;
-      wrapper.append(heading);
+      if (section.heading) {
+        const heading = document.createElement('h2');
+        heading.textContent = section.heading;
+        wrapper.append(heading);
+      }
 
       for (const text of section.paragraphs || []) {
         const paragraph = document.createElement('p');
@@ -103,6 +105,7 @@
     const rows = Array.isArray(spec.rows) ? spec.rows.filter(row => Number.isFinite(Number(row.value))) : [];
     const figure = document.createElement('figure');
     figure.className = 'article-chart';
+    if (spec.wideValues) figure.classList.add('article-chart-wide-values');
 
     if (spec.caption) {
       const caption = document.createElement('figcaption');
@@ -133,7 +136,7 @@
 
       const value = document.createElement('strong');
       value.className = 'article-chart-value';
-      value.textContent = `${Number(row.value).toLocaleString('ko-KR')}${spec.unit || ''}`;
+      value.textContent = row.displayValue || `${Number(row.value).toLocaleString('ko-KR')}${spec.unit || ''}`;
 
       line.append(label, track, value);
       grid.append(line);
