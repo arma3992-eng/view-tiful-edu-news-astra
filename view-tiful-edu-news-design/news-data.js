@@ -48,6 +48,12 @@ window.CATEGORY_NEWS = {
     "description": "새로운 기술을 넘어, 배움과 생각하는 힘을 살펴봅니다.",
     "articles": [
       [
+        "교육부, AI 중점학교 1,141개교 본격 운영",
+        "2026년 1,141개교를 시작으로 AI 수업 확대와 특별교부금 지원, 2028년 2,000개교까지의 확대 계획을 살펴본다.",
+        "ai",
+        "digital-ai-focus-schools-2026"
+      ],
+      [
         "AI학과 학생만 AI를 배우는 시대 끝날까, 경북 ‘AI 인재 혁신대학’ 구상",
         "전공 불문 AI 기초교육과 기업 프로젝트를 연결하는 대학 모델 연구가 시작됐다. 아직 정책 연구 단계다.",
         "ai",
@@ -98,3 +104,93 @@ window.ARCHIVE_ARTICLES = Object.entries(window.CATEGORY_NEWS).flatMap(([key, gr
     readingLabel: '교육뉴스', summary: description ? [description] : []
   }))
 );
+
+const aiFocusStory = window.ARCHIVE_ARTICLES.find(item => item.id === 'digital-ai-focus-schools-2026');
+if (aiFocusStory) {
+  aiFocusStory.alt = 'AI 중점학교 운영과 인공지능 교육을 상징하는 이미지';
+  aiFocusStory.readingLabel = 'AI교육 · 데이터 읽기 · 4분 읽기';
+  aiFocusStory.summary = [
+    '교육부는 초·중등 인공지능 교육 확대를 위해 2026년 AI 중점학교 1,141개교 운영을 시작했습니다.',
+    '초등·중등의 관련 수업 시간을 늘리고 고등학교는 매 학기 관련 수업을 편성하는 방향을 제시했습니다.',
+    '2026년 특별교부금 385억 원을 지원하고, 2027년 1,500개교·2028년 2,000개교까지 확대할 계획입니다.'
+  ];
+}
+
+window.ARTICLE_CONTENTS = window.ARTICLE_CONTENTS || {};
+window.ARTICLE_CONTENTS['digital-ai-focus-schools-2026'] = {
+  sections: [
+    {
+      heading: 'AI 중점학교 1,141개교 운영 시작',
+      paragraphs: [
+        '교육부는 초·중등학교에서 인공지능 교육을 체계적으로 확대하고 학교 현장의 인공지능 교육 모델을 확산하기 위해 AI 중점학교 1,141개교를 선정해 운영을 시작한다고 밝혔다.',
+        '이번 사업은 국정과제 ‘인공지능 디지털 시대 미래인재 양성(99-1)’과 「모두를 위한 인공지능 인재양성 방안」에 포함된 초·중등 인공지능 교육 사업이다.',
+        '선정된 학교는 2026년 3월부터 3년간 운영되며, 전국 17개 시도교육청이 지역 여건과 학교 특성을 고려해 자체 선정했다.'
+      ]
+    },
+    {
+      heading: '네 가지 운영 방향과 지원 계획',
+      paragraphs: [
+        'AI 중점학교는 학교 교육과정 내 인공지능 관련 수업 확대, 국어·수학·과학·사회 등과 연계한 융합 교육과정 운영, 인공지능 윤리 교육 강화, 인공지능 기술을 직접 경험하고 활용하는 학교 환경 조성의 네 가지 방향으로 운영된다.',
+        '교육부는 초등은 34시간에서 68시간 이상, 중등은 68시간에서 102시간 이상으로 확대하고, 고등은 매 학기 편성하도록 했다.',
+        '또 2026년 특별교부금 총 385억 원을 지원하고, 학교급과 운영 유형을 고려해 학교별 지원 규모를 달리할 계획이다.'
+      ]
+    },
+    {
+      heading: '학생이 직접 체감할 변화',
+      paragraphs: [
+        '학생 입장에서는 교과 수업 안에서 인공지능을 더 자주 접하고, 윤리와 책임 있는 활용 방법도 함께 배우게 된다.',
+        '학교에 따라 동아리나 체험 활동, 지역사회 연계 프로그램이 강화될 수 있어 수업 밖 경험도 넓어질 수 있다.'
+      ]
+    },
+    {
+      heading: '핵심 수치 한눈에 보기',
+      table: {
+        headers: ['항목', '내용'],
+        rows: [
+          ['선정 학교 수', '1,141개교'],
+          ['운영 시작', '2026년 3월'],
+          ['운영 기간', '3년'],
+          ['2026년 특별교부금', '총 385억 원'],
+          ['확대 계획', '2027년 1,500개교 · 2028년 2,000개교']
+        ]
+      }
+    },
+    {
+      heading: 'AI 중점학교 확대 계획',
+      chart: {
+        caption: '연도별 AI 중점학교 운영·확대 계획',
+        unit: '개교',
+        rows: [
+          { label: '2026', value: 1141 },
+          { label: '2027', value: 1500 },
+          { label: '2028', value: 2000 }
+        ],
+        note: '2026년은 운영 시작 규모이며, 2027년과 2028년 수치는 교육부가 제시한 확대 계획입니다.'
+      }
+    }
+  ],
+  sources: [
+    { name: '교육부 보도자료 원문', url: 'https://www.moe.go.kr/boardCnts/viewRenew.do?boardID=294&boardSeq=105557&lev=0&m=020402&opType=N&page=1&s=moe&statusYN=W' },
+    { name: '대한민국 정책브리핑', url: 'https://www.korea.kr/news/policyNewsView.do?newsId=148960798' },
+    { name: '연합뉴스 관련 보도', url: 'https://www.yna.co.kr/view/AKR20260309049000530' },
+    { name: '첨부 자료 · 편집실 승인 JSON 테스트', url: 'data/articles/digital-ai-focus-schools-2026.json' }
+  ]
+};
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', addAiFocusSchoolToHome, { once: true });
+} else {
+  addAiFocusSchoolToHome();
+}
+
+function addAiFocusSchoolToHome() {
+  const categoryLink = document.querySelector('.side-category[href="category.html?type=digital"]');
+  const item = categoryLink?.closest('.side-item');
+  if (!item || item.querySelector('a[href="article.html?id=digital-ai-focus-schools-2026"]')) return;
+
+  const link = document.createElement('a');
+  link.className = 'side-story';
+  link.href = 'article.html?id=digital-ai-focus-schools-2026';
+  link.textContent = '교육부, AI 중점학교 1,141개교 본격 운영';
+  categoryLink.insertAdjacentElement('afterend', link);
+}
