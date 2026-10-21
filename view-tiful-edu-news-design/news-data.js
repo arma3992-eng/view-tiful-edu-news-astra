@@ -120,43 +120,19 @@ window.ARTICLE_CONTENTS = window.ARTICLE_CONTENTS || {};
 window.ARTICLE_CONTENTS['digital-ai-focus-schools-2026'] = {
   sections: [
     {
-      heading: 'AI 중점학교 1,141개교 운영 시작',
       paragraphs: [
         '교육부는 초·중등학교에서 인공지능 교육을 체계적으로 확대하고 학교 현장의 인공지능 교육 모델을 확산하기 위해 AI 중점학교 1,141개교를 선정해 운영을 시작한다고 밝혔다.',
         '이번 사업은 국정과제 ‘인공지능 디지털 시대 미래인재 양성(99-1)’과 「모두를 위한 인공지능 인재양성 방안」에 포함된 초·중등 인공지능 교육 사업이다.',
-        '선정된 학교는 2026년 3월부터 3년간 운영되며, 전국 17개 시도교육청이 지역 여건과 학교 특성을 고려해 자체 선정했다.'
-      ]
-    },
-    {
-      heading: '네 가지 운영 방향과 지원 계획',
-      paragraphs: [
+        '선정된 학교는 2026년 3월부터 3년간 운영되며, 전국 17개 시도교육청이 지역 여건과 학교 특성을 고려해 자체 선정했다.',
         'AI 중점학교는 학교 교육과정 내 인공지능 관련 수업 확대, 국어·수학·과학·사회 등과 연계한 융합 교육과정 운영, 인공지능 윤리 교육 강화, 인공지능 기술을 직접 경험하고 활용하는 학교 환경 조성의 네 가지 방향으로 운영된다.',
         '교육부는 초등은 34시간에서 68시간 이상, 중등은 68시간에서 102시간 이상으로 확대하고, 고등은 매 학기 편성하도록 했다.',
-        '또 2026년 특별교부금 총 385억 원을 지원하고, 학교급과 운영 유형을 고려해 학교별 지원 규모를 달리할 계획이다.'
-      ]
-    },
-    {
-      heading: '학생이 직접 체감할 변화',
-      paragraphs: [
+        '또 2026년 특별교부금 총 385억 원을 지원하고, 학교급과 운영 유형을 고려해 학교별 지원 규모를 달리할 계획이다.',
         '학생 입장에서는 교과 수업 안에서 인공지능을 더 자주 접하고, 윤리와 책임 있는 활용 방법도 함께 배우게 된다.',
         '학교에 따라 동아리나 체험 활동, 지역사회 연계 프로그램이 강화될 수 있어 수업 밖 경험도 넓어질 수 있다.'
       ]
     },
     {
       heading: '핵심 수치 한눈에 보기',
-      table: {
-        headers: ['항목', '내용'],
-        rows: [
-          ['선정 학교 수', '1,141개교'],
-          ['운영 시작', '2026년 3월'],
-          ['운영 기간', '3년'],
-          ['2026년 특별교부금', '총 385억 원'],
-          ['확대 계획', '2027년 1,500개교 · 2028년 2,000개교']
-        ]
-      }
-    },
-    {
-      heading: 'AI 중점학교 확대 계획',
       chart: {
         caption: '연도별 AI 중점학교 운영·확대 계획',
         unit: '개교',
@@ -167,13 +143,41 @@ window.ARTICLE_CONTENTS['digital-ai-focus-schools-2026'] = {
         ],
         note: '2026년은 운영 시작 규모이며, 2027년과 2028년 수치는 교육부가 제시한 확대 계획입니다.'
       }
+    },
+    {
+      chart: {
+        caption: '시도별 AI 중점학교 운영 비율',
+        wideValues: true,
+        unit: '%',
+        rows: [
+          { label: '세종', value: 39.3, displayValue: '39.3% · 42 / 107교' },
+          { label: '인천', value: 19.0, displayValue: '19.0% · 107 / 562교' },
+          { label: '충남', value: 15.5, displayValue: '15.5% · 115 / 741교' },
+          { label: '서울', value: 13.5, displayValue: '13.5% · 182 / 1,350교' },
+          { label: '전북', value: 10.6, displayValue: '10.6% · 81 / 761교' },
+          { label: '대구', value: 10.5, displayValue: '10.5% · 50 / 477교' },
+          { label: '울산', value: 10.4, displayValue: '10.4% · 26 / 249교' },
+          { label: '경북', value: 9.0, displayValue: '9.0% · 85 / 947교' },
+          { label: '광주', value: 8.4, displayValue: '8.4% · 27 / 323교' },
+          { label: '충북', value: 8.1, displayValue: '8.1% · 40 / 495교' },
+          { label: '대전', value: 7.7, displayValue: '7.7% · 24 / 313교' },
+          { label: '경기', value: 7.6, displayValue: '7.6% · 200 / 2,618교' },
+          { label: '부산', value: 6.9, displayValue: '6.9% · 44 / 634교' },
+          { label: '전남', value: 6.1, displayValue: '6.1% · 53 / 867교' },
+          { label: '제주', value: 5.6, displayValue: '5.6% · 11 / 198교' },
+          { label: '경남', value: 4.9, displayValue: '4.9% · 49 / 1,006교' },
+          { label: '강원', value: 4.2, displayValue: '4.2% · 27 / 642교' }
+        ],
+        note: '비율 = AI 중점학교 수 ÷ 시도별 초·중·고·특수학교 수. 분모는 2026년 교육기본통계 학교 주소록(2026.4.1 기준), 지역별 AI 중점학교 수는 연구지원센터 공개 현황(2026.10.7 열람, 총 1,163교 기준)입니다. 이 지역별 현황은 교육부가 3월 발표한 1,141교와 차이가 있으며, 공개자료만으로 차이의 원인은 확인되지 않았습니다.'
+      }
     }
   ],
   sources: [
     { name: '교육부 보도자료 원문', url: 'https://www.moe.go.kr/boardCnts/viewRenew.do?boardID=294&boardSeq=105557&lev=0&m=020402&opType=N&page=1&s=moe&statusYN=W' },
     { name: '대한민국 정책브리핑', url: 'https://www.korea.kr/news/policyNewsView.do?newsId=148960798' },
     { name: '연합뉴스 관련 보도', url: 'https://www.yna.co.kr/view/AKR20260309049000530' },
-    { name: '첨부 자료 · 편집실 승인 JSON 테스트', url: 'data/articles/digital-ai-focus-schools-2026.json' }
+    { name: 'AI 중점학교 연구지원센터 선정현황', url: 'https://aischool-center.kr/about/schools' },
+    { name: '2026 교육기본통계 학교 주소록', url: 'https://kess.kedi.re.kr/post/6876968?itemCode=04&menuId=m_02_04_02' }
   ]
 };
 
