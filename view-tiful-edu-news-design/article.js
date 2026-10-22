@@ -37,6 +37,10 @@
   const content = window.ARTICLE_CONTENTS?.[story.id];
   if (content) {
     document.querySelector('#article-example-note').hidden = true;
+    if (story.id === 'digital-ai-focus-schools-2026') {
+      document.querySelector('#article-intro').hidden = true;
+      document.querySelector('#summary').classList.add('article-summary-plain');
+    }
     renderFullArticle(content);
   }
 
