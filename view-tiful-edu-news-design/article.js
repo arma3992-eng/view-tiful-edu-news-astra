@@ -24,7 +24,7 @@
     ? story.description.replace(/<br\s*\/?\s*>/gi, ' ')
     : '기사 본문을 준비하고 있습니다.';
 
-  document.querySelector('#summary-label').textContent = leadStory ? '핵심 요약' : '기사 요약';
+  document.querySelector('#summary-label').textContent = '기사 요약';
   const summary = Array.isArray(story.summary) ? story.summary : [];
   document.querySelector('#article-summary-empty').hidden = summary.length > 0;
   const list = document.querySelector('#article-summary-list');
@@ -37,10 +37,8 @@
   const content = window.ARTICLE_CONTENTS?.[story.id];
   if (content) {
     document.querySelector('#article-example-note').hidden = true;
-    if (story.id === 'digital-ai-focus-schools-2026') {
-      document.querySelector('#article-intro').hidden = true;
-      document.querySelector('#summary').classList.add('article-summary-plain');
-    }
+    document.querySelector('#article-intro').hidden = true;
+    document.querySelector('#summary').classList.add('article-summary-plain');
     renderFullArticle(content);
   }
 
