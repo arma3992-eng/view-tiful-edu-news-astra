@@ -1,6 +1,6 @@
 """Read-only school queries. Vercel provides credentials via server environment only."""
 import os
-from contextlib import closing
+from contextlib import closing, contextmanager
 
 import psycopg
 from psycopg.rows import dict_row
@@ -9,19 +9,45 @@ from fastapi import FastAPI, HTTPException, Query
 app = FastAPI(title="뷰티풀 에듀 학교 통계 API", docs_url=None, redoc_url=None, openapi_url=None)
 
 
+class _DBDiagnosticError(Exception):
+    pass
+
+
+@contextmanager
+def _diagnostic_stage(stage):
+    try:
+        yield
+    except _DBDiagnosticError:
+        raise
+    except Exception as error:
+        # Never log exception text, traceback, environment values or connection info.
+        print(f"DB diagnostic stage={stage}, error={type(error).__name__}", flush=True)
+        raise _DBDiagnosticError() from None
+
+
 def get_connection():
-    connection = psycopg.connect(
-        host=os.environ["SUPABASE_DB_HOST"],
-        port=int(os.getenv("SUPABASE_DB_PORT", "5432")),
-        user=os.environ["SUPABASE_DB_USER"],
-        password=os.environ["SUPABASE_DB_PASSWORD"],
-        dbname=os.environ["SUPABASE_DB_NAME"],
-        connect_timeout=5,
-        sslmode="require",
-        client_encoding="UTF8",
-        row_factory=dict_row,
-    )
-    connection.read_only = True
+    with _diagnostic_stage("env_read"):
+        host = os.environ["SUPABASE_DB_HOST"]
+        port_raw = os.getenv("SUPABASE_DB_PORT", "5432")
+        user = os.environ["SUPABASE_DB_USER"]
+        password = os.environ["SUPABASE_DB_PASSWORD"]
+        dbname = os.environ["SUPABASE_DB_NAME"]
+    with _diagnostic_stage("port_parse"):
+        port = int(port_raw)
+    with _diagnostic_stage("psycopg_connect"):
+        connection = psycopg.connect(
+            host=host,
+            port=port,
+            user=user,
+            password=password,
+            dbname=dbname,
+            connect_timeout=5,
+            sslmode="require",
+            client_encoding="UTF8",
+            row_factory=dict_row,
+        )
+    with _diagnostic_stage("set_read_only"):
+        connection.read_only = True
     return connection
 
 
@@ -69,11 +95,11 @@ def school_stats(year: int = Query(default=2026, ge=2000, le=2100)):
 
     try:
         with closing(get_connection()) as connection:
-            with closing(connection.cursor()) as cursor:
+            with _diagnostic_stage("execute_query"), closing(connection.cursor()) as cursor:
                 cursor.execute(sql, (year,))
-                rows = cursor.fetchall()
-    except (psycopg.Error, KeyError, ValueError) as error:
-        print(f"PostgreSQL 오류 코드: {getattr(error, 'sqlstate', None) or type(error).__name__}")
+                with _diagnostic_stage("fetch_rows"):
+                    rows = cursor.fetchall()
+    except _DBDiagnosticError:
         raise HTTPException(
             status_code=503,
             detail="DB 조회에 실패했습니다. 터미널의 오류 코드를 확인하세요.",
@@ -114,11 +140,11 @@ def school_list(
 
     try:
         with closing(get_connection()) as connection:
-            with closing(connection.cursor()) as cursor:
+            with _diagnostic_stage("execute_query"), closing(connection.cursor()) as cursor:
                 cursor.execute(sql, tuple(values))
-                rows = cursor.fetchall()
-    except (psycopg.Error, KeyError, ValueError) as error:
-        print(f"PostgreSQL 오류 코드: {getattr(error, 'sqlstate', None) or type(error).__name__}")
+                with _diagnostic_stage("fetch_rows"):
+                    rows = cursor.fetchall()
+    except _DBDiagnosticError:
         raise HTTPException(
             status_code=503,
             detail="학교 목록 조회에 실패했습니다.",
