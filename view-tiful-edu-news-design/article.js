@@ -10,6 +10,37 @@
     return;
   }
 
+  const existingArticleTimestamps = {
+    'admissions-career-credit-20261016': {
+      publishedAt: '2026-10-21T06:05:45+09:00',
+      updatedAt: '2026-10-22T16:04:53+09:00'
+    },
+    'digital-ai-innovation-university-20261015': {
+      publishedAt: '2026-10-21T06:05:45+09:00',
+      updatedAt: '2026-10-22T16:04:53+09:00'
+    },
+    'gifted-dropout-20261015': {
+      publishedAt: '2026-10-21T06:05:45+09:00',
+      updatedAt: '2026-10-22T16:04:53+09:00'
+    },
+    'digital-ai-focus-schools-2026': {
+      publishedAt: '2026-10-21T10:35:58+09:00',
+      updatedAt: '2026-10-22T21:02:26+09:00'
+    },
+    'admissions-perfect-scorers-20261022': {
+      publishedAt: '2026-10-22T21:02:26+09:00'
+    },
+    'digital-bcg-ai-pioneers-20261022': {
+      publishedAt: '2026-10-22T21:02:26+09:00'
+    },
+    'school-policy-free-tuition-20261022': {
+      publishedAt: '2026-10-22T21:02:26+09:00'
+    },
+    'school-policy-national-university-funding-20261022': {
+      publishedAt: '2026-10-22T21:02:26+09:00'
+    }
+  };
+
   document.body.dataset.navCategory = story.navCategory;
   document.title = story.title.replace(/<br\s*\/?\s*>/gi, ' ') + ' | 뷰티풀 에듀';
   document.querySelector('#article-category').textContent = story.category;
@@ -56,22 +87,16 @@
     const parts = [];
     if (story.readingLabel) parts.push(story.readingLabel);
 
-    const publishedAt = story.publishedAt || inferPublishedDateFromId(story.id);
-    const publishedLabel = formatKstDateTime(publishedAt);
+    const fallback = existingArticleTimestamps[story.id] || {};
+    const publishedLabel = formatKstDateTime(story.publishedAt || fallback.publishedAt);
     if (publishedLabel) parts.push(`게시 ${publishedLabel}`);
 
-    const updatedLabel = formatKstDateTime(story.updatedAt);
+    const updatedLabel = formatKstDateTime(story.updatedAt || fallback.updatedAt);
     if (updatedLabel && updatedLabel !== publishedLabel) {
       parts.push(`수정 ${updatedLabel}`);
     }
 
     return parts.join(' · ');
-  }
-
-  function inferPublishedDateFromId(articleId) {
-    const match = String(articleId || '').match(/-(20\d{2})(\d{2})(\d{2})$/);
-    if (!match) return '';
-    return `${match[1]}-${match[2]}-${match[3]}`;
   }
 
   function formatKstDateTime(value) {
