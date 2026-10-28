@@ -146,6 +146,116 @@
         {"name": "교육부 보도자료", "url": "https://www.moe.go.kr/boardCnts/viewRenew.do?boardID=294&boardSeq=105557&lev=0&m=020402&opType=N&page=1&s=moe&statusYN=W"},
         {"name": "대한민국 정책브리핑", "url": "https://www.korea.kr/news/policyNewsView.do?newsId=148960798"}
       ]
+    },
+    "admissions-regional-doctor-eligibility-20261022": {
+      "approval_id": "user-approved-20261029",
+      "article_title": "지역의사제 지원자격의 빈틈…‘각종학교’ 삼육중 4곳은 왜 빠졌나",
+      "reader_guide": {
+        "enabled": true,
+        "audiences": [
+          {
+            "label": "학생",
+            "title": "학교 이름보다 법적 학교 유형과 모집요강을 확인하기",
+            "sections": [
+              {"type": "check", "items": [{"text": "지역의사제 지원을 생각한다면 학교 명칭만 보지 말고 학교의 법적 유형과 대학별 지원자격을 함께 확인하세요."}]},
+              {"type": "prepare", "items": [{"text": "학교 소재지·거주기간 등 다른 지역요건도 함께 적용되므로 지원 대학의 최신 모집요강을 기준으로 준비해야 합니다."}]}
+            ]
+          },
+          {
+            "label": "학부모",
+            "title": "각종학교 재학 여부가 대입 자격에 미치는 영향 확인하기",
+            "sections": [
+              {"type": "check", "items": [{"text": "자녀 학교가 각종학교라면 지역의사제 지원 가능 여부를 대학 입학처에 직접 확인하는 것이 안전합니다."}]},
+              {"type": "think", "items": [{"text": "교육부와 보건복지부가 협의하겠다고 밝혔지만 아직 제도 개선이 확정됐다고 단정할 단계는 아닙니다."}]}
+            ]
+          },
+          {
+            "label": "교사",
+            "title": "진학상담에서 학교의 법적 분류까지 확인하기",
+            "sections": [
+              {"type": "action", "items": [{"text": "지역의사제 상담 시 학교명이나 학력 인정 여부만으로 판단하지 말고 현행 시행령과 대학 모집요강을 함께 확인하세요."}]},
+              {"type": "check", "items": [{"text": "시행령 개정이나 2027학년도 전형지침 변경이 발표되는지 후속 공지를 확인할 필요가 있습니다."}]}
+            ]
+          }
+        ]
+      },
+      "sources": [
+        {"name": "지역의사법 시행령", "url": "https://www.law.go.kr/lsLinkCommonInfo.do?chrClsCd=010202&lspttninfSeq=198585"},
+        {"name": "초·중등교육법 제2조", "url": "https://www.law.go.kr/LSW/lsLinkCommonInfo.do?lsJoLnkSeq=1031285139"},
+        {"name": "연합뉴스 국정감사 보도", "url": "https://www.yna.co.kr/view/AKR20261021142600054"}
+      ]
+    },
+    "school-policy-national-education-plan-delay-20261022": {
+      "approval_id": "user-approved-20261029",
+      "article_title": "국가교육발전계획 시안, 10월 말→연내로…대입 개편은 아직 ‘논의 중’",
+      "reader_guide": {
+        "enabled": true,
+        "audiences": [
+          {
+            "label": "학생",
+            "title": "검토 중인 대입 의제를 확정 정책으로 받아들이지 않기",
+            "sections": [
+              {"type": "check", "items": [{"text": "수능 서·논술형 등은 현재 논의 단계이므로 현행 대입 준비를 갑자기 바꾸기보다 공식 시안과 적용 학년을 확인하세요."}]}
+            ]
+          },
+          {
+            "label": "학부모",
+            "title": "시안·최종안·시행계획을 구분해 보기",
+            "sections": [
+              {"type": "check", "items": [{"text": "연내 공개되는 시안은 최종 정책이 아니며 이후 의견수렴과 숙의를 거쳐 내용이 달라질 수 있습니다."}]},
+              {"type": "prepare", "items": [{"text": "실제 자녀 학년에 영향을 주는지는 적용 시기와 경과조치가 제시된 뒤 판단해야 합니다."}]}
+            ]
+          },
+          {
+            "label": "교사",
+            "title": "정책 논의와 확정된 진학지도를 분리하기",
+            "sections": [
+              {"type": "action", "items": [{"text": "학생·학부모 상담에서 검토 의제와 확정된 대입제도를 구분해 안내하고, 공식 시안 공개 이후 적용 범위를 다시 확인하세요."}]}
+            ]
+          }
+        ]
+      },
+      "sources": [
+        {"name": "국가교육위원회 보도자료", "url": "https://www.ne.go.kr/user/bbs/BD_selectBbsList.do?q_bbsSn=1004"},
+        {"name": "국가교육위원회 설명자료", "url": "https://www.ne.go.kr/user/bbs/BD_selectBbs.do?q_bbsDocNo=20260907095916359&q_bbsSn=1004"},
+        {"name": "연합뉴스 관련 보도", "url": "https://www.yna.co.kr/view/AKR20261021160351530"}
+      ]
+    },
+    "school-policy-gangwon-industry-education-20261022": {
+      "approval_id": "user-approved-20261029",
+      "article_title": "강원 특성화고, AI·드론·청정에너지와 연결…고교학점제도 대학과 공동 설계",
+      "reader_guide": {
+        "enabled": true,
+        "audiences": [
+          {
+            "label": "학생",
+            "title": "학과 이름보다 실제 과목·실습·진로 연결을 확인하기",
+            "sections": [
+              {"type": "check", "items": [{"text": "관심 학교의 학과 개편과 새 과목이 실제로 확정됐는지, 대학·기업 연계 실습이 어떻게 운영되는지 확인하세요."}]},
+              {"type": "think", "items": [{"text": "‘미래산업’이라는 이름보다 졸업 뒤 진학·취업 경로와 배우는 내용이 자신의 진로에 맞는지가 더 중요합니다."}]}
+            ]
+          },
+          {
+            "label": "학부모",
+            "title": "지역산업 연계가 학생의 실제 선택지로 이어지는지 보기",
+            "sections": [
+              {"type": "check", "items": [{"text": "학과 개편 대상 학교, 기업·대학 참여 방식, 취업·진학 연계가 후속 계획에서 어떻게 구체화되는지 살펴보세요."}]}
+            ]
+          },
+          {
+            "label": "교사",
+            "title": "고교학점제 과목을 지역 진로 경로와 연결해 설계하기",
+            "sections": [
+              {"type": "prepare", "items": [{"text": "대학·산업체와 공동 개발되는 과목이 학교 교육과정 안에서 지속적으로 운영될 수 있는지, 교원·시설 지원을 함께 점검할 필요가 있습니다."}]},
+              {"type": "check", "items": [{"text": "현재는 협력 합의 단계이므로 대상 학교·학과·예산이 확정된 것으로 안내하지 않도록 주의하세요."}]}
+            ]
+          }
+        ]
+      },
+      "sources": [
+        {"name": "강원특별자치도교육청 공식 보도자료", "url": "https://open.gwe.go.kr/promotion/bbs/view.do?bbsSn=57091&key=bTI0MTEyMjUyOTQ2NDA%3D&refSn=31&referer="},
+        {"name": "연합뉴스 관련 보도", "url": "https://www.yna.co.kr/view/AKR20261021152100062"}
+      ]
     }
   }
 }
