@@ -14,7 +14,7 @@
   document.title = story.title.replace(/<br\s*\/?\s*>/gi, ' ') + ' | 뷰티풀 에듀';
   document.querySelector('#article-category').textContent = story.category;
   document.querySelector('#article-title').innerHTML = story.title;
-  document.querySelector('#article-meta').textContent = story.readingLabel;
+  document.querySelector('#article-meta').textContent = buildArticleMeta(story);
 
   const image = document.querySelector('#article-image');
   image.src = `assets/${story.image}.jpg`;
@@ -50,6 +50,52 @@
 
   if (location.hash === '#summary') {
     requestAnimationFrame(() => document.querySelector('#summary').scrollIntoView({ block: 'start' }));
+  }
+
+  function buildArticleMeta(story) {
+    const parts = [];
+    if (story.readingLabel) parts.push(story.readingLabel);
+
+    const publishedAt = story.publishedAt || inferPublishedDateFromId(story.id);
+    const publishedLabel = formatKstDateTime(publishedAt);
+    if (publishedLabel) parts.push(`게시 ${publishedLabel}`);
+
+    const updatedLabel = formatKstDateTime(story.updatedAt);
+    if (updatedLabel && updatedLabel !== publishedLabel) {
+      parts.push(`수정 ${updatedLabel}`);
+    }
+
+    return parts.join(' · ');
+  }
+
+  function inferPublishedDateFromId(articleId) {
+    const match = String(articleId || '').match(/-(20\d{2})(\d{2})(\d{2})$/);
+    if (!match) return '';
+    return `${match[1]}-${match[2]}-${match[3]}`;
+  }
+
+  function formatKstDateTime(value) {
+    if (!value) return '';
+    const raw = String(value).trim();
+    const dateOnly = raw.match(/^(20\d{2})-(\d{2})-(\d{2})$/);
+    if (dateOnly) return `${dateOnly[1]}.${dateOnly[2]}.${dateOnly[3]}`;
+
+    const date = new Date(raw);
+    if (Number.isNaN(date.getTime())) return '';
+
+    const values = Object.fromEntries(
+      new Intl.DateTimeFormat('ko-KR', {
+        timeZone: 'Asia/Seoul',
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false
+      }).formatToParts(date).map(part => [part.type, part.value])
+    );
+
+    return `${values.year}.${values.month}.${values.day} ${values.hour}:${values.minute}`;
   }
 
   function renderFullArticle(content) {
