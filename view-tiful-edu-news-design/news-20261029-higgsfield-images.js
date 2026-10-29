@@ -1,7 +1,13 @@
 'use strict';
 (() => {
-  // Articles that already have a Canva representative image are intentionally
-  // excluded here. Their existing story.canvaImage value remains the priority.
+  const CANVA_IMAGES = {
+    'school-policy-rural-good-schools-20261029': 'assets/canva-rural.jpg',
+    'school-policy-tuition-review-transparency-20261028': 'assets/canva-tuition.jpg',
+    'admissions-2028-reform-competition-20261027': 'assets/canva-admissions.jpg',
+    'school-policy-seoul-org-reform-20261027': 'assets/canva-seoul.jpg',
+    'admissions-ai-glasses-followup-20261027': 'assets/canva-smartglasses.jpg'
+  };
+
   const HIGGSFIELD_IMAGES = {
     'admissions-medical-additional-admissions-20261027': 'https://d8j0ntlcm91z4.cloudfront.net/user_3LMTOHbGD7mnmCVVk0yMzzEZXzd/hf_20261029_084557_c404d184-8d70-4fb6-8716-a6de40622e92.png',
     'digital-ai-essay-evaluation-effect-20261025': 'https://d8j0ntlcm91z4.cloudfront.net/user_3LMTOHbGD7mnmCVVk0yMzzEZXzd/hf_20261029_084624_6c8510c8-e5b3-4ced-bae8-b2e45db2e80a.png',
@@ -19,20 +25,35 @@
 
   const storyById = new Map((window.ARCHIVE_ARTICLES || []).map(story => [story.id, story]));
 
+  for (const [id, url] of Object.entries(CANVA_IMAGES)) {
+    const story = storyById.get(id);
+    if (story) story.canvaImage = url;
+  }
+
   for (const [id, url] of Object.entries(HIGGSFIELD_IMAGES)) {
     const story = storyById.get(id);
     if (story) story.higgsfieldImage = url;
   }
 
+  const preferredImage = id => CANVA_IMAGES[id] || HIGGSFIELD_IMAGES[id] || '';
+
   const setArticleImage = (img, id) => {
-    const url = HIGGSFIELD_IMAGES[id];
-    if (!img || !url || img.dataset.higgsfieldImage === url) return;
+    const url = preferredImage(id);
+    if (!img || !url || img.dataset.articleImage === url) return;
 
     const story = storyById.get(id);
     const fallback = story?.image ? `assets/${story.image}.jpg` : '';
-    img.dataset.higgsfieldImage = url;
+    img.dataset.articleImage = url;
     img.src = url;
     if (story?.alt) img.alt = story.alt;
+
+    if (CANVA_IMAGES[id]) {
+      img.dataset.imageSource = 'canva';
+      delete img.dataset.higgsfieldImage;
+    } else {
+      img.dataset.imageSource = 'higgsfield';
+      img.dataset.higgsfieldImage = url;
+    }
 
     img.addEventListener('error', () => {
       if (fallback && img.src !== new URL(fallback, location.href).href) {
@@ -48,7 +69,7 @@
     document.querySelectorAll('a[href*="article.html?id="]').forEach(link => {
       try {
         const id = new URL(link.href, location.href).searchParams.get('id');
-        if (!id || !HIGGSFIELD_IMAGES[id]) return;
+        if (!id || !preferredImage(id)) return;
         const img = link.querySelector('img') || link.closest('article')?.querySelector('img');
         setArticleImage(img, id);
       } catch (_) {}
@@ -65,7 +86,6 @@
     });
   };
 
-  // This script is loaded after the page render scripts, so apply once immediately.
   applyImages();
 
   document.addEventListener('DOMContentLoaded', () => {
