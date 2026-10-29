@@ -61,9 +61,7 @@
     });
   };
 
-  document.addEventListener('DOMContentLoaded', () => {
-    requestAnimationFrame(applyImages);
-
+  const observeLists = () => {
     const roots = [document.querySelector('#article-list'), document.querySelector('#archive-grid')].filter(Boolean);
     roots.forEach(root => {
       new MutationObserver(() => requestAnimationFrame(applyImages)).observe(root, {
@@ -71,5 +69,14 @@
         subtree: true
       });
     });
+  };
+
+  // This script is loaded after the page render scripts, so apply once immediately.
+  applyImages();
+
+  document.addEventListener('DOMContentLoaded', () => {
+    applyImages();
+    observeLists();
+    requestAnimationFrame(applyImages);
   });
 })();
