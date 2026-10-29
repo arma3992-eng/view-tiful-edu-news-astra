@@ -1,41 +1,32 @@
 const CANVA_IMAGES = {
-  rural: 'https://media.canva.com/v2/document-image/hash:-858231996/height:335/id:DAHZYHM02sI/type:B/width:596?brand=BAHZUUXHLWI&csig=AAAAAAAAAAAAAAAAAAAAANAMJcZgUw_8elIBj_uIW94wKr2Dt7gKN3TXOMLZ2orX&exp=1793269288&fallback=https%3A%2F%2Fs3.amazonaws.com%2Fdocument-export.canva.com%2FM02sI%2FDAHZYHM02sI%2F2%2Fthumbnail%2F0001.png%3FX-Amz-Algorithm%3DAWS4-HMAC-SHA256%26X-Amz-Credential%3DAKIAQYCGKMUHW27RK5IK%252F20261029%252Fus-east-1%252Fs3%252Faws4_request%26X-Amz-Date%3D20261029T075126Z%26X-Amz-Expires%3D6842%26X-Amz-Signature%3Dfe64cd2da7fa1f6df7cff7c463d4b2ad584064596f95e7d70c21f2ca147ad419%26X-Amz-SignedHeaders%3Dhost%26response-expires%3DThu%252C%252029%2520Oct%25202026%252009%253A45%253A28%2520GMT&osig=AAAAAAAAAAAAAAAAAAAAAAlaTrtD8CbGiNmC8Yt4cRjKBTVL2w-GmiKx5ob3DE1G&page=1&signed=brand%2Cfallback%2Cpage%2Cversion&signer=document-rpc&version=2',
-  tuition: 'https://media.canva.com/v2/document-image/hash:1788095817/height:335/id:DAHZYDwDC9M/type:B/width:596?brand=BAHZUUXHLWI&csig=AAAAAAAAAAAAAAAAAAAAAI4kEOsU2txsoSp1MRToOsbSNNBzgJeWWhN0hcw-tsiI&exp=1793269490&fallback=https%3A%2F%2Fs3.amazonaws.com%2Fdocument-export.canva.com%2FwDC9M%2FDAHZYDwDC9M%2F2%2Fthumbnail%2F0001.png%3FX-Amz-Algorithm%3DAWS4-HMAC-SHA256%26X-Amz-Credential%3DAKIAQYCGKMUHW27RK5IK%252F20261028%252Fus-east-1%252Fs3%252Faws4_request%26X-Amz-Date%3D20261028T204334Z%26X-Amz-Expires%3D46295%26X-Amz-Signature%3D0e771e59bedd4b1a5753fc35fbe387cedac609c90d74e8b4ee704264e33ea4ef%26X-Amz-SignedHeaders%3Dhost%26response-expires%3DThu%252C%252029%2520Oct%25202026%252009%253A35%253A09%2520GMT&osig=AAAAAAAAAAAAAAAAAAAAACapbufc-21nNBZoz19s87oJRglVvMHk-t1BSiSKbNz0&page=1&signed=brand%2Cfallback%2Cpage%2Cversion&signer=document-rpc&version=2',
-  admissions: 'https://media.canva.com/v2/document-image/hash:820917204/height:335/id:DAHZYEZDx_w/type:B/width:596?brand=BAHZUUXHLWI&csig=AAAAAAAAAAAAAAAAAAAAAJ3TwTcMCXnxgF5N5zQc9Ri7aOWNV2NT5KF-p4JAYIcm&exp=1793268429&fallback=https%3A%2F%2Fs3.amazonaws.com%2Fdocument-export.canva.com%2FZDx_w%2FDAHZYEZDx_w%2F2%2Fthumbnail%2F0001.png%3FX-Amz-Algorithm%3DAWS4-HMAC-SHA256%26X-Amz-Credential%3DAKIAQYCGKMUHW27RK5IK%252F20261028%252Fus-east-1%252Fs3%252Faws4_request%26X-Amz-Date%3D20261028T180637Z%26X-Amz-Expires%3D58402%26X-Amz-Signature%3D13f08884da766cd0ed1a070ec4342675fc63322642892a5476994ce55e29a0ab%26X-Amz-SignedHeaders%3Dhost%26response-expires%3DThu%252C%252029%2520Oct%25202026%252010%253A19%253A59%2520GMT&osig=AAAAAAAAAAAAAAAAAAAAAE_SdSaq9Dz8BDgjqg_4yIahwDqfbGJeEDpsdvfuWEnz&page=1&signed=brand%2Cfallback%2Cpage%2Cversion&signer=document-rpc&version=2',
-  seoul: 'https://media.canva.com/v2/document-image/hash:225764367/height:335/id:DAHZYEdacl0/type:B/width:596?brand=BAHZUUXHLWI&csig=AAAAAAAAAAAAAAAAAAAAAKz7F-sy6yCvse2Ff92GdHjl04Qzqc6Wf3BsBl7RTnwi&exp=1793266921&fallback=https%3A%2F%2Fs3.amazonaws.com%2Fdocument-export.canva.com%2Fdacl0%2FDAHZYEdacl0%2F2%2Fthumbnail%2F0001.png%3FX-Amz-Algorithm%3DAWS4-HMAC-SHA256%26X-Amz-Credential%3DAKIAQYCGKMUHW27RK5IK%252F20261028%252Fus-east-1%252Fs3%252Faws4_request%26X-Amz-Date%3D20261028T213906Z%26X-Amz-Expires%3D44728%26X-Amz-Signature%3D7a68655451053e464bae06908aaf5b9f08d37b68c45e2193acd1e0ded7452379%26X-Amz-SignedHeaders%3Dhost%26response-expires%3DThu%252C%252029%2520Oct%25202026%252010%253A04%253A34%2520GMT&osig=AAAAAAAAAAAAAAAAAAAAAKKlHoFpgTJfhck-EQHW-Hj85RLnDk-VEed8ww1P4QoL&page=1&signed=brand%2Cfallback%2Cpage%2Cversion&signer=document-rpc&version=2',
-  smartglasses: 'https://media.canva.com/v2/document-image/hash:1322506464/height:335/id:DAHZYKnaTyg/type:B/width:596?brand=BAHZUUXHLWI&csig=AAAAAAAAAAAAAAAAAAAAAHdB13FTJzxbYFOyDLpJogf7NoNvY_pFLelwZcPmzMrW&exp=1793267299&fallback=https%3A%2F%2Fs3.amazonaws.com%2Fdocument-export.canva.com%2FnaTyg%2FDAHZYKnaTyg%2F2%2Fthumbnail%2F0001.png%3FX-Amz-Algorithm%3DAWS4-HMAC-SHA256%26X-Amz-Credential%3DAKIAQYCGKMUHW27RK5IK%252F20261028%252Fus-east-1%252Fs3%252Faws4_request%26X-Amz-Date%3D20261028T084518Z%26X-Amz-Expires%3D90593%26X-Amz-Signature%3Dcbcb3a5d53223b87853fecb479a025881d0bc6b023a7ad2b42d92e2c1fbf4872%26X-Amz-SignedHeaders%3Dhost%26response-expires%3DThu%252C%252029%2520Oct%25202026%252009%253A55%253A11%2520GMT&osig=AAAAAAAAAAAAAAAAAAAAAJ5wjC-zmC-C730JWRLiR8HJSp1bcSza0EfPVk6Qfhh3&page=1&signed=brand%2Cfallback%2Cpage%2Cversion&signer=document-rpc&version=2'
+  rural: 'https://storage.googleapis.com/firecrawl-scrape-media/screenshot-589f587a-fd68-4301-bd15-fa99dbd1162b.png?GoogleAccessId=scrape-bucket-accessor%40firecrawl.iam.gserviceaccount.com&Expires=1793867529&Signature=QfGsHAIXoUsYgdmuIOIVP4zXs8urAsWNw1%2Bv0jl%2FVxbo%2BA3CKPj3bt1Fbv36Y1nvhSx%2FRFyaNuoLyONuJqaNzcR7ILvsMo83VoniSUzHVHqSy6Ca7wF9xWONsYwa7EUHInzXw1ddPyYeaCXNONVvgkqI2h%2FR4TGUWhX9MAwEFHpby7SeA8ktX28f8pPGA4puHV0yUxPCh4XaCAr4QrdJKcs9QKjgXchzR7Scw%2FY7spz3YLyfv1Sf52Yrj%2BYE9OOmj3q297s76Qr%2FSKwaBpoxjdNjI0QczLHnXInge%2FdcXTqUMPSna4eeo%2BO1nZp%2FXZiy3Ux8SV%2BkZgnWebZVQGq9vA%3D%3D',
+  tuition: 'https://storage.googleapis.com/firecrawl-scrape-media/screenshot-05c3f01b-9ff8-4177-8830-751d20709151.png?GoogleAccessId=scrape-bucket-accessor%40firecrawl.iam.gserviceaccount.com&Expires=1793867552&Signature=S7IYqRZUdTwBDsYdDDAbPCP%2BFb1Fve1ucrEMkSMPuBuS14MbaFrPgUU9uk%2F8pxcbXln%2FJ3ITRCTv11nI3OxWs66zD55Jo2FntS%2FvqfbRGlvs4cY6VIfWUtjErAvsfvQk7Xf4OyquMVj%2Ftsc3nGdXAprRiDlhpe6OhssgJc0uyOhiS1h3Yo0lFh6coLf%2BzovXOE81vCz4oaDjRDtaygJXFoa3%2F1AvxOouvFScb1RfUTgOfjy4GXTMLyAZlHDIn9bHlJIzFlLXTpQnyQcjSM3pSeLHUdfjLpDBFFbBCJ%2FeFlWQEHcS24bDU2SVreFq%2B0Cc%2Bs2cK9%2BjLTylOOig02kH5Q%3D%3D',
+  admissions: 'https://storage.googleapis.com/firecrawl-scrape-media/screenshot-e3b4938f-38db-42eb-86f2-6390a1f5325e.png?GoogleAccessId=scrape-bucket-accessor%40firecrawl.iam.gserviceaccount.com&Expires=1793867559&Signature=SGDHTVgCDTv6yQ4mHLTVh19zZMRi8xoN9HwY2Ibjhv6QOOjoFSWP%2FJgnxzSPHHG1Ty8%2F9Z9tmRyFGeRGI1rDSvylW%2F4YK3YvFWq3bXtvYOyQmt6hrh1qBe%2B6JKZ4rV8nNDJQ2kaCjzcPIPNvn9cjEkcRjFv2Ob%2BmUkRxzvDP7Bsk2aKPLMXzuHSBBjb8yoig6fPqfya%2F%2FmXUg9CXKyMXjN7RdFfq%2BFSx28ctsoeYQ0zHMcihUeEn1lGHU26xzDy67jdou0nbQhIC9iO8JKxz7rCRSr8NtDYAfsSBUVJ%2FeMCmRM%2Fo%2Fg4RenkwNrVB6BW76F4Dvfqkoo%2Fvli8YzmjwgA%3D%3D',
+  seoul: 'https://storage.googleapis.com/firecrawl-scrape-media/screenshot-478dd401-2431-4ab3-805e-bce39062c2dc.png?GoogleAccessId=scrape-bucket-accessor%40firecrawl.iam.gserviceaccount.com&Expires=1793867564&Signature=WMUm0wYpxp1Laa9DhAtxDWxZ6w0eClwEMMkMbAuraBMgd9olJHTA8dLnvViQraIxl93TqEAF6fbCOgTI4%2BWLxqDwupAYHLR9UQO5EFDum6LsjM0ktvsBogZTlORh%2ByJH2dL4l7lwka9u1vbhonn%2BEwrivfCaTWxLs20A0rqS%2BttnGdOKjYVcbj%2FhgPWnLR9FBnP53uq2TgoAOPN9dd%2B%2FHaag1CtxF%2BDduMpuNGnbUBt7kFN3wVqMfDA1WFG2QVnLV7XV9rE1%2FKFbM3GCKlWMFGSHSEPJMfcBjODF%2Byzy7YEvfYBx8KNTD4I9AZa%2Fh9emi6l1l9KVwjZfVJSmovBFcg%3D%3D',
+  smartglasses: 'https://storage.googleapis.com/firecrawl-scrape-media/screenshot-8b2687e7-5ab7-41c4-ab71-2e4709253119.png?GoogleAccessId=scrape-bucket-accessor%40firecrawl.iam.gserviceaccount.com&Expires=1793867571&Signature=KMT9eYwpRYt1bCMoPXAbLptc03X%2FZGhNyWyFi6m53H28T55335gvxEosxymh4BPqYgXMMxZBx45rhQ%2BaZFLIS44g%2FjbTNORRNBMoPFHmMz9PEH6GTNuH9ca6b%2FnJtgoBEheke7dYRDR6gk9Ah5J%2FYylMHVG7O9IAWnAnG1Hea3Kt3XS5zIqBt9sM8U5zLUNJBVxKlQ6ZZK6uJr2MP6%2FVc1Egy%2FYVpzogLdLk4b0pcGbNszdoHNgo0QI%2BoJexBmML6VFjpEj4sE6DF1r%2BWuN9px%2FTGittEh7XcQdIQm6FA%2Bnr0i7T3i5nif1rpgVfqWcrolrkhOU6dznEGtRgp3eXwg%3D%3D'
 };
 
 module.exports = async (req, res) => {
   const key = String(req.query?.key || '');
   const source = CANVA_IMAGES[key];
-
-  if (!source) {
-    res.status(404).json({ error: 'Unknown Canva image' });
-    return;
-  }
+  if (!source) return res.status(404).json({ error: 'Unknown Canva image' });
 
   try {
     const response = await fetch(source, { redirect: 'follow' });
-    if (!response.ok) {
-      res.status(502).json({ error: 'Canva image unavailable', status: response.status });
-      return;
-    }
+    if (!response.ok) return res.status(502).json({ error: 'Canva image unavailable', status: response.status });
 
     const contentType = response.headers.get('content-type') || 'image/png';
     const body = Buffer.from(await response.arrayBuffer());
-
     if (req.query?.format === 'base64') {
       res.setHeader('Cache-Control', 'no-store');
-      res.status(200).json({ key, contentType, base64: body.toString('base64') });
-      return;
+      return res.status(200).json({ key, contentType, base64: body.toString('base64') });
     }
 
     res.setHeader('Content-Type', contentType);
     res.setHeader('Cache-Control', 'public, s-maxage=3600, stale-while-revalidate=86400');
-    res.status(200).send(body);
+    return res.status(200).send(body);
   } catch (error) {
     console.error('Canva image proxy error:', error);
-    res.status(502).json({ error: 'Canva image unavailable' });
+    return res.status(502).json({ error: 'Canva image unavailable' });
   }
 };
