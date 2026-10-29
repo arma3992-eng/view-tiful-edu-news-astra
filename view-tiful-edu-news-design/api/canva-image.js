@@ -18,7 +18,9 @@ module.exports = async (req, res) => {
   try {
     const response = await fetch(source, {
       redirect: 'follow',
-      headers: { 'User-Agent': 'View-tiful-Edu/1.0' }
+      headers: {
+        Accept: 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8'
+      }
     });
 
     if (!response.ok) {
