@@ -1,11 +1,8 @@
 'use strict';
 (() => {
+  // Articles that already have a Canva representative image are intentionally
+  // excluded here. Their existing story.canvaImage value remains the priority.
   const HIGGSFIELD_IMAGES = {
-    'school-policy-rural-good-schools-20261029': 'https://d8j0ntlcm91z4.cloudfront.net/user_3LMTOHbGD7mnmCVVk0yMzzEZXzd/hf_20261029_084522_022bf5cc-2dc5-4b71-af4f-5d26ed74cefb.png',
-    'school-policy-tuition-review-transparency-20261028': 'https://d8j0ntlcm91z4.cloudfront.net/user_3LMTOHbGD7mnmCVVk0yMzzEZXzd/hf_20261029_084522_f59fea0a-7b83-477e-8954-de2ae4f461d4.png',
-    'admissions-2028-reform-competition-20261027': 'https://d8j0ntlcm91z4.cloudfront.net/user_3LMTOHbGD7mnmCVVk0yMzzEZXzd/hf_20261029_084522_18c307db-f287-440a-9e0f-6d3885c84382.png',
-    'school-policy-seoul-org-reform-20261027': 'https://d8j0ntlcm91z4.cloudfront.net/user_3LMTOHbGD7mnmCVVk0yMzzEZXzd/hf_20261029_084557_d44c0183-91af-4060-8a08-d66972ee5d83.png',
-    'admissions-ai-glasses-followup-20261027': 'https://d8j0ntlcm91z4.cloudfront.net/user_3LMTOHbGD7mnmCVVk0yMzzEZXzd/hf_20261029_084726_4fd13521-a53d-4bc6-9730-6e50f37d9669.png',
     'admissions-medical-additional-admissions-20261027': 'https://d8j0ntlcm91z4.cloudfront.net/user_3LMTOHbGD7mnmCVVk0yMzzEZXzd/hf_20261029_084557_c404d184-8d70-4fb6-8716-a6de40622e92.png',
     'digital-ai-essay-evaluation-effect-20261025': 'https://d8j0ntlcm91z4.cloudfront.net/user_3LMTOHbGD7mnmCVVk0yMzzEZXzd/hf_20261029_084624_6c8510c8-e5b3-4ced-bae8-b2e45db2e80a.png',
     'admissions-naver-education-search-20261024': 'https://d8j0ntlcm91z4.cloudfront.net/user_3LMTOHbGD7mnmCVVk0yMzzEZXzd/hf_20261029_084624_e57c8a6f-af13-4acf-a055-4190a8b96f70.png',
@@ -24,10 +21,7 @@
 
   for (const [id, url] of Object.entries(HIGGSFIELD_IMAGES)) {
     const story = storyById.get(id);
-    if (story) {
-      story.higgsfieldImage = url;
-      story.canvaImage = url;
-    }
+    if (story) story.higgsfieldImage = url;
   }
 
   const setArticleImage = (img, id) => {
