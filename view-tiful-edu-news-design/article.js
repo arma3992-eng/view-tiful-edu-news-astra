@@ -48,8 +48,16 @@
   document.querySelector('#article-meta').textContent = buildArticleMeta(story);
 
   const image = document.querySelector('#article-image');
-  image.src = `assets/${story.image}.jpg`;
-  image.alt = story.alt;
+  const visual = image.closest('.article-visual');
+  if (story.image) {
+    image.src = `assets/${story.image}.jpg`;
+    image.alt = story.alt || '';
+    if (visual) visual.hidden = false;
+  } else {
+    image.removeAttribute('src');
+    image.alt = '';
+    if (visual) visual.hidden = true;
+  }
 
   document.querySelector('#article-intro').textContent = story.description
     ? story.description.replace(/<br\s*\/?\s*>/gi, ' ')
