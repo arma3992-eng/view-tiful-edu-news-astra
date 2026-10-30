@@ -20,6 +20,48 @@
     return map;
   };
 
+  function loadLatestNews() {
+    if (window.__VIEWTIFUL_NEWS_20261030__) return Promise.resolve();
+    return new Promise(resolve => {
+      const existing = document.querySelector('script[data-news-20261030]');
+      if (existing) {
+        if (window.__VIEWTIFUL_NEWS_20261030__) resolve();
+        else {
+          existing.addEventListener('load', resolve, { once: true });
+          existing.addEventListener('error', resolve, { once: true });
+        }
+        return;
+      }
+      const script = document.createElement('script');
+      script.src = 'news-20261030.js?v=20261030-1';
+      script.async = false;
+      script.dataset.news20261030 = 'true';
+      script.addEventListener('load', resolve, { once: true });
+      script.addEventListener('error', resolve, { once: true });
+      document.head.append(script);
+    });
+  }
+
+  function refreshSidebar() {
+    const categoryOrder = ['admissions', 'gifted', 'digital', 'school-policy'];
+    document.querySelectorAll('.sidebar .side-item').forEach((container, index) => {
+      const group = window.CATEGORY_NEWS?.[categoryOrder[index]];
+      if (!group) return;
+      container.querySelectorAll('.side-story, .side-empty').forEach(item => item.remove());
+      const articles = group.articles.slice(0, 4);
+      if (!articles.length) {
+        const empty = node('p', '등록된 기사가 없습니다.', 'side-empty');
+        container.append(empty);
+        return;
+      }
+      articles.forEach(([title, , , id]) => {
+        const link = node('a', title, 'side-story');
+        link.href = articleHref(id);
+        container.append(link);
+      });
+    });
+  }
+
   function ensureFeatureNav() {
     const navLinks = document.querySelector('.nav-links');
     if (!navLinks || navLinks.querySelector('[data-nav="features"]')) return;
@@ -147,15 +189,20 @@
       window.setTimeout(() => init(attempt + 1), 100);
       return;
     }
+    refreshSidebar();
     ensureFeatureNav();
     buildFeatureIndex();
     remodelInterests();
   }
 
-  // 메인 기본 스크립트와 이미지/스타일 로딩까지 끝난 뒤 실행해 기존 레이아웃과 충돌하지 않게 합니다.
+  function start() {
+    loadLatestNews().finally(() => init());
+  }
+
+  // 메인 기본 스크립트와 이미지/스타일 로딩까지 끝난 뒤 최신 기사 데이터를 연결합니다.
   if (document.readyState === 'complete') {
-    window.setTimeout(() => init(), 0);
+    window.setTimeout(start, 0);
   } else {
-    window.addEventListener('load', () => init(), { once: true });
+    window.addEventListener('load', start, { once: true });
   }
 })();
