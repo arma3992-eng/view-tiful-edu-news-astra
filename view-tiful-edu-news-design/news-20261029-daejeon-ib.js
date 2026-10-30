@@ -5,7 +5,7 @@
     navCategory: 'school-policy',
     id: 'school-policy-daejeon-ib-district-20261021',
     image: 'policy',
-    video: 'https://resource2.heygen.ai/aws_pacific/avatar_tmp/e3fe6261554445dab3af098a821e0911/v9787120acef1403ca90da60986395c3f/caption_9dcedd42876d4a05932b48eee95fdbf6.mp4',
+    video: 'https://resource2.heygen.ai/video/40e9308b5ffe440786f63b18848e779c/original.mp4',
     videoCaption: 'VTN 브리핑 | AI 아바타·생성형 보조 영상 사용',
     title: '대전 IB 교육지구, 2027년 동부권부터…‘인증학교 확대’보다 수업·평가 협력에 초점',
     description: '대전교육청이 2027년 동구·중구·대덕구를 시작으로 IB 교육지구를 추진하고 2028년 서부권으로 확대할 계획이다. 운영학교 확대 로드맵과 함께 수업·평가 공동연구 체계를 지역 단위로 묶는 것이 핵심이다.',
