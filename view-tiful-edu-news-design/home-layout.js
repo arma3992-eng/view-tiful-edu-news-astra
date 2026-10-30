@@ -113,13 +113,16 @@
         const [articleTitle, description, image, id] = first;
         const feature = node('a', '', 'topic-feature');
         feature.href = articleHref(id);
-        const img = document.createElement('img');
-        img.src = `assets/${image}.jpg`;
-        img.alt = '';
+        if (image) {
+          const img = document.createElement('img');
+          img.src = `assets/${image}.jpg`;
+          img.alt = '';
+          feature.append(img);
+        }
         const text = node('div', '', 'topic-feature-text');
         text.append(node('strong', articleTitle));
         if (description) text.append(node('small', description));
-        feature.append(img, text);
+        feature.append(text);
         article.append(feature);
       }
 
