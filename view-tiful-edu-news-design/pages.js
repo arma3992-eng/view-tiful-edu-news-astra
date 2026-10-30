@@ -56,12 +56,19 @@ function renderArticles(query = '') {
   const template = document.querySelector('#article-template');
   matches.forEach(([title, summary, image, id, category]) => {
     const card = template.content.cloneNode(true);
-    card.querySelector('img').src = `assets/${image}.jpg`;
+    const cover = card.querySelector('.listing-cover');
+    const coverImage = cover.querySelector('img');
+    if (image) {
+      coverImage.src = `assets/${image}.jpg`;
+      coverImage.alt = '';
+      cover.setAttribute('aria-label', title + ' 기사 보기');
+    } else {
+      cover.remove();
+    }
     card.querySelector('.category').textContent = category || currentPage.title;
     card.querySelector('.listing-story-title').textContent = title;
     card.querySelector('.listing-summary').textContent = summary;
     if (!summary) card.querySelector('.listing-summary').hidden = true;
-    card.querySelector('.listing-cover').setAttribute('aria-label', title + ' 기사 보기');
     card.querySelectorAll('a').forEach(link => {
       link.href = `article.html?id=${encodeURIComponent(id)}`;
     });
@@ -75,7 +82,7 @@ function renderArticles(query = '') {
 }
 
 if (pageKind === 'category') {
-    const schoolStats = document.querySelector('#ai-school-stats');
+  const schoolStats = document.querySelector('#ai-school-stats');
   if (schoolStats) schoolStats.hidden = type !== 'digital';
   document.title = `${currentPage.title} | 뷰티풀 에듀`;
   document.querySelector('#listing-title').textContent = currentPage.title;
