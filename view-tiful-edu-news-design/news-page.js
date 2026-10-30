@@ -25,13 +25,17 @@
     grid.replaceChildren();count.textContent=String(rows.length);empty.hidden=rows.length>0;clear.hidden=!query && active==='all';
     for(const article of rows){
       const card=document.createElement('article');card.className='archive-card';
-      const imageLink=document.createElement('a');imageLink.className='archive-card-image';imageLink.href=`article.html?id=${encodeURIComponent(article.id)}`;
-      const image=document.createElement('img');image.src=`assets/${article.image}.jpg`;image.alt='';imageLink.append(image);
+      const href=`article.html?id=${encodeURIComponent(article.id)}`;
+      if(article.image){
+        const imageLink=document.createElement('a');imageLink.className='archive-card-image';imageLink.href=href;
+        const image=document.createElement('img');image.src=`assets/${article.image}.jpg`;image.alt='';imageLink.append(image);
+        card.append(imageLink);
+      }
       const category=document.createElement('p');category.className='category';category.textContent=article.category;
-      const title=document.createElement('h2'),titleLink=document.createElement('a');titleLink.href=imageLink.href;titleLink.textContent=article.title;title.append(titleLink);
+      const title=document.createElement('h2'),titleLink=document.createElement('a');titleLink.href=href;titleLink.textContent=article.title;title.append(titleLink);
       const description=document.createElement('p');description.textContent=article.description||'기사 내용을 확인해보세요.';
-      const read=document.createElement('a');read.className='archive-read';read.href=imageLink.href;read.textContent='기사 읽기 →';
-      card.append(imageLink,category,title,description,read);grid.append(card);
+      const read=document.createElement('a');read.className='archive-read';read.href=href;read.textContent='기사 읽기 →';
+      card.append(category,title,description,read);grid.append(card);
     }
   }
 
