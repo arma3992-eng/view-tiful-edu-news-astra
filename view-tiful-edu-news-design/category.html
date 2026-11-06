@@ -6,7 +6,8 @@
 <meta name="description" content="학생·학부모·교사를 위한 뷰티풀 에듀 교육뉴스">
 <title>분야별 뉴스 | 뷰티풀 에듀</title>
 <link rel="stylesheet" href="style.css">
-<script src="news-data.js" defer></script><script src="news-20261029.js?v=20261029-1" defer></script><script src="news-20261029-approved.js?v=20261029-1" defer></script><script src="news-20261029-daejeon-ib.js?v=20261029-1" defer></script><script src="news-20261029-notion-batch.js?v=20261029-1" defer></script><script src="news-20261029-canva-proxy.js?v=20261029-2" defer></script><script src="news-20261030.js?v=20261030-1" defer></script><script src="news-20261031-verified.js?v=20261105-1" defer></script><script src="news-20261102-verified.js?v=20261105-1" defer></script><script src="news-20261105-approved-batch.js?v=20261105-1" defer></script><script src="pages.js?v=20261030-1" defer></script><script src="news-20261029-higgsfield-images.js?v=20261029-4" defer></script>
+<link rel="stylesheet" href="ai-school-chat.css?v=20261106-1">
+<script src="news-data.js" defer></script><script src="news-20261029.js?v=20261029-1" defer></script><script src="news-20261029-approved.js?v=20261029-1" defer></script><script src="news-20261029-daejeon-ib.js?v=20261029-1" defer></script><script src="news-20261029-notion-batch.js?v=20261029-1" defer></script><script src="news-20261029-canva-proxy.js?v=20261029-2" defer></script><script src="news-20261030.js?v=20261030-1" defer></script><script src="news-20261031-verified.js?v=20261105-1" defer></script><script src="news-20261102-verified.js?v=20261105-1" defer></script><script src="news-20261105-approved-batch.js?v=20261105-1" defer></script><script src="ai-school-data.js?v=20261106-1" defer></script><script src="pages.js?v=20261106-1" defer></script><script src="ai-school-chat.js?v=20261106-1" defer></script><script src="news-20261029-higgsfield-images.js?v=20261029-4" defer></script>
 </head>
 <body class="subpage" data-page="category">
 <header><div class="masthead wrap"><a class="brand masthead-brand" href="index.html" aria-label="뷰티풀 에듀 홈으로 이동"><strong>뷰티풀 에듀</strong><span class="brand-english">(View-tiful Edu)</span></a><p class="tagline">교육을 읽다,<br>내일을 준비하다</p><form class="search" role="search"><input aria-label="교육 소식 검색" placeholder="관심 있는 교육 소식을 찾아보세요"><button aria-label="검색" type="submit"><svg viewBox="0 0 24 24"><circle cx="10" cy="10" r="6.5"/><path d="m15 15 5 5"/></svg></button></form></div><div class="nav-line"><nav class="wrap navigation" aria-label="주 메뉴"><div class="nav-links">
@@ -23,6 +24,7 @@
 <h1 id="listing-title">교육뉴스</h1>
 <p id="listing-description"></p>
 </div>
+<div class="ai-school-area">
 <section id="ai-school-stats" hidden aria-labelledby="ai-school-title">
   <h2 id="ai-school-title">우리 지역 AI 중점학교는?</h2>
   <p>지역별·학교급별 AI 중점학교 현황을 확인하세요.</p>
@@ -38,6 +40,25 @@
   <option value="2020">2020년</option>
 </select>
 </section>
+<aside id="ai-school-chat" hidden aria-labelledby="ai-school-chat-title">
+  <div class="chat-head">
+    <h2 id="ai-school-chat-title">AI 중점학교 물어보기</h2>
+    <p>우리 지역·학교급별 현황이나 학교 이름을 물어보세요. 숫자는 17개 시도교육청 공개 명단(2026년 11월 확인)에서만 가져옵니다.</p>
+  </div>
+  <div class="chat-log" role="log" aria-live="polite" aria-label="챗봇 대화"></div>
+  <div class="chat-suggestions" aria-label="예시 질문">
+    <button type="button">서울 AI 중점학교는 몇 개인가요?</button>
+    <button type="button">대전 중학교 중 AI 중점학교 알려줘</button>
+    <button type="button">AI 중점학교 비율이 가장 높은 지역은?</button>
+  </div>
+  <form class="chat-form">
+    <label class="sr-only" for="ai-school-chat-input">질문 입력</label>
+    <textarea id="ai-school-chat-input" maxlength="400" placeholder="예: 경기 초등학교는 몇 곳?"></textarea>
+    <button type="submit">보내기</button>
+  </form>
+  <div class="chat-foot"><span>AI가 만든 답변으로 오류가 있을 수 있습니다. 중요한 내용은 표와 교육청 원문으로 확인하세요. 대화는 저장되지 않습니다.</span><span class="chat-counter" aria-hidden="true"></span></div>
+</aside>
+</div>
 <div class="listing-meta"><p id="listing-count" role="status" aria-live="polite"></p><button id="clear-search" hidden>검색 초기화</button></div>
 <div class="listing-grid" id="article-list"></div>
 <div class="empty-list" id="empty-list" hidden><h2 id="empty-title">등록된 기사가 없습니다</h2><p id="empty-description">새로운 기사가 등록되면 이곳에서 확인할 수 있습니다.</p><a href="index.html">메인페이지로 돌아가기 →</a></div>
