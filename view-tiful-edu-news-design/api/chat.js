@@ -209,7 +209,9 @@ function cleanHistory(raw) {
 
 module.exports = async (req, res) => {
   const allowed = (process.env.ALLOWED_ORIGINS || '').split(',').map(s => s.trim()).filter(Boolean);
-  const origins = allowed.length ? allowed : DEFAULT_ORIGINS;
+  const origins = allowed.length ? [...allowed] : [...DEFAULT_ORIGINS];
+  // 같은 배포에서 온 요청(Preview 주소·커스텀 도메인 포함)은 항상 허용합니다.
+  if (req.headers.host) origins.push(`https://${req.headers.host}`);
   const origin = req.headers.origin || '';
   if (origin && origins.includes(origin)) {
     res.setHeader('Access-Control-Allow-Origin', origin);
