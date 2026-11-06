@@ -127,14 +127,14 @@ async function showSchoolList(year, region, level, total) {
   const isCurrent = () => dialog.open && content.contains(message);
 
   try {
-    const query = new URLSearchParams({
-      year: String(year), region, level
-    });
-    const response = await fetch(`http://127.0.0.1:8000/api/schools?${query}`);
-    if (!response.ok) throw new Error('학교 목록 조회 실패');
-
-    const data = await response.json();
+    const data = await window.ViewtifulAiSchools.list({ year, region, level, limit: 500 });
     if (!isCurrent()) return;
+
+    if (!data.roster_available) {
+      message.textContent =
+        `${year}년은 학교별 명단을 제공하지 않습니다. 학교 명단은 2026년 AI 중점학교만 확인할 수 있습니다.`;
+      return;
+    }
 
     message.textContent =
       `통계: ${total}개교 · 등록된 학교 목록: ${data.count}개교`;
@@ -159,8 +159,10 @@ async function showSchoolList(year, region, level, total) {
 
     data.items.forEach(school => {
       const item = document.createElement('li');
-      const details = [school.school_level, school.district]
-        .filter(Boolean).join(' · ');
+      const details = [
+        school.school_level, school.district, school.operation_type,
+        school.also_digital_leading ? 'AI·디지털 활용 선도학교 동시 지정' : ''
+      ].filter(Boolean).join(' · ');
       item.textContent = `${school.school_name} (${details})`;
       list.append(item);
     });
@@ -185,11 +187,7 @@ async function loadSchoolStats(year = '2026') {
   status.textContent = `${year}년 학교 통계를 불러오는 중입니다.`;
 
   try {
-    const query = new URLSearchParams({ year: String(year) });
-    const response = await fetch(`http://127.0.0.1:8000/api/school-stats?${query}`);
-    if (!response.ok) throw new Error('통계 조회 실패');
-
-    const data = await response.json();
+    const data = await window.ViewtifulAiSchools.stats(year);
     if (requestId !== schoolStatsRequest) return;
 
     if (!data.items.length) {
@@ -209,8 +207,10 @@ async function loadSchoolStats(year = '2026') {
     caption.textContent =
       `${data.year}년 지역별 학교 현황 (단위: 개교)`;
 
+    const hasRatio = data.items.some(item => item.ratio_pct != null);
     const head = table.createTHead().insertRow();
-    ['지역', '초등', '중등', '고등', '특수', '합계', '자료 확인 상태']
+    ['지역', '초등', '중등', '고등', '특수', '합계',
+      ...(hasRatio ? ['전체 학교 대비'] : []), '자료 확인 상태']
       .forEach(label => {
         const th = document.createElement('th');
         th.scope = 'col';
@@ -250,6 +250,9 @@ async function loadSchoolStats(year = '2026') {
           cell.textContent = '미확인';
         } else if (value === 0) {
           cell.textContent = '0';
+        } else if (data.year !== 2026) {
+          // 학교별 명단은 2026년만 있으므로 과거 연도는 숫자만 표시합니다.
+          cell.textContent = String(value);
         } else {
           const button = document.createElement('button');
           button.type = 'button';
@@ -269,27 +272,67 @@ async function loadSchoolStats(year = '2026') {
         }
       });
 
+      if (hasRatio) {
+        const ratioCell = row.insertCell();
+        ratioCell.style.cssText = cellStyle;
+        ratioCell.textContent = item.ratio_pct == null ? '-' : `${Number(item.ratio_pct).toFixed(1)}%`;
+      }
+
       const stateCell = row.insertCell();
       stateCell.style.cssText = cellStyle;
       stateCell.textContent =
-        `${item.data_status || '상태 미확인'} · ` +
-        (item.validation_status || '미검증').replaceAll('_', ' · ');
+        `${item.data_status || '상태 미확인'} · ${item.validation_status || '추가 확인 필요'}`;
     });
 
+    // 전국 합계: 미확인 지역이 하나라도 있으면 합계를 내지 않습니다.
+    const totalRow = table.createTFoot().insertRow();
+    const totalHead = document.createElement('th');
+    totalHead.scope = 'row';
+    totalHead.textContent = '전국';
+    totalHead.style.cssText = cellStyle + 'border-top:2px solid #ccc;';
+    totalRow.append(totalHead);
+    const sumOf = key => data.items.some(item => item[key] == null)
+      ? null : data.items.reduce((sum, item) => sum + item[key], 0);
+    columns.forEach(([key]) => {
+      const cell = totalRow.insertCell();
+      cell.style.cssText = cellStyle + 'border-top:2px solid #ccc; font-weight:bold;';
+      const value = key === 'total_count' ? data.national_total : sumOf(key);
+      cell.textContent = value == null ? '산출 불가' : value.toLocaleString('ko-KR');
+    });
+    if (hasRatio) {
+      const cell = totalRow.insertCell();
+      cell.style.cssText = cellStyle + 'border-top:2px solid #ccc;';
+      cell.textContent = data.national_total != null && data.national_all_school_count
+        ? `${(100 * data.national_total / data.national_all_school_count).toFixed(1)}%` : '-';
+    }
+    const totalState = totalRow.insertCell();
+    totalState.style.cssText = cellStyle + 'border-top:2px solid #ccc;';
+    totalState.textContent = data.basis || '';
+
     wrapper.append(table);
+
+    // 집계 기준·주의 문구 (Supabase public_stat_notes에서 관리)
+    if (data.notes?.length) {
+      const notes = document.createElement('ul');
+      notes.style.cssText = 'margin:0 0 24px; padding-left:20px; font-size:13px; line-height:1.8; color:#536077;';
+      data.notes.forEach(text => {
+        const note = document.createElement('li');
+        note.textContent = text;
+        notes.append(note);
+      });
+      wrapper.append(notes);
+    }
     section.append(wrapper);
 
-    const programs = [
-      ...new Set(data.items.map(item => item.program_name))
-    ];
+    const programs = data.program_names || [];
     status.textContent =
       `${data.year}년 ${programs.join(' / ')} · ${data.count}개 지역. ` +
-      '밑줄 친 숫자를 누르면 등록된 학교 목록을 확인할 수 있습니다. ' +
+      (data.year === 2026 ? '밑줄 친 숫자를 누르면 학교 목록을 확인할 수 있습니다. ' : '') +
       '미확인은 0개를 뜻하지 않으며, 연도별 사업과 집계 기준은 다를 수 있습니다.';
   } catch (error) {
     if (requestId !== schoolStatsRequest) return;
     status.textContent =
-      `${year}년 통계를 불러오지 못했습니다. API 서버 실행 상태를 확인해주세요.`;
+      `${year}년 통계를 불러오지 못했습니다. 잠시 후 다시 시도해주세요.`;
     console.error(error);
   }
 }
