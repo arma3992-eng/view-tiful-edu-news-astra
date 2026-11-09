@@ -49,6 +49,11 @@ window.CATEGORY_NEWS = {
       ]
     ]
   },
+  "general-autonomous": {
+    "title": "일반고·자사고",
+    "description": "일반고와 자사고의 교육·진학 변화를 살펴봅니다.",
+    "articles": []
+  },
   "digital": {
     "title": "AI•디지털교육",
     "description": "새로운 기술을 넘어, 배움과 생각하는 힘을 살펴봅니다.",
