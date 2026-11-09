@@ -102,18 +102,52 @@
   .guide-search-field button{padding:0 12px}
 }
 
-/* Desktop: extend the header's 70:30 story/sidebar divider through the home sections. */
+/* Desktop: keep all sections' actual content inside the same left column as the lead story. */
 @media (min-width:1101px){
-  .notable.deep-read,.features-index,.interests{position:relative}
+  .notable.deep-read,.features-index,.interests{
+    position:relative;
+    --home-left-column:calc(68.553459% - 21.937107px);
+  }
+  .notable.deep-read > .section-heading,
+  .notable.deep-read > .notable-grid,
+  .features-index > .section-heading,
+  .features-index > .feature-index-list,
+  .interests > .section-heading,
+  .interests > .category-grid{
+    width:var(--home-left-column);
+    max-width:100%;
+    min-width:0;
+  }
   .notable.deep-read::after,.features-index::after,.interests::after{
     content:"";
     position:absolute;
     top:0;
     bottom:0;
-    /* 2.18:1 lead columns + 32px gap: align with the sidebar's left border. */
-    left:calc(68.553459% + 10.062893px);
+    /* Match the sidebar border, leaving the same 32px gap after the left content. */
+    left:calc(var(--home-left-column) + 32px);
     width:1px;
     background:var(--line);
     pointer-events:none;
   }
+
+  /* Scale the three article cards to fit the narrower main column. */
+  .notable.deep-read .notable-grid{gap:17px}
+  .notable.deep-read h3 button{font-size:17px;line-height:1.45;overflow-wrap:break-word;word-break:keep-all}
+  .notable.deep-read .card-description{font-size:12px;line-height:1.65;min-height:0}
+  .notable.deep-read .section-heading{flex-wrap:wrap;gap:8px 12px}
+
+  /* Keep feature-index article titles, summaries and links inside the column. */
+  .features-index .section-heading{flex-wrap:wrap;gap:8px 12px}
+  .features-index .feature-index-item{grid-template-columns:100px minmax(0,1fr) 64px;gap:14px}
+  .features-index .feature-index-body{min-width:0}
+  .features-index .feature-index-body h3{font-size:15px;line-height:1.45;overflow-wrap:break-word;word-break:keep-all}
+  .features-index .feature-index-body p{font-size:12px;line-height:1.55;overflow-wrap:break-word;word-break:keep-all}
+  .features-index .feature-index-arrow{font-size:11px}
+
+  /* Preserve the 3 + 2 card order, but size every card to the left column. */
+  .interests .section-heading{flex-wrap:wrap;gap:8px 12px}
+  .interests .category-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:36px 17px}
+  .interests .topic h3{font-size:18px;word-break:keep-all}
+  .interests .topic-four .topic-feature strong{font-size:14px;line-height:1.5;word-break:keep-all}
+  .interests .topic-four li{font-size:11px;overflow-wrap:break-word;word-break:keep-all}
 }
