@@ -76,8 +76,9 @@
 .feature-index-body p{margin-top:5px;color:#536077;font-size:13px;line-height:1.65}
 .feature-index-arrow{justify-self:end;color:var(--blue);font-size:12px;white-space:nowrap}
 
-.interests .category-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:30px}
+.interests .category-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:30px}
 .interests .topic-four{min-width:0}
+.interests .topic-empty{font-size:12px;color:var(--muted);margin-top:14px}
 .interests .topic-four .topic-feature{display:block;margin:14px 0 17px}
 .interests .topic-four .topic-feature img{width:100%;aspect-ratio:16/9;border-radius:3px}
 .interests .topic-four .topic-feature-text{margin-top:10px}
