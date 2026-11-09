@@ -118,8 +118,29 @@
     max-width:100%;
     min-width:0;
   }
+  /* Limit section separators to the left news column. */
+  .notable.deep-read,.features-index{
+    border-bottom:0;
+    background-image:linear-gradient(var(--line),var(--line));
+    background-size:var(--home-left-column) 1px;
+    background-position:left bottom;
+    background-repeat:no-repeat;
+  }
+  /* Hide any remaining horizontal rules extending into the empty right area. */
+  .notable.deep-read::before,.features-index::before,.interests::before{
+    content:"";
+    position:absolute;
+    top:0;
+    bottom:0;
+    left:calc(var(--home-left-column) + 33px);
+    right:0;
+    background:#fff;
+    pointer-events:none;
+    z-index:1;
+  }
   .notable.deep-read::after,.features-index::after,.interests::after{
     content:"";
+    z-index:2;
     position:absolute;
     top:0;
     bottom:0;
