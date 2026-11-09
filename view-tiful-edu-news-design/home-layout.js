@@ -43,7 +43,7 @@
   }
 
   function refreshSidebar() {
-    const categoryOrder = ['admissions', 'gifted', 'digital', 'school-policy'];
+    const categoryOrder = ['admissions', 'gifted', 'general-autonomous', 'digital', 'school-policy'];
     document.querySelectorAll('.sidebar .side-item').forEach((container, index) => {
       const group = window.CATEGORY_NEWS?.[categoryOrder[index]];
       if (!group) return;
@@ -132,14 +132,14 @@
     const subtitle = heading.querySelector('.heading-group p');
     const allLink = heading.querySelector('a');
     if (title) title.textContent = '관심 분야로 읽는 교육뉴스';
-    if (subtitle) subtitle.textContent = '네 가지 핵심 분야의 최신 기사와 흐름을 한눈에';
+    if (subtitle) subtitle.textContent = '다섯 가지 핵심 분야의 최신 기사와 흐름을 한눈에';
     if (allLink) {
       allLink.href = 'news.html';
       allLink.textContent = '분야 전체 보기 →';
     }
 
     grid.replaceChildren();
-    const keys = ['admissions', 'gifted', 'digital', 'school-policy'];
+    const keys = ['admissions', 'gifted', 'general-autonomous', 'digital', 'school-policy'];
     for (const key of keys) {
       const group = window.CATEGORY_NEWS[key];
       if (!group) continue;
@@ -177,6 +177,7 @@
         list.append(li);
       });
       if (list.children.length) article.append(list);
+      if (!group.articles.length) article.append(node('p', '등록된 기사가 없습니다.', 'topic-empty'));
       grid.append(article);
     }
     return true;
