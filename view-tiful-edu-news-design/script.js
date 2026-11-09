@@ -145,7 +145,7 @@ function openMedia() {
 function refreshPublishedHomeSections() {
   if (typeof syncPublishedArticles === 'function') syncPublishedArticles();
 
-  const categoryOrder = ['admissions', 'gifted', 'digital', 'school-policy'];
+  const categoryOrder = ['admissions', 'gifted', 'general-autonomous', 'digital', 'school-policy'];
   document.querySelectorAll('.sidebar .side-item').forEach((container, index) => {
     const group = window.CATEGORY_NEWS?.[categoryOrder[index]];
     if (!group) return;
