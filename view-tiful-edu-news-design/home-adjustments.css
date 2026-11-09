@@ -101,3 +101,19 @@
   .feature-index-arrow{grid-column:1}
   .guide-search-field button{padding:0 12px}
 }
+
+/* Desktop: extend the header's 70:30 story/sidebar divider through the home sections. */
+@media (min-width:1101px){
+  .notable.deep-read,.features-index,.interests{position:relative}
+  .notable.deep-read::after,.features-index::after,.interests::after{
+    content:"";
+    position:absolute;
+    top:0;
+    bottom:0;
+    /* 2.18:1 lead columns + 32px gap: align with the sidebar's left border. */
+    left:calc(68.553459% + 10.062893px);
+    width:1px;
+    background:var(--line);
+    pointer-events:none;
+  }
+}
