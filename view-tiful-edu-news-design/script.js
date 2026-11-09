@@ -6,7 +6,7 @@ const $ = s => document.querySelector(s);
 // 메인화면에만 필요한 작은 스타일 보정을 별도 파일로 불러옵니다.
 const homeStyle = document.createElement('link');
 homeStyle.rel = 'stylesheet';
-homeStyle.href = 'home-adjustments.css?v=20261021-1';
+homeStyle.href = 'home-adjustments.css?v=20261109-1';
 document.head.append(homeStyle);
 
 const dialog = $('#detail-dialog');
